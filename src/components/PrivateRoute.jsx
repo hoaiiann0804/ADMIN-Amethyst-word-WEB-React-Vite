@@ -8,7 +8,7 @@ const PrivateRoute = ({ element }) => {
       if (!token) {
           navigate('/login', { replace: true });
       }
-  }, [token, navigate]);
+  }, [token, navigate])
 
   return token ? element : null;
 };

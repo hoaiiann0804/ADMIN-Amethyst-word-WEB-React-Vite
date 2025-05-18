@@ -13,7 +13,7 @@ const Header = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // Thêm hàm kiểm tra đăng nhập
+
   const checkAuth = () => {
     const token = localStorage.getItem("token");
     const userData = localStorage.getItem("user");
@@ -30,11 +30,10 @@ const Header = () => {
     }
   };
 
-  // Kiểm tra khi component mount và thêm event listener
+
   useEffect(() => {
     checkAuth();
     
-    // Thêm listener để phát hiện thay đổi localStorage
     const handleStorageChange = () => checkAuth();
     window.addEventListener('storage', handleStorageChange);
     
@@ -47,7 +46,7 @@ const Header = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login");
-    window.location.reload(); // Reload để đảm bảo cập nhật state
+    window.location.reload(); 
   };
 
   const getUserName = () => {
@@ -58,7 +57,6 @@ const Header = () => {
   return (
     <header className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
       <div className="flex items-center w-full max-w-md">
-        {/* Logo hoặc thanh tìm kiếm */}
       </div>
 
       <div className="flex items-center gap-4">
@@ -109,4 +107,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Header
