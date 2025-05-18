@@ -1,52 +1,108 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { ShoppingBag, User, LogOut } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { User, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/DropdownMenu";
 
 const Header = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+  // Thêm hàm kiểm tra đăng nhập
+  const checkAuth = () => {
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+    
+    if (token && userData) {
+      try {
+        setUser(JSON.parse(userData));
+      } catch (e) {
+        console.error("Failed to parse user data", e);
+        handleLogout();
+      }
+    } else {
+      setUser(null);
     }
+  };
+
+  // Kiểm tra khi component mount và thêm event listener
+  useEffect(() => {
+    checkAuth();
+    
+    // Thêm listener để phát hiện thay đổi localStorage
+    const handleStorageChange = () => checkAuth();
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
     localStorage.removeItem("user");
-    setUser(null);
     navigate("/login");
+    window.location.reload(); // Reload để đảm bảo cập nhật state
+  };
+
+  const getUserName = () => {
+    if (!user) return "";
+    return user.admiN_NAME || user.admiN_EMAIL || "User";
   };
 
   return (
     <header className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
       <div className="flex items-center w-full max-w-md">
-        {/* Logo hoặc thanh tìm kiếm (nếu có) */}
+        {/* Logo hoặc thanh tìm kiếm */}
       </div>
 
       <div className="flex items-center gap-4">
-
         {user ? (
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">xin chào {user.name}</span>
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full"
-              onClick={handleLogout}
-              title="Đăng xuất"
-            >
-              <LogOut size={20} />
-            </Button>
+          <div className="flex items-center gap-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center gap-2">
+                  <User className="h-5 w-5" />
+                  <span className="font-medium">{getUserName()}</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem 
+                  onClick={handleLogout} 
+                  className="cursor-pointer flex items-center gap-2 text-red-600 hover:bg-red-50"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Đăng xuất</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         ) : (
-          <Link to="/login">
-            <Button variant="outline" size="icon" className="rounded-full" title="Đăng nhập">
-              <User size={20} />
-            </Button>
-          </Link>
+          <Button 
+            onClick={() => navigate('/login')} 
+            className="flex items-center gap-2"
+          >
+            <User className="h-4 w-4" />
+            Đăng nhập
+          </Button>
         )}
       </div>
     </header>

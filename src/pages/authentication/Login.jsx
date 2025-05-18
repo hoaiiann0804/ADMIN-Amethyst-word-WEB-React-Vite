@@ -103,9 +103,9 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <Button type="submit" className="w-full bg-violet-400">
+              <button type="submit" className="w-full bg-violet-400">
                 Login
-              </Button>
+              </button>
               <Button type="button" variant="outline" className="w-full">
                 Login with Google
               </Button>
