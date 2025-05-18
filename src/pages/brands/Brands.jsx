@@ -1,11 +1,4 @@
-import React, { useState } from "react";
 import { DashboardLayout } from "@/components/layouts/DashboardLayout";
-import { Button } from "@/components/ui/Button";
-import { Plus } from "lucide-react";
-import BrandsFilter from "./BrandsFilter";
-import BrandTable from "./BrandTable";
-import BrandForm from "./BrandForm";
-import initialBrands from "../../services/mockBrands";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,10 +9,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/AlertDialog";
-
+import { Button } from "@/components/ui/Button";
+import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getBrands } from "../../services/BrandService";
+import BrandForm from "./BrandForm";
+import BrandsFilter from "./BrandsFilter";
+import BrandTable from "./BrandTable";
 
 const Brands = () => {
-  const [brands, setBrands] = useState(initialBrands);
+  const [brands, setBrands] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBrand, setEditingBrand] = useState(null);
@@ -29,7 +28,7 @@ const Brands = () => {
   // Filter brands based on search term
   const filteredBrands = brands.filter(
     (brand) =>
-      brand.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      brand.branD_NAME.toLowerCase().includes(searchTerm.toLowerCase()) ||
       brand.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -59,6 +58,7 @@ const Brands = () => {
     setBrandToDelete(brand);
     setIsDeleteDialogOpen(true);
   };
+
   const confirmDelete = () => {
     console.log("Đang xóa:", brandToDelete);
     if (brandToDelete) {
@@ -81,6 +81,19 @@ const Brands = () => {
     setEditingBrand(brand);
     setIsModalOpen(true);
   };
+
+  const fetchBrands = async () => {
+    try {
+      const response = await getBrands();
+      setBrands(response);
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchBrands();
+  }, []);
 
   return (
     <DashboardLayout>
@@ -111,7 +124,7 @@ const Brands = () => {
           brand={editingBrand}
         />
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-             <AlertDialogContent>
+            <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
               <AlertDialogDescription>

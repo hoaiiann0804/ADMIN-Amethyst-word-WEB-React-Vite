@@ -1,13 +1,5 @@
-import React from "react";
-import {
-  Table,
-  TableHeader,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-} from "@/components/ui/Table";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,9 +7,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
-import { Badge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
-import { Tag, MoreVertical, Edit, Trash, ArrowUpDown } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/Table";
+import { ArrowUpDown, Edit, MoreVertical, Tag, Trash } from "lucide-react";
 
 const BrandTable = ({ brands, onEdit, onDelete }) => {
   return (
@@ -39,33 +37,33 @@ const BrandTable = ({ brands, onEdit, onDelete }) => {
               <TableHead>Slug</TableHead>
               <TableHead>Mô tả</TableHead>
               <TableHead>Số sản phẩm</TableHead>
-              <TableHead>Nổi bật</TableHead>
+              {/* <TableHead>Nổi bật</TableHead> */}
               <TableHead className="w-[80px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {brands.length > 0 ? (
               brands.map((brand) => (
-                <TableRow key={brand.id}>
-                  <TableCell>{brand.id}</TableCell>
+                <TableRow key={brand.branD_ID}>
+                  <TableCell>{brand.branD_ID}</TableCell>
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
                       <Tag size={16} className="text-gray-500" />
-                      {brand.name}
+                      {brand.branD_NAME}
                     </div>
                   </TableCell>
-                  <TableCell>{brand.slug}</TableCell>
+                  <TableCell>{brand.branD_NAME.replace(/\s+/g, '').toLowerCase()}</TableCell>
                   <TableCell className="max-w-[300px] truncate">
                     {brand.description}
                   </TableCell>
-                  <TableCell>{brand.productsCount}</TableCell>
-                  <TableCell>
+                  <TableCell>{brand.producT_QUANTITY}</TableCell>
+                  {/* <TableCell>
                     {brand.featured ? (
                       <Badge className="bg-blue-500">Nổi bật</Badge>
                     ) : (
                       <Badge variant="outline">Không</Badge>
                     )}
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

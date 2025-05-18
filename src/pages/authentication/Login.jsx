@@ -1,8 +1,3 @@
-import React, { useRef, useState } from "react"
-import { Toast } from "primereact/toast"
-import { useMountEffect } from "primereact/hooks"
-import { useNavigate } from "react-router-dom"
-import { clsx } from "clsx"
 import { Button } from "@/components/ui/Button"
 import {
   Card,
@@ -13,6 +8,13 @@ import {
 } from "@/components/ui/Card"
 import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
+import { clsx } from "clsx"
+import { useMountEffect } from "primereact/hooks"
+import { Toast } from "primereact/toast"
+import { useRef, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { login } from "../../services/AdminService"
+
 
 const Login = () => {
   const [username, setUsername] = useState("")
@@ -26,7 +28,7 @@ const Login = () => {
     }
   })
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (!username || !password) {
@@ -39,19 +41,18 @@ const Login = () => {
       return
     }
 
-    // Giả lập kiểm tra đăng nhập
-    if (username === "admin@gmail.com" && password === "12345") {
-        const userData = { name: "Admin", email: username };
-        localStorage.setItem("user", JSON.stringify(userData));
-
+    const response =  await login(username, password)
+    console.log(response)
+    if (response.code === 200) {
+      navigate("/")
+    } else if (response.code === 401) {
       toast.current?.show({
-        severity: "success",
-        summary: "Success",
-        detail: "Login successful",
+        severity: "error",
+        summary: "Login failed",
+        detail: "Invalid email or password.",
         life: 3000,
       })
-
-      navigate("/")
+    
     } else {
       toast.current?.show({
         severity: "error",
