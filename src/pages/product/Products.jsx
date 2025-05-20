@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/Button";
-import useToast from "../../hooks/use-toast";
 import {
   Dialog,
   DialogContent,
@@ -16,13 +14,16 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/Tabs";
-import { PlusCircle } from "lucide-react";
-import { ProductForm } from "@/pages/product/ProductForm";
 import { DeleteProductDialog } from "@/pages/product/DeleteProductDialog";
+import { ProductForm } from "@/pages/product/ProductForm";
 import { ProductsFilter } from "@/pages/product/ProductsFilter";
 import { ProductsGrid } from "@/pages/product/ProductsGrid";
 import { ProductsList } from "@/pages/product/ProductsList";
 import { ProductsPagination } from "@/pages/product/ProductsPagination";
+import { PlusCircle } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import useToast from "../../hooks/use-toast";
+import { ProductPaging } from '../../services/ProductService';
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,7 +36,9 @@ const Products = () => {
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
   const { toast } = useToast();
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(10); 
+  const [productsPerPage] = useState(10);
+  const [totalProduct, setTotalProducts] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   
   const categories = [
     { id: 1, name: "Áo Nam", products: 42, created: "15/04/2025", status: "Hiển thị", isActive: true },
@@ -48,214 +51,23 @@ const Products = () => {
     { id: 8, name: "Túi Xách", products: 18, created: "01/05/2025", status: "Hiển thị", isActive: true },
   ];
 
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "Áo Sơ Mi Nam Trắng",
-      image: "/placeholder.svg",
-      price: 450000,
-      category: "Áo Nam",
-      stock: 25,
-      status: "Còn hàng",
-      description: "Áo sơ mi nam chất liệu cotton thoáng mát, phù hợp với nhiều dịp khác nhau."
-    },
-    {
-      id: 2,
-      name: "Quần Jeans Slim Fit",
-      image: "/placeholder.svg",
-      price: 650000,
-      category: "Quần Nam",
-      stock: 18,
-      status: "Còn hàng",
-      description: "Quần jeans nam ôm dáng, co giãn tốt, dễ kết hợp với nhiều loại áo."
-    },
-    {
-      id: 3,
-      name: "Áo Thun Nữ Cổ Tròn",
-      image: "/placeholder.svg",
-      price: 300000,
-      category: "Áo Nữ",
-      stock: 32,
-      status: "Còn hàng",
-      description: "Áo thun nữ chất liệu cotton, kiểu dáng đơn giản, dễ phối đồ."
-    },
-    {
-      id: 4,
-      name: "Đầm Suông Dáng Dài",
-      image: "/placeholder.svg",
-      price: 850000,
-      category: "Váy Nữ",
-      stock: 10,
-      status: "Còn hàng",
-      description: "Đầm suông dài thoải mái, phong cách thanh lịch, thích hợp cho nhiều dịp."
-    },
-    {
-      id: 5,
-      name: "Áo Khoác Denim Unisex",
-      image: "/placeholder.svg",
-      price: 750000,
-      category: "Áo Khoác",
-      stock: 15,
-      status: "Còn hàng",
-      description: "Áo khoác denim phù hợp cả nam và nữ, thiết kế hiện đại, bền đẹp theo thời gian."
-    },
-    {
-      id: 6,
-      name: "Giày Thể Thao Nam",
-      image: "/placeholder.svg",
-      price: 950000,
-      category: "Giày Nam",
-      stock: 8,
-      status: "Còn hàng",
-      description: "Giày thể thao nam đế cao su, nhẹ, êm ái, thích hợp đi thường ngày."
-    },
-    {
-      id: 7,
-      name: "Túi Xách Thời Trang",
-      image: "/placeholder.svg",
-      price: 1250000,
-      category: "Phụ Kiện",
-      stock: 5,
-      status: "Còn hàng",
-      description: "Túi xách nữ chất liệu da cao cấp, thiết kế sang trọng, nhiều ngăn tiện dụng."
-    },
-    {
-      id: 8,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 9,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 10,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 11,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 12,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 13,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 14,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 15,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 16,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 17,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 18,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 19,
-      name: "Quần Tây Công Sở 2",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 20,
-      name: "Quần Tây Công Sở 3",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
+  const [products, setProducts] = useState([]);
 
-
-  ]);
+  const fetchProducts = async () => {
+    try {
+      const response = await ProductPaging(currentPage, productsPerPage);
+      setProducts(response.data);
+      setTotalProducts(response.totalRecords);
+      setTotalPages(response.totalPages);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  }
 
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, selectedCategory, priceRange.min, priceRange.max]);
+    //setCurrentPage(1);
+    fetchProducts();
+  }, [searchTerm, selectedCategory, priceRange.min, priceRange.max, currentPage]);
   
   const handleApplyFilter = (filterOptions) => {
     const { min, max } = filterOptions.priceRange;
@@ -279,14 +91,15 @@ const Products = () => {
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase());
+    // const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //   product.category.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = product.producT_NAME.toLowerCase().includes(searchTerm.toLowerCase()) 
     
     const matchesCategory = selectedCategory === "" || product.category === selectedCategory;
     
     const matchesPrice = (
-      (priceRange.min === "" || product.price >= Number(priceRange.min)) &&
-      (priceRange.max === "" || product.price <= Number(priceRange.max))
+      (priceRange.min === "" || product.producT_PRICE >= Number(priceRange.min)) &&
+      (priceRange.max === "" || product.producT_PRICE <= Number(priceRange.max))
     );
     
     return matchesSearch && matchesCategory && matchesPrice;
@@ -331,6 +144,7 @@ const Products = () => {
       description: `Sản phẩm "${updatedProduct.name}" đã được cập nhật.`
     });
   };
+
   const handleDeleteProduct = (id) => {
     setProducts(products.filter(product => product.id !== id));
     setIsDeleteDialogOpen(false);
@@ -343,6 +157,7 @@ const Products = () => {
   const handleEditProduct = (product) => {
     setProductToEdit(product);
   };
+
   const handleDeleteClick = (product) => {
     setProductToDelete(product);
     setIsDeleteDialogOpen(true);
@@ -436,9 +251,6 @@ const Products = () => {
           {/* Nội dung các tab */}
           {["all", "in-stock", "out-of-stock"].map((tab) => {
             const statusFilteredProducts = filterProductsByStatus(filteredProducts, tab);
-            const displayProducts = getProductsForCurrentPage(statusFilteredProducts);
-            const totalPages = Math.ceil(statusFilteredProducts.length / productsPerPage);
-            
             return (
               <TabsContent key={tab} value={tab}>
                 <div className="space-y-4">
@@ -459,14 +271,14 @@ const Products = () => {
                     <>
                       {viewMode === "grid" ? (
                         <ProductsGrid 
-                          products={displayProducts}
+                          products={products}
                           formatPrice={formatPrice}
                           onEdit={handleEditProduct}
                           onDelete={handleDeleteClick}
                         />
                       ) : (
                         <ProductsList
-                          products={displayProducts}
+                          products={products}
                           formatPrice={formatPrice}
                           onEdit={handleEditProduct}
                           onDelete={handleDeleteClick}
@@ -478,7 +290,7 @@ const Products = () => {
                         setCurrentPage={setCurrentPage}
                         totalPages={totalPages}
                         productsPerPage={productsPerPage}
-                        totalProducts={statusFilteredProducts.length}
+                        totalProducts={totalProduct}
                       />
                     </>
                   ) : (

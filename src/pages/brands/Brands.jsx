@@ -60,7 +60,6 @@ const Brands = () => {
   };
 
   const confirmDelete = () => {
-    console.log("Deleting brand:", brandToDelete);
     deleteBrand(brandToDelete.branD_ID);
     if (brandToDelete) {
       setBrands(brands.filter((brand) => brand.id !== brandToDelete.id));

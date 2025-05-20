@@ -65,7 +65,7 @@ export const GetProductDetail = async (input) => {
     }
 }
 
-export const ProductPaging = async (pageNumber = 1, pageSize = 8) => {
+export const ProductPaging = async (pageNumber = 1, pageSize = 10) => {
     try {
         const response = await axios.get(`${API_URL}/api/Product/ProductList`, {
             headers: {

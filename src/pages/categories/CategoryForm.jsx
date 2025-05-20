@@ -1,27 +1,23 @@
-
-import React, { useState, useEffect } from "react";
-
 import { Button } from "@/components/ui/Button";
-import { DialogFooter } from "@/components/ui/DiaLog";
-
+import { Checkbox } from "@/components/ui/Checkbox";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/Dialog";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
-import { Button } from "@/components/ui/Button";
-import { Checkbox } from "@/components/ui/Checkbox";
+import { useEffect, useState } from "react";
+import { addCategory, updateCategory } from "../../services/CategoryService";
+import { uploadImage } from "../../services/UploadService";
 
 const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
   const [formData, setFormData] = useState({
-    name: "",
-    slug: "",
+    categorY_NAME: "",
+    image: "",
     description: "",
-    productsCount: 0,
     featured: false,
   });
 
@@ -31,35 +27,31 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
       setFormData(category);
     } else {
       setFormData({
-        name: "",
-        slug: "",
+        categorY_NAME: "",
+        image: "",
         description: "",
-        productsCount: 0,
         featured: false,
       });
-import { Switch } from "@/components/ui/Switch";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { uploadImage } from "../../services/UploadService";
-
-const categorySchema = z.object({
-  name: z.string().min(2, {
-    message: "Tên danh mục phải có ít nhất 2 ký tự."
-  }),
-  isActive: z.boolean().default(true)
-});
-
-const CategoryForm = ({ initialData, onSubmit }) => {
-  const form = useForm({
-    resolver: zodResolver(categorySchema),
-    defaultValues: initialData || {
-      name: "",
-      image: "",
-      isActive: true
-
     }
   }, [category]);
+
+  const handleFileChange = async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setFormData((prev) => ({ ...prev, imagePreview: reader.result }));
+        };
+        reader.readAsDataURL(file);
+  
+        try {
+          const res = await uploadImage(file);
+          setFormData((prev) => ({ ...prev, image: res.imageUrl }));
+        } catch (err) {
+          console.error('Upload thất bại:', err);
+        }
+      }
+    };
 
   // Handle input changes
   const handleChange = (e) => {
@@ -79,91 +71,17 @@ const CategoryForm = ({ initialData, onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Basic validation
-    if (!formData.name || !formData.slug) {
-      alert("Tên và slug không được để trống!");
+    if (!formData.categorY_NAME) {
+      alert("Tên không được để trống!");
       return;
     }
     onSave(formData);
-  };
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prev) => ({ ...prev, imagePreview: reader.result }));
-      };
-      reader.readAsDataURL(file);
-
-      try {
-        const res = await uploadImage(file);
-        setFormData((prev) => ({ ...prev, image: res.imageUrl }));
-      } catch (err) {
-        console.error('Upload thất bại:', err);
-      }
+    if(category){
+      updateCategory(formData)
+    } else{
+      addCategory(formData)
     }
   };
-
-  const handleSubmit = (values) => {
-    values.preventDefault();
-    onSubmit({
-      ...values,
-      ...(initialData?.id ? { id: initialData.id } : {})
-    });
-  };
-
-
-
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tên danh mục</FormLabel>
-              <FormControl>
-                <Input placeholder="Nhập tên danh mục" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Ảnh danh mục</FormLabel>
-              <FormControl>
-                <Input type="file" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="isActive"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-              <div className="space-y-0.5">
-                <FormLabel>Trạng thái</FormLabel>
-                <div className="text-sm text-muted-foreground">
-                  Hiển thị danh mục trên website
-                </div>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -180,21 +98,9 @@ const CategoryForm = ({ initialData, onSubmit }) => {
                 Tên
               </Label>
               <Input
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="slug" className="text-right">
-                Slug
-              </Label>
-              <Input
-                id="slug"
-                name="slug"
-                value={formData.slug}
+                id="categorY_NAME"
+                name="categorY_NAME"
+                value={formData.categorY_NAME}
                 onChange={handleChange}
                 className="col-span-3"
               />
@@ -213,14 +119,13 @@ const CategoryForm = ({ initialData, onSubmit }) => {
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="productsCount" className="text-right">
-                Số sản phẩm
+                Ảnh danh mục
               </Label>
               <Input
-                id="productsCount"
-                name="productsCount"
-                type="number"
-                value={formData.productsCount}
-                onChange={handleChange}
+                id="image"
+                name="image"
+                type="file"
+                onChange={handleFileChange}
                 className="col-span-3"
               />
             </div>
