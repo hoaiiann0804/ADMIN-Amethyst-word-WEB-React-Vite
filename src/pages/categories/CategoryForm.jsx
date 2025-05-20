@@ -1,8 +1,5 @@
-import React from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/Button";
+import { DialogFooter } from "@/components/ui/DiaLog";
 import {
   Form,
   FormControl,
@@ -12,10 +9,12 @@ import {
   FormMessage,
 } from "@/components/ui/Form";
 import { Input } from "@/components/ui/Input";
-import { DialogFooter } from "@/components/ui/DiaLog";
 import { Switch } from "@/components/ui/Switch";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { uploadImage } from "../../services/UploadService";
 
-// Schema xác thực dữ liệu form
 const categorySchema = z.object({
   name: z.string().min(2, {
     message: "Tên danh mục phải có ít nhất 2 ký tự."
@@ -28,16 +27,38 @@ const CategoryForm = ({ initialData, onSubmit }) => {
     resolver: zodResolver(categorySchema),
     defaultValues: initialData || {
       name: "",
+      image: "",
       isActive: true
     }
   });
 
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({ ...prev, imagePreview: reader.result }));
+      };
+      reader.readAsDataURL(file);
+
+      try {
+        const res = await uploadImage(file);
+        setFormData((prev) => ({ ...prev, image: res.imageUrl }));
+      } catch (err) {
+        console.error('Upload thất bại:', err);
+      }
+    }
+  };
+
   const handleSubmit = (values) => {
+    values.preventDefault();
     onSubmit({
       ...values,
       ...(initialData?.id ? { id: initialData.id } : {})
     });
   };
+
+
 
   return (
     <Form {...form}>
@@ -50,6 +71,20 @@ const CategoryForm = ({ initialData, onSubmit }) => {
               <FormLabel>Tên danh mục</FormLabel>
               <FormControl>
                 <Input placeholder="Nhập tên danh mục" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Ảnh danh mục</FormLabel>
+              <FormControl>
+                <Input type="file" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
