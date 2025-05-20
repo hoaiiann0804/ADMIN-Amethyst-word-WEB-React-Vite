@@ -1,3 +1,22 @@
+
+import React, { useState, useEffect } from "react";
+import { DashboardLayout } from "@/components/layouts/DashboardLayout";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/AlertDialog";
+import { Button } from "@/components/ui/Button";
+import { Plus } from "lucide-react";
+import categoriesData from "../../services/CategoryData";
+import CategoryForm from "./CategoryForm";
+import CategoriesFilter from "./CategoriesFilter";
+import CategoryTable from "./CategoryTable";
 import { DashboardLayout } from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/Button";
 import {
@@ -27,15 +46,23 @@ import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, Pagi
 import useToast from "../../hooks/use-toast";
 import { getCategories } from "../../services/CategoryService";
 
+
 const Categories = () => {
-  const { toast } = useToast();
+  const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all"); // "all", "active", "hidden"
-  const [sortBy, setSortBy] = useState("id"); // "id", "name", "products", "created"
-  const [sortOrder, setSortOrder] = useState("asc"); // "asc", "desc"
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
+
+  // Filter categories based on search term
+  const filteredCategories = categories.filter(
+    (category) =>
+      category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      category.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+=======
   const [selectedCategory, setSelectedCategory] = useState(null);
   
   // Dữ liệu mẫu cho danh mục
@@ -123,33 +150,57 @@ const Categories = () => {
     setSelectedCategory(null);
   };
 
-  // Hàm mở dialog chỉnh sửa danh mục
-  const openEditDialog = (category) => {
-    setSelectedCategory(category);
-    setIsEditDialogOpen(true);
+  // Add or update category
+  const handleSaveCategory = (categoryData) => {
+    if (editingCategory) {
+      // Update existing category
+      setCategories(
+        categories.map((category) =>
+          category.id === editingCategory.id ? { ...categoryData, id: category.id } : category
+        )
+      );
+    } else {
+      // Add new category
+      const newCategory = {
+        ...categoryData,
+        id: categories.length ? Math.max(...categories.map((c) => c.id)) + 1 : 1,
+      };
+      setCategories([...categories, newCategory]);
+    }
+    setIsModalOpen(false);
+    setEditingCategory(null);
   };
 
-  // Hàm mở dialog xóa danh mục
+  // Delete category
   const openDeleteDialog = (category) => {
-    setSelectedCategory(category);
+    setCategoryToDelete(category);
     setIsDeleteDialogOpen(true);
   };
 
-  // Hàm xử lý thay đổi sắp xếp
-  const handleSort = (column) => {
-    if (sortBy === column) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(column);
-      setSortOrder('asc');
+  const confirmDelete = () => {
+    if (categoryToDelete) {
+      setCategories(categories.filter((category) => category.id !== categoryToDelete.id));
+      setIsDeleteDialogOpen(false);
+      setCategoryToDelete(null);
+      setSearchTerm("");
     }
   };
 
-  const renderSortIndicator = (column) => {
-    if (sortBy !== column) return null;
-    
-    return sortOrder === 'asc' ? ' ↑' : ' ↓';
+  // Open modal for adding
+  const openAddModal = () => {
+    setEditingCategory(null);
+    setIsModalOpen(true);
   };
+
+
+  // Open modal for editing
+  const openEditModal = (category) => {
+    setEditingCategory(category);
+    setIsModalOpen(true);
+  };
+
+  useEffect(() => {
+    setCategories(categoriesData);
 
   // Hàm lấy danh sách danh mục từ API
   const fetchCategories = async () => {
@@ -163,32 +214,58 @@ const Categories = () => {
 
   useEffect(() => {
     fetchCategories();
+
   }, []);
 
   return (
     <DashboardLayout>
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Danh Mục</h1>
-            <p className="text-gray-500">Quản lý danh mục sản phẩm thời trang của bạn</p>
-          </div>
-          <Button 
-            className="flex items-center gap-2"
-            onClick={() => setIsCreateDialogOpen(true)}
-          >
-            <FolderPlus size={18} />
-            <span>Thêm Danh Mục</span>
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Quản lý danh mục</h1>
+          <Button className="flex items-center gap-2" onClick={openAddModal}>
+            <Plus size={18} />
+            Thêm danh mục
           </Button>
         </div>
 
-        {/* Bộ lọc và tìm kiếm */}
-        <CategoriesFilter 
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
+        <CategoriesFilter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
+        <CategoryTable
+          categories={filteredCategories}
+          onEdit={openEditModal}
+          onDelete={openDeleteDialog}
         />
+
+
+        <CategoryForm
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setEditingCategory(null);
+          }}
+          onSave={handleSaveCategory}
+          category={editingCategory}
+        />
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
+              <AlertDialogDescription>
+                Bạn có chắc muốn xóa danh mục{" "}
+                <strong>{categoryToDelete?.name}</strong>? Hành động này không thể
+                hoàn tác.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setIsDeleteDialogOpen(false)}>
+                Hủy
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={confirmDelete}>
+                Xóa
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         {/* Danh sách danh mục */}
         <Card>
@@ -296,37 +373,6 @@ const Categories = () => {
           </div>
         </Card>
       </div>
-
-      {/* Dialog thêm danh mục */}
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Thêm danh mục mới</DialogTitle>
-          </DialogHeader>
-          <CategoryForm onSubmit={handleAddCategory} />
-        </DialogContent>
-      </Dialog>
-
-      {/* Dialog chỉnh sửa danh mục */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Chỉnh sửa danh mục</DialogTitle>
-          </DialogHeader>
-          <CategoryForm 
-            initialData={selectedCategory} 
-            onSubmit={handleUpdateCategory}
-          />
-        </DialogContent>
-      </Dialog>
-
-      {/* Dialog xóa danh mục */}
-      <DeleteCategoryDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-        category={selectedCategory}
-        onConfirm={handleDeleteCategory}
-      />
     </DashboardLayout>
   );
 };

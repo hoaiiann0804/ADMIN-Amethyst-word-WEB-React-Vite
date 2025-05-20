@@ -1,0 +1,68 @@
+const categoriesData = [
+    {
+      id: 1,
+      name: "Áo Nam",
+      slug: "ao-nam",
+      description: "Danh mục áo nam thời trang",
+      productsCount: 42,
+      featured: true,
+    },
+    {
+      id: 2,
+      name: "Quần Nam",
+      slug: "quan-nam",
+      description: "Danh mục quần nam thời trang",
+      productsCount: 38,
+      featured: true,
+    },
+    {
+      id: 3,
+      name: "Áo Nữ",
+      slug: "ao-nu",
+      description: "Danh mục áo nữ thời trang",
+      productsCount: 56,
+      featured: true,
+    },
+    {
+      id: 4,
+      name: "Quần Nữ",
+      slug: "quan-nu",
+      description: "Danh mục quần nữ thời trang",
+      productsCount: 44,
+      featured: true,
+    },
+    {
+      id: 5,
+      name: "Phụ Kiện",
+      slug: "phu-kien",
+      description: "Danh mục phụ kiện thời trang",
+      productsCount: 27,
+      featured: true,
+    },
+    {
+      id: 6,
+      name: "Giày Nam",
+      slug: "giay-nam",
+      description: "Danh mục giày nam thời trang",
+      productsCount: 31,
+      featured: true,
+    },
+    {
+      id: 7,
+      name: "Giày Nữ",
+      slug: "giay-nu",
+      description: "Danh mục giày nữ thời trang",
+      productsCount: 29,
+      featured: false,
+    },
+    {
+      id: 8,
+      name: "Túi Xách",
+      slug: "tui-xach",
+      description: "Danh mục túi xách thời trang",
+      productsCount: 18,
+      featured: true,
+    },
+  ];
+  
+  export default categoriesData;

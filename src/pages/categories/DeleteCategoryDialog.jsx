@@ -9,14 +9,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/AlertDialog";
-import { Trash2 } from "lucide-react";
 
-const DeleteCategoryDialog = ({
-  open,
-  onOpenChange,
-  category,
-  onConfirm,
-}) => {
+const DeleteCategoryDialog = ({ open, onOpenChange, category, onConfirm }) => {
   if (!category) {
     return null;
   }
@@ -25,26 +19,19 @@ const DeleteCategoryDialog = ({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-2 text-destructive">
-            <Trash2 className="h-5 w-5" />
-            <span>Xác nhận xóa danh mục</span>
-          </AlertDialogTitle>
+          <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
           <AlertDialogDescription>
-            <span>
-              Bạn có chắc chắn muốn xóa danh mục </span>
-            <strong>"{category.name}"</strong>
-            <span> không? Hành động này không thể hoàn tác.</span>
+            Bạn có chắc muốn xóa danh mục{" "}
+            <strong>{category.name}</strong>? Hành động này không thể
+            hoàn tác.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>
-            <span>Hủy</span>
+            Hủy
           </AlertDialogCancel>
-          <AlertDialogAction 
-            onClick={onConfirm}
-            className="bg-destructive hover:bg-destructive/90"
-          >
-            <span>Xóa</span>
+          <AlertDialogAction onClick={onConfirm}>
+            Xóa
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
