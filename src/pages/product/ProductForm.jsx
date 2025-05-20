@@ -25,7 +25,7 @@ const productSchema = z.object({
 
 const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) => {
   const { toast } = useToast();
-  const { register, handleSubmit, reset, formState: { errors }, setValue } = useForm({
+  const { register, handleSubmit, reset, formState: { errors }, setValue, watch } = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: {
       producT_NAME: "",
@@ -37,6 +37,20 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
       producT_STATUS: "ACTIVE",
     },
   });
+
+  // Watch selected values for controlled Select components
+  const selectedBrand = watch("branD_ID");
+  const selectedCategory = watch("categorY_ID");
+  const selectedStatus = watch("producT_STATUS");
+
+  // Ép kiểu sang string để đảm bảo khớp với value của SelectItem
+  const selectedBrandStr = selectedBrand ? String(selectedBrand) : "";
+  const selectedCategoryStr = selectedCategory ? String(selectedCategory) : "";
+  const selectedStatusStr = selectedStatus ? String(selectedStatus) : "";
+
+  console.log("selectedBrand:", selectedBrand);
+  console.log("selectedCategory:", selectedCategory);
+  console.log("selectedStatus:", selectedStatus);
 
   useEffect(() => {
     if (product) {
@@ -133,14 +147,14 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
               <Label htmlFor="branD_ID" className="text-right">Thương hiệu</Label>
               <Select
                 onValueChange={(value) => setValue("branD_ID", value)}
-                defaultValue={product?.branD_ID}
+                value={selectedBrandStr}
               >
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Chọn thương hiệu" />
                 </SelectTrigger>
                 <SelectContent>
                   {brands.map((brand) => (
-                    <SelectItem key={brand.id} value={brand.id}>
+                    <SelectItem key={brand.id} value={String(brand.id)}>
                       {brand.name}
                     </SelectItem>
                   ))}
@@ -157,14 +171,14 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
               <Label htmlFor="categorY_ID" className="text-right">Danh mục</Label>
               <Select
                 onValueChange={(value) => setValue("categorY_ID", value)}
-                defaultValue={product?.categorY_ID}
+                value={selectedCategoryStr}
               >
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Chọn danh mục" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
+                    <SelectItem key={category.id} value={String(category.id)}>
                       {category.name}
                     </SelectItem>
                   ))}
@@ -181,7 +195,7 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
               <Label htmlFor="producT_STATUS" className="text-right">Trạng thái</Label>
               <Select
                 onValueChange={(value) => setValue("producT_STATUS", value)}
-                defaultValue={product?.producT_STATUS || "ACTIVE"}
+                value={selectedStatusStr}
               >
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Chọn trạng thái" />

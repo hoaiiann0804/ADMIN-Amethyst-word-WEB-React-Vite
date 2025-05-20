@@ -82,19 +82,19 @@ export const ProductsFilter = ({
                 <div className="space-y-2">
                   <h4 className="font-medium leading-none">Danh mục</h4>
                   <Select
-                    value={selectedCategoryId || ""}
+                    value={selectedCategoryId || "all"}
                     onValueChange={setSelectedCategoryId}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Tất cả danh mục" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Tất cả danh mục</SelectItem>
-                      {categories?.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
+                  <SelectItem value="all">Tất cả danh mục</SelectItem>
+                  {categories?.map((category) => (
+                    <SelectItem key={category.id} value={String(category.id)}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -102,19 +102,19 @@ export const ProductsFilter = ({
                 <div className="space-y-2">
                   <h4 className="font-medium leading-none">Thương hiệu</h4>
                   <Select
-                    value={selectedBrandId || ""}
+                    value={selectedBrandId || "all"}
                     onValueChange={setSelectedBrandId}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Tất cả thương hiệu" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Tất cả thương hiệu</SelectItem>
-                      {brands?.map((brand) => (
-                        <SelectItem key={brand.id} value={brand.id}>
-                          {brand.name}
-                        </SelectItem>
-                      ))}
+                  <SelectItem value="all">Tất cả thương hiệu</SelectItem>
+                  {brands?.map((brand) => (
+                    <SelectItem key={brand.id} value={String(brand.id)}>
+                      {brand.name}
+                    </SelectItem>
+                  ))}
                     </SelectContent>
                   </Select>
                 </div>
