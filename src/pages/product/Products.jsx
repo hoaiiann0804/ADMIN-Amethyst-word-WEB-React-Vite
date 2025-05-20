@@ -64,26 +64,158 @@ const Products = () => {
     {
       id: 1,
       producT_NAME: "Áo Sơ Mi Nam Trắng",
-      image: "/placeholder.svg",
+      image: "/images/ao-so-mi-nam.jpg",
       producT_PRICE: 450000,
-      categorY_ID: 1,
+      categorY_ID: 1, // Áo Nam
       stock: 25,
       producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Áo sơ mi nam chất liệu cotton thoáng mát, phù hợp với nhiều dịp khác nhau.",
-      producT_DETAIL: "Cotton, size M-XXL",
-      branD_ID: 1,
+      producT_DESCRIPTION: "Áo sơ mi nam chất liệu cotton thoáng mát, phù hợp với môi trường công sở.",
+      producT_DETAIL: "Cotton 100%, size M-XXL",
+      branD_ID: 1, // Nike
     },
     {
       id: 2,
       producT_NAME: "Quần Jeans Nam Đen",
-      image: "/placeholder.svg",
+      image: "/images/quan-jeans-nam.jpg",
       producT_PRICE: 600000,
-      categorY_ID: 2,
+      categorY_ID: 2, // Quần Nam
       stock: 15,
       producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Quần jeans nam phong cách hiện đại, chất liệu bền đẹp.",
+      producT_DESCRIPTION: "Quần jeans nam phong cách hiện đại, chất liệu denim cao cấp.",
       producT_DETAIL: "Denim, size 28-34",
-      branD_ID: 2,
+      branD_ID: 2, // Adidas
+    },
+    {
+      id: 3,
+      producT_NAME: "Áo Thun Nữ In Họa Tiết",
+      image: "/images/ao-thun-nu.jpg",
+      producT_PRICE: 250000,
+      categorY_ID: 3, // Áo Nữ
+      stock: 30,
+      producT_STATUS: "ACTIVE",
+      producT_DESCRIPTION: "Áo thun nữ in họa tiết thời thượng, chất liệu cotton mềm mại.",
+      producT_DETAIL: "Cotton pha spandex, size S-L",
+      branD_ID: 4, // Zara
+    },
+    {
+      id: 4,
+      producT_NAME: "Quần Tây Nữ Đen",
+      image: "/images/quan-tay-nu.jpg",
+      producT_PRICE: 550000,
+      categorY_ID: 4, // Quần Nữ
+      stock: 20,
+      producT_STATUS: "ACTIVE",
+      producT_DESCRIPTION: "Quần tây nữ dáng ôm, phù hợp cho công sở và sự kiện trang trọng.",
+      producT_DETAIL: "Polyester pha, size S-XL",
+      branD_ID: 3, // Gucci
+    },
+    {
+      id: 5,
+      producT_NAME: "Mũ Lưỡi Trai Đen",
+      image: "/images/mu-luoi-trai.jpg",
+      producT_PRICE: 200000,
+      categorY_ID: 5, // Phụ Kiện
+      stock: 50,
+      producT_STATUS: "ACTIVE",
+      producT_DESCRIPTION: "Mũ lưỡi trai unisex phong cách thể thao, phù hợp mọi lứa tuổi.",
+      producT_DETAIL: "Cotton, one size",
+      branD_ID: 1, // Nike
+    },
+    {
+      id: 6,
+      producT_NAME: "Áo Khoác Nam Gió",
+      image: "/images/ao-khoac-nam.jpg",
+      producT_PRICE: 800000,
+      categorY_ID: 1, // Áo Nam
+      stock: 10,
+      producT_STATUS: "ACTIVE",
+      producT_DESCRIPTION: "Áo khoác nam chống gió, chống nước nhẹ, phù hợp cho mùa đông.",
+      producT_DETAIL: "Nylon, size M-XXL",
+      branD_ID: 2, // Adidas
+    },
+    {
+      id: 7,
+      producT_NAME: "Quần Short Nữ Trắng",
+      image: "/images/quan-short-nu.jpg",
+      producT_PRICE: 300000,
+      categorY_ID: 4, // Quần Nữ
+      stock: 35,
+      producT_STATUS: "ACTIVE",
+      producT_DESCRIPTION: "Quần short nữ dáng suông, thoải mái cho mùa hè.",
+      producT_DETAIL: "Cotton pha, size S-L",
+      branD_ID: 4, // Zara
+    },
+    {
+      id: 8,
+      producT_NAME: "Túi Xách Nữ Da",
+      image: "/images/tui-xach-nu.jpg",
+      producT_PRICE: 1200000,
+      categorY_ID: 5, // Phụ Kiện
+      stock: 8,
+      producT_STATUS: "ACTIVE",
+      producT_DESCRIPTION: "Túi xách nữ da thật, thiết kế sang trọng cho các buổi tiệc.",
+      producT_DETAIL: "Da bò, kích thước 30x20cm",
+      branD_ID: 3, // Gucci
+    },
+    {
+      id: 9,
+      producT_NAME: "Áo Polo Nam Xanh Navy",
+      image: "/images/ao-polo-nam.jpg",
+      producT_PRICE: 350000,
+      categorY_ID: 1, // Áo Nam
+      stock: 40,
+      producT_STATUS: "ACTIVE",
+      producT_DESCRIPTION: "Áo polo nam phong cách năng động, phù hợp cho cả công việc và giải trí.",
+      producT_DETAIL: "Cotton pique, size M-XL",
+      branD_ID: 1, // Nike
+    },
+    {
+      id: 10,
+      producT_NAME: "Quần Jogger Nam Xám",
+      image: "/images/quan-jogger-nam.jpg",
+      producT_PRICE: 400000,
+      categorY_ID: 2, // Quần Nam
+      stock: 22,
+      producT_STATUS: "ACTIVE",
+      producT_DESCRIPTION: "Quần jogger nam thoải mái, lý tưởng cho thể thao và dạo phố.",
+      producT_DETAIL: "Cotton pha polyester, size M-XXL",
+      branD_ID: 2, // Adidas
+    },
+    {
+      id: 11,
+      producT_NAME: "Áo Len Nữ Cổ Lọ",
+      image: "/images/ao-len-nu.jpg",
+      producT_PRICE: 500000,
+      categorY_ID: 3, // Áo Nữ
+      stock: 18,
+      producT_STATUS: "ACTIVE",
+      producT_DESCRIPTION: "Áo len nữ cổ lọ ấm áp, phong cách tối giản cho mùa đông.",
+      producT_DETAIL: "Len pha acrylic, size S-L",
+      branD_ID: 4, // Zara
+    },
+    {
+      id: 12,
+      producT_NAME: "Thắt Lưng Nam Da",
+      image: "/images/that-lung-nam.jpg",
+      producT_PRICE: 350000,
+      categorY_ID: 5, // Phụ Kiện
+      stock: 30,
+      producT_STATUS: "ACTIVE",
+      producT_DESCRIPTION: "Thắt lưng nam da thật, phù hợp với trang phục công sở và thường ngày.",
+      producT_DETAIL: "Da bò, chiều dài 110-130cm",
+      branD_ID: 3, // Gucci
+    },
+    {
+      id: 13,
+      producT_NAME: "Áo Thun Nam Đen",
+      image: "/images/ao-thun-nam.jpg",
+      producT_PRICE: 200000,
+      categorY_ID: 1, // Áo Nam
+      stock: 45,
+      producT_STATUS: "ACTIVE",
+      producT_DESCRIPTION: "Áo thun nam basic, dễ phối đồ cho mọi dịp.",
+      producT_DETAIL: "Cotton 100%, size M-XXL",
+      branD_ID: 1, // Nike
     },
   ]);
 
