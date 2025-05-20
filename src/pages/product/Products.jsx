@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/Button";
 import useToast from "../../hooks/use-toast";
@@ -34,8 +34,9 @@ const Products = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
   const { toast } = useToast();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(10); 
   
-  // Dữ liệu mẫu cho danh mục
   const categories = [
     { id: 1, name: "Áo Nam", products: 42, created: "15/04/2025", status: "Hiển thị", isActive: true },
     { id: 2, name: "Quần Nam", products: 38, created: "16/04/2025", status: "Hiển thị", isActive: true },
@@ -47,7 +48,6 @@ const Products = () => {
     { id: 8, name: "Túi Xách", products: 18, created: "01/05/2025", status: "Hiển thị", isActive: true },
   ];
 
-  // Dữ liệu mẫu cho sản phẩm
   const [products, setProducts] = useState([
     {
       id: 1,
@@ -149,38 +149,113 @@ const Products = () => {
       status: "Hết hàng",
       description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
     },
-    // {
-    //   id: 11,
-    //   name: "Quần Tây Công Sở",
-    //   image: "/placeholder.svg",
-    //   price: 550000,
-    //   category: "Quần Nam",
-    //   stock: 0,
-    //   status: "Hết hàng",
-    //   description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    // },
-    // {
-    //   id: 12,
-    //   name: "Quần Tây Công Sở",
-    //   image: "/placeholder.svg",
-    //   price: 550000,
-    //   category: "Quần Nam",
-    //   stock: 0,
-    //   status: "Hết hàng",
-    //   description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    // },
-    // {
-    //   id: 13,
-    //   name: "Quần Tây Công Sở",
-    //   image: "/placeholder.svg",
-    //   price: 550000,
-    //   category: "Quần Nam",
-    //   stock: 0,
-    //   status: "Hết hàng",
-    //   description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    // },
+    {
+      id: 11,
+      name: "Quần Tây Công Sở",
+      image: "/placeholder.svg",
+      price: 550000,
+      category: "Quần Nam",
+      stock: 0,
+      status: "Hết hàng",
+      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
+    },
+    {
+      id: 12,
+      name: "Quần Tây Công Sở",
+      image: "/placeholder.svg",
+      price: 550000,
+      category: "Quần Nam",
+      stock: 0,
+      status: "Hết hàng",
+      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
+    },
+    {
+      id: 13,
+      name: "Quần Tây Công Sở",
+      image: "/placeholder.svg",
+      price: 550000,
+      category: "Quần Nam",
+      stock: 0,
+      status: "Hết hàng",
+      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
+    },
+    {
+      id: 14,
+      name: "Quần Tây Công Sở",
+      image: "/placeholder.svg",
+      price: 550000,
+      category: "Quần Nam",
+      stock: 0,
+      status: "Hết hàng",
+      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
+    },
+    {
+      id: 15,
+      name: "Quần Tây Công Sở",
+      image: "/placeholder.svg",
+      price: 550000,
+      category: "Quần Nam",
+      stock: 0,
+      status: "Hết hàng",
+      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
+    },
+    {
+      id: 16,
+      name: "Quần Tây Công Sở",
+      image: "/placeholder.svg",
+      price: 550000,
+      category: "Quần Nam",
+      stock: 0,
+      status: "Hết hàng",
+      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
+    },
+    {
+      id: 17,
+      name: "Quần Tây Công Sở",
+      image: "/placeholder.svg",
+      price: 550000,
+      category: "Quần Nam",
+      stock: 0,
+      status: "Hết hàng",
+      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
+    },
+    {
+      id: 18,
+      name: "Quần Tây Công Sở",
+      image: "/placeholder.svg",
+      price: 550000,
+      category: "Quần Nam",
+      stock: 0,
+      status: "Hết hàng",
+      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
+    },
+    {
+      id: 19,
+      name: "Quần Tây Công Sở 2",
+      image: "/placeholder.svg",
+      price: 550000,
+      category: "Quần Nam",
+      stock: 0,
+      status: "Hết hàng",
+      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
+    },
+    {
+      id: 20,
+      name: "Quần Tây Công Sở 3",
+      image: "/placeholder.svg",
+      price: 550000,
+      category: "Quần Nam",
+      stock: 0,
+      status: "Hết hàng",
+      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
+    },
+
+
   ]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory, priceRange.min, priceRange.max]);
   
   const handleApplyFilter = (filterOptions) => {
     const { min, max } = filterOptions.priceRange;
@@ -203,28 +278,25 @@ const Products = () => {
     });
   };
 
-    // Lọc sản phẩm theo từ khóa tìm kiếm và danh mục
-    const filteredProducts = products.filter((product) => {
-      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesCategory = selectedCategory === "" || product.category === selectedCategory;
-      
-      const matchesPrice = (
-        (priceRange.min === "" || product.price >= Number(priceRange.min)) &&
-        (priceRange.max === "" || product.price <= Number(priceRange.max))
-      );
-      
-      return matchesSearch && matchesCategory && matchesPrice;
-    });
-  // Format giá tiền VND
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesCategory = selectedCategory === "" || product.category === selectedCategory;
+    
+    const matchesPrice = (
+      (priceRange.min === "" || product.price >= Number(priceRange.min)) &&
+      (priceRange.max === "" || product.price <= Number(priceRange.max))
+    );
+    
+    return matchesSearch && matchesCategory && matchesPrice;
+  });
+
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN').format(price) + "đ";
   };
 
-
-
-  // Xử lý thêm sản phẩm mới
   const handleAddProduct = (newProduct) => {
     const highestId = products.reduce((max, product) => Math.max(max, product.id), 0);
     const productToAdd = {
@@ -241,7 +313,6 @@ const Products = () => {
     });
   };
 
-  // Xử lý cập nhật sản phẩm
   const handleUpdateProduct = (updatedProduct) => {
     const updatedProducts = products.map(product => {
       if (product.id === updatedProduct.id) {
@@ -260,8 +331,6 @@ const Products = () => {
       description: `Sản phẩm "${updatedProduct.name}" đã được cập nhật.`
     });
   };
-
-  // Xử lý xóa sản phẩm
   const handleDeleteProduct = (id) => {
     setProducts(products.filter(product => product.id !== id));
     setIsDeleteDialogOpen(false);
@@ -271,19 +340,14 @@ const Products = () => {
       description: "Sản phẩm đã được xóa khỏi danh sách."
     });
   };
-
-  // Xử lý khi nhấn nút sửa sản phẩm
   const handleEditProduct = (product) => {
     setProductToEdit(product);
   };
-
-  // Xử lý khi nhấn nút xóa sản phẩm
   const handleDeleteClick = (product) => {
     setProductToDelete(product);
     setIsDeleteDialogOpen(true);
   };
 
-  // Helper function để lọc sản phẩm theo trạng thái cho các tab
   const filterProductsByStatus = (products, status) => {
     if (status === "in-stock") {
       return products.filter(p => p.stock > 0);
@@ -292,6 +356,37 @@ const Products = () => {
     }
     return products;
   };
+
+
+  const getProductsForCurrentPage = (products) => {
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    return products.slice(indexOfFirstProduct, indexOfLastProduct);
+  };
+
+  // Hiển thị thông báo không có sản phẩm nào
+  const renderEmptyState = () => (
+    <div className="p-8 text-center bg-white rounded-lg shadow-sm border border-gray-100">
+      <div className="mx-auto w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
+          <path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1.5"></path>
+          <path d="M18 2v4"></path>
+          <path d="M6 2v4"></path>
+          <path d="M3 10h18"></path>
+          <line x1="9" y1="16" x2="15" y2="16"></line>
+        </svg>
+      </div>
+      <h3 className="text-lg font-medium text-gray-900 mb-2">Không có sản phẩm nào</h3>
+      <p className="text-gray-500 mb-6">Không tìm thấy sản phẩm nào phù hợp với điều kiện lọc.</p>
+      <Button onClick={() => {
+        setSearchTerm("");
+        setSelectedCategory("");
+        setPriceRange({ min: "", max: "" });
+      }}>
+        Xóa bộ lọc
+      </Button>
+    </div>
+  );
 
   return (
     <React.Fragment>
@@ -316,7 +411,7 @@ const Products = () => {
                   Điền thông tin chi tiết về sản phẩm mới bên dưới.
                 </DialogDescription>
               </DialogHeader>
-              <ProductForm onSubmit={handleAddProduct} />
+              <ProductForm onSubmit={handleAddProduct} categories={categories.map(c => c.name)} />
             </DialogContent>
           </Dialog>
         </div>
@@ -339,42 +434,60 @@ const Products = () => {
           </TabsList>
           
           {/* Nội dung các tab */}
-          {["all", "in-stock", "out-of-stock"].map((tab) => (
-            <TabsContent key={tab} value={tab}>
-              <div className="space-y-4">
-                <ProductsFilter 
-                  searchTerm={searchTerm} 
-                  setSearchTerm={setSearchTerm}
-                  viewMode={viewMode}
-                  setViewMode={setViewMode}
-                  categories={categories}
-                  selectedCategory={selectedCategory}
-                  setSelectedCategory={setSelectedCategory}
-                  onApplyFilter={handleApplyFilter} 
-                  priceRange={priceRange}
-                  setPriceRange={setPriceRange}
-                />
+          {["all", "in-stock", "out-of-stock"].map((tab) => {
+            const statusFilteredProducts = filterProductsByStatus(filteredProducts, tab);
+            const displayProducts = getProductsForCurrentPage(statusFilteredProducts);
+            const totalPages = Math.ceil(statusFilteredProducts.length / productsPerPage);
+            
+            return (
+              <TabsContent key={tab} value={tab}>
+                <div className="space-y-4">
+                  <ProductsFilter 
+                    searchTerm={searchTerm} 
+                    setSearchTerm={setSearchTerm}
+                    viewMode={viewMode}
+                    setViewMode={setViewMode}
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                    onApplyFilter={handleApplyFilter} 
+                    priceRange={priceRange}
+                    setPriceRange={setPriceRange}
+                  />
 
-                {viewMode === "grid" ? (
-                  <ProductsGrid 
-                    products={filterProductsByStatus(filteredProducts, tab)}
-                    formatPrice={formatPrice}
-                    onEdit={handleEditProduct}
-                    onDelete={handleDeleteClick}
-                  />
-                ) : (
-                  <ProductsList
-                    products={filterProductsByStatus(filteredProducts, tab)}
-                    formatPrice={formatPrice}
-                    onEdit={handleEditProduct}
-                    onDelete={handleDeleteClick}
-                  />
-                )}
-                
-                <ProductsPagination />
-              </div>
-            </TabsContent>
-          ))}
+                  {statusFilteredProducts.length > 0 ? (
+                    <>
+                      {viewMode === "grid" ? (
+                        <ProductsGrid 
+                          products={displayProducts}
+                          formatPrice={formatPrice}
+                          onEdit={handleEditProduct}
+                          onDelete={handleDeleteClick}
+                        />
+                      ) : (
+                        <ProductsList
+                          products={displayProducts}
+                          formatPrice={formatPrice}
+                          onEdit={handleEditProduct}
+                          onDelete={handleDeleteClick}
+                        />
+                      )}
+                      
+                      <ProductsPagination 
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        totalPages={totalPages}
+                        productsPerPage={productsPerPage}
+                        totalProducts={statusFilteredProducts.length}
+                      />
+                    </>
+                  ) : (
+                    renderEmptyState()
+                  )}
+                </div>
+              </TabsContent>
+            );
+          })}
           
           <TabsContent value="draft">
             <div className="p-4 text-center text-gray-500">
@@ -394,7 +507,11 @@ const Products = () => {
             </DialogDescription>
           </DialogHeader>
           {productToEdit && (
-            <ProductForm initialData={productToEdit} onSubmit={handleUpdateProduct} />
+            <ProductForm 
+              initialData={productToEdit} 
+              onSubmit={handleUpdateProduct} 
+              categories={categories.map(c => c.name)}
+            />
           )}
         </DialogContent>
       </Dialog>
@@ -410,6 +527,5 @@ const Products = () => {
   </React.Fragment>
 );
 };
-
 
 export default Products;
