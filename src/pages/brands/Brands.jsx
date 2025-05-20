@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/Button";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getBrands } from "../../services/BrandService";
+import { deleteBrand, getBrands } from "../../services/BrandService";
 import BrandForm from "./BrandForm";
 import BrandsFilter from "./BrandsFilter";
 import BrandTable from "./BrandTable";
@@ -60,7 +60,8 @@ const Brands = () => {
   };
 
   const confirmDelete = () => {
-    console.log("Đang xóa:", brandToDelete);
+    console.log("Deleting brand:", brandToDelete);
+    deleteBrand(brandToDelete.branD_ID);
     if (brandToDelete) {
       setBrands(brands.filter((brand) => brand.id !== brandToDelete.id));
       setIsDeleteDialogOpen(false);
@@ -68,7 +69,6 @@ const Brands = () => {
       setSearchTerm("");
     }
   };
-
 
   // Open modal for adding
   const openAddModal = () => {
@@ -119,6 +119,7 @@ const Brands = () => {
           onClose={() => {
             setIsModalOpen(false);
             setEditingBrand(null);
+            onSaveBrand(brands)
           }}
           onSave={handleSaveBrand}
           brand={editingBrand}

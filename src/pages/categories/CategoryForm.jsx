@@ -1,4 +1,9 @@
+
 import React, { useState, useEffect } from "react";
+
+import { Button } from "@/components/ui/Button";
+import { DialogFooter } from "@/components/ui/DiaLog";
+
 import {
   Dialog,
   DialogContent,
@@ -32,6 +37,27 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
         productsCount: 0,
         featured: false,
       });
+import { Switch } from "@/components/ui/Switch";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { uploadImage } from "../../services/UploadService";
+
+const categorySchema = z.object({
+  name: z.string().min(2, {
+    message: "Tên danh mục phải có ít nhất 2 ký tự."
+  }),
+  isActive: z.boolean().default(true)
+});
+
+const CategoryForm = ({ initialData, onSubmit }) => {
+  const form = useForm({
+    resolver: zodResolver(categorySchema),
+    defaultValues: initialData || {
+      name: "",
+      image: "",
+      isActive: true
+
     }
   }, [category]);
 
@@ -59,6 +85,85 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
     }
     onSave(formData);
   };
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({ ...prev, imagePreview: reader.result }));
+      };
+      reader.readAsDataURL(file);
+
+      try {
+        const res = await uploadImage(file);
+        setFormData((prev) => ({ ...prev, image: res.imageUrl }));
+      } catch (err) {
+        console.error('Upload thất bại:', err);
+      }
+    }
+  };
+
+  const handleSubmit = (values) => {
+    values.preventDefault();
+    onSubmit({
+      ...values,
+      ...(initialData?.id ? { id: initialData.id } : {})
+    });
+  };
+
+
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tên danh mục</FormLabel>
+              <FormControl>
+                <Input placeholder="Nhập tên danh mục" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Ảnh danh mục</FormLabel>
+              <FormControl>
+                <Input type="file" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="isActive"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+              <div className="space-y-0.5">
+                <FormLabel>Trạng thái</FormLabel>
+                <div className="text-sm text-muted-foreground">
+                  Hiển thị danh mục trên website
+                </div>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

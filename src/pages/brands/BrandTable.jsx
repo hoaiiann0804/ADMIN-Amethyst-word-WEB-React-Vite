@@ -35,9 +35,9 @@ const BrandTable = ({ brands, onEdit, onDelete }) => {
                 </div>
               </TableHead>
               <TableHead>Slug</TableHead>
+              <TableHead>Ảnh</TableHead>
               <TableHead>Mô tả</TableHead>
               <TableHead>Số sản phẩm</TableHead>
-              {/* <TableHead>Nổi bật</TableHead> */}
               <TableHead className="w-[80px]"></TableHead>
             </TableRow>
           </TableHeader>
@@ -53,17 +53,13 @@ const BrandTable = ({ brands, onEdit, onDelete }) => {
                     </div>
                   </TableCell>
                   <TableCell>{brand.branD_NAME.replace(/\s+/g, '').toLowerCase()}</TableCell>
+                  <TableCell>
+                    <img src={`https://localhost:5000/images/${brand.branD_IMAGE}`} alt={brand.branD_NAME} className="w-16 h-16 object-cover" />
+                  </TableCell>
                   <TableCell className="max-w-[300px] truncate">
                     {brand.description}
                   </TableCell>
-                  <TableCell>{brand.producT_QUANTITY}</TableCell>
-                  {/* <TableCell>
-                    {brand.featured ? (
-                      <Badge className="bg-blue-500">Nổi bật</Badge>
-                    ) : (
-                      <Badge variant="outline">Không</Badge>
-                    )}
-                  </TableCell> */}
+                  <TableCell className="text-center">{brand.producT_QUANTITY}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -71,7 +67,7 @@ const BrandTable = ({ brands, onEdit, onDelete }) => {
                           <MoreVertical size={16} />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent align="end" className="background-white">
                         <DropdownMenuItem
                           className="flex items-center gap-2"
                           onClick={() => onEdit(brand)}
