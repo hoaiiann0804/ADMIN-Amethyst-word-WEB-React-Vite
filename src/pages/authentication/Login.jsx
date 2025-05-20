@@ -103,7 +103,7 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <button type="submit" className="w-full bg-violet-400">
+              <button type="submit" className="w-full bg-violet-400 h-10">
                 Login
               </button>
               <Button type="button" variant="outline" className="w-full">

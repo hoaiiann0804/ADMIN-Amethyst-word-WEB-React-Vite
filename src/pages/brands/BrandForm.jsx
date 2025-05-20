@@ -1,23 +1,25 @@
-import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/Button";
+import { Checkbox } from "@/components/ui/Checkbox";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/Dialog";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
-import { Button } from "@/components/ui/Button";
-import { Checkbox } from "@/components/ui/Checkbox";
+import { useEffect, useState } from "react";
+import { addBrand, updateBrand } from "../../services/BrandService";
+import { uploadImage } from "../../services/UploadService";
 
 const BrandForm = ({ isOpen, onClose, onSave, brand }) => {
   const [formData, setFormData] = useState({
-    name: "",
-    slug: "",
+    branD_NAME: "",
+    image: "",
     description: "",
     productsCount: 0,
-    featured: false,
+    status: false,
   });
 
   // Populate form when editing
@@ -26,11 +28,10 @@ const BrandForm = ({ isOpen, onClose, onSave, brand }) => {
       setFormData(brand);
     } else {
       setFormData({
-        name: "",
-        slug: "",
+        branD_NAME: "",
+        image: "",
         description: "",
-        productsCount: 0,
-        featured: false,
+        status: false,
       });
     }
   }, [brand]);
@@ -44,21 +45,51 @@ const BrandForm = ({ isOpen, onClose, onSave, brand }) => {
     }));
   };
 
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({ ...prev, imagePreview: reader.result }));
+      };
+      reader.readAsDataURL(file);
+
+      try {
+        const res = await uploadImage(file);
+        setFormData((prev) => ({ ...prev, image: res.imageUrl }));
+      } catch (err) {
+        console.error('Upload thất bại:', err);
+      }
+    }
+  };
+
   // Handle checkbox change
   const handleCheckboxChange = (checked) => {
-    setFormData((prev) => ({ ...prev, featured: checked }));
+    setFormData((prev) => ({ ...prev, status: checked }));
   };
 
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Basic validation
-    if (!formData.name || !formData.slug) {
-      alert("Tên và slug không được để trống!");
+
+    if (!formData.branD_NAME) {
+      alert("Tên không được để trống!");
       return;
     }
-    onSave(formData);
+
+    onSave(formData); // gọi callback cho parent xử lý lưu
+
+    if (brand) {
+      // đang edit
+      updateBrand(formData)
+    } else {
+      // đang thêm mới
+      addBrand(formData);
+    }
+
+    onClose();
   };
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -76,21 +107,21 @@ const BrandForm = ({ isOpen, onClose, onSave, brand }) => {
               </Label>
               <Input
                 id="name"
-                name="name"
-                value={formData.name}
+                name="branD_NAME"
+                value={formData.branD_NAME}
                 onChange={handleChange}
                 className="col-span-3"
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="slug" className="text-right">
-                Slug
+                Ảnh
               </Label>
               <Input
-                id="slug"
-                name="slug"
-                value={formData.slug}
-                onChange={handleChange}
+                id="image"
+                name="image"
+                type="file"
+                onChange={handleFileChange}
                 className="col-span-3"
               />
             </div>
@@ -107,22 +138,9 @@ const BrandForm = ({ isOpen, onClose, onSave, brand }) => {
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="productsCount" className="text-right">
-                Số sản phẩm
-              </Label>
-              <Input
-                id="productsCount"
-                name="productsCount"
-                type="number"
-                value={formData.productsCount}
-                onChange={handleChange}
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">Nổi bật</Label>
               <Checkbox
-                checked={formData.featured}
+                checked={formData.status}
                 onCheckedChange={handleCheckboxChange}
                 className="col-span-3"
               />
