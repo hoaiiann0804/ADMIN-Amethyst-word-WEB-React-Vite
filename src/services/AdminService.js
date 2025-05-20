@@ -1,7 +1,7 @@
 // services/auth.js
 import axios from 'axios';
 
-const API = 'http://localhost:5000/api';
+const API = 'https://localhost:5000/api';
 export const login = async (email, password) => {
     try {
       const response = await axios.post(`${API}/Admin/Login`, {
@@ -17,5 +17,6 @@ export const login = async (email, password) => {
       
       return response.data;
     } catch (error) {
-      throw error;    }
-  };
+      return error.response ? error.response.data : { message: 'An error occurred' };
+    }
+};
