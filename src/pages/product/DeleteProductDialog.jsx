@@ -1,53 +1,63 @@
 import React from "react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/AlertDiaLog";
+import { Button } from "@/components/ui/Button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/DiaLog";
 import { Trash2 } from "lucide-react";
+import useToast from "../../hooks/use-toast";
 
-export const DeleteProductDialog = ({
-  open,
-  onOpenChange,
-  product,
-  onConfirm,
-}) => {
-  if (!product) {
-    return null;
+const DeleteProductDialog = ({ isOpen, onClose, item, onConfirm, itemType }) => {
+  const { toast } = useToast();
+
+  const handleConfirm = () => {
+    if (!item) return; // Prevent action if item is null
+    onConfirm();
+    toast({
+      title: `Xóa ${itemType} thành công`,
+      description: `${itemType} "${itemType === "Sản phẩm" ? item.producT_NAME : item.categorY_NAME}" đã được xóa.`,
+    });
+  };
+
+  // If item is null, show a fallback message
+  if (!item) {
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Trash2 className="h-5 w-5" />
+              Xác nhận xóa {itemType.toLowerCase()}
+            </DialogTitle>
+            <DialogDescription>
+              Không tìm thấy {itemType.toLowerCase()} để xóa. Vui lòng thử lại.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onClose}>Hủy</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
             <Trash2 className="h-5 w-5" />
-            <span>Xác nhận xóa sản phẩm</span>
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            <span>
-              Bạn có chắc chắn muốn xóa sản phẩm </span>
-            <strong>"{product.name}"</strong>
-            <span> không? Hành động này không thể hoàn tác.</span>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel className="bg-white hover:bg-red-400">
-            <span>Hủy</span>
-          </AlertDialogCancel>
-          <AlertDialogAction 
-            onClick={onConfirm}
-            className="bg-white hover:bg-yellow-400 "
-          >
-            <span>Xóa</span>
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+            Xác nhận xóa {itemType.toLowerCase()}
+          </DialogTitle>
+          <DialogDescription>
+            Bạn có chắc chắn muốn xóa {itemType.toLowerCase()}{" "}
+            <strong>"{itemType === "Sản phẩm" ? item.producT_NAME : item.categorY_NAME}"</strong> không? Hành động này không thể hoàn tác.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button type="button" variant="outline" onClick={onClose}>Hủy</Button>
+          <Button type="button" onClick={handleConfirm}>Xóa</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
+
+export default DeleteProductDialog;

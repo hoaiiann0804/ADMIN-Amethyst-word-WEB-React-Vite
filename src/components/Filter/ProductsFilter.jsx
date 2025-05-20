@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-export const ProductsFilter = ({
+ const ProductsFilter = ({
   searchTerm,
   setSearchTerm,
   viewMode,
@@ -50,3 +50,4 @@ export const ProductsFilter = ({
     </Card>
   );
 };
+export default ProductsFilter;
