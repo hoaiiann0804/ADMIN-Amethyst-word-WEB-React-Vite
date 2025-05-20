@@ -17,26 +17,31 @@ import {
   TabsTrigger,
 } from "@/components/ui/Tabs";
 import { PlusCircle } from "lucide-react";
-import { ProductForm } from "@/pages/product/ProductForm";
-import { DeleteProductDialog } from "@/pages/product/DeleteProductDialog";
-import { ProductsFilter } from "@/pages/product/ProductsFilter";
-import { ProductsGrid } from "@/pages/product/ProductsGrid";
-import { ProductsList } from "@/pages/product/ProductsList";
-import { ProductsPagination } from "@/pages/product/ProductsPagination";
+import  ProductForm from "./ProductForm";
+import ImageForm from "./ImageForm";
+import  DeleteProductDialog from "@/pages/product/DeleteProductDialog";
+import  ProductTable  from "./ProductTable";
+import  ProductsPagination  from "@/pages/product/ProductsPagination";
+import { ProductsFilter } from "./ProductsFilter";
+import { ProductsGrid } from "./ProductsGrid";
+// import { addProduct, addImage } from "../../services/ProductService";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("grid");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedBrandId, setSelectedBrandId] = useState("");
   const [productToEdit, setProductToEdit] = useState(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
+  const [newProductId, setNewProductId] = useState(null);
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
   const { toast } = useToast();
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(10); 
-  
+  const [productsPerPage] = useState(10);
+
   const categories = [
     { id: 1, name: "Áo Nam", products: 42, created: "15/04/2025", status: "Hiển thị", isActive: true },
     { id: 2, name: "Quần Nam", products: 38, created: "16/04/2025", status: "Hiển thị", isActive: true },
@@ -48,218 +53,46 @@ const Products = () => {
     { id: 8, name: "Túi Xách", products: 18, created: "01/05/2025", status: "Hiển thị", isActive: true },
   ];
 
+  const brands = [
+    { id: 1, name: "Nike" },
+    { id: 2, name: "Adidas" },
+    { id: 3, name: "Gucci" },
+    { id: 4, name: "Zara" },
+  ];
+
   const [products, setProducts] = useState([
     {
       id: 1,
-      name: "Áo Sơ Mi Nam Trắng",
+      producT_NAME: "Áo Sơ Mi Nam Trắng",
       image: "/placeholder.svg",
-      price: 450000,
-      category: "Áo Nam",
+      producT_PRICE: 450000,
+      categorY_ID: 1,
       stock: 25,
-      status: "Còn hàng",
-      description: "Áo sơ mi nam chất liệu cotton thoáng mát, phù hợp với nhiều dịp khác nhau."
+      producT_STATUS: "ACTIVE",
+      producT_DESCRIPTION: "Áo sơ mi nam chất liệu cotton thoáng mát, phù hợp với nhiều dịp khác nhau.",
+      producT_DETAIL: "Cotton, size M-XXL",
+      branD_ID: 1,
     },
     {
       id: 2,
-      name: "Quần Jeans Slim Fit",
+      producT_NAME: "Quần Jeans Nam Đen",
       image: "/placeholder.svg",
-      price: 650000,
-      category: "Quần Nam",
-      stock: 18,
-      status: "Còn hàng",
-      description: "Quần jeans nam ôm dáng, co giãn tốt, dễ kết hợp với nhiều loại áo."
-    },
-    {
-      id: 3,
-      name: "Áo Thun Nữ Cổ Tròn",
-      image: "/placeholder.svg",
-      price: 300000,
-      category: "Áo Nữ",
-      stock: 32,
-      status: "Còn hàng",
-      description: "Áo thun nữ chất liệu cotton, kiểu dáng đơn giản, dễ phối đồ."
-    },
-    {
-      id: 4,
-      name: "Đầm Suông Dáng Dài",
-      image: "/placeholder.svg",
-      price: 850000,
-      category: "Váy Nữ",
-      stock: 10,
-      status: "Còn hàng",
-      description: "Đầm suông dài thoải mái, phong cách thanh lịch, thích hợp cho nhiều dịp."
-    },
-    {
-      id: 5,
-      name: "Áo Khoác Denim Unisex",
-      image: "/placeholder.svg",
-      price: 750000,
-      category: "Áo Khoác",
+      producT_PRICE: 600000,
+      categorY_ID: 2,
       stock: 15,
-      status: "Còn hàng",
-      description: "Áo khoác denim phù hợp cả nam và nữ, thiết kế hiện đại, bền đẹp theo thời gian."
+      producT_STATUS: "ACTIVE",
+      producT_DESCRIPTION: "Quần jeans nam phong cách hiện đại, chất liệu bền đẹp.",
+      producT_DETAIL: "Denim, size 28-34",
+      branD_ID: 2,
     },
-    {
-      id: 6,
-      name: "Giày Thể Thao Nam",
-      image: "/placeholder.svg",
-      price: 950000,
-      category: "Giày Nam",
-      stock: 8,
-      status: "Còn hàng",
-      description: "Giày thể thao nam đế cao su, nhẹ, êm ái, thích hợp đi thường ngày."
-    },
-    {
-      id: 7,
-      name: "Túi Xách Thời Trang",
-      image: "/placeholder.svg",
-      price: 1250000,
-      category: "Phụ Kiện",
-      stock: 5,
-      status: "Còn hàng",
-      description: "Túi xách nữ chất liệu da cao cấp, thiết kế sang trọng, nhiều ngăn tiện dụng."
-    },
-    {
-      id: 8,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 9,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 10,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 11,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 12,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 13,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 14,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 15,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 16,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 17,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 18,
-      name: "Quần Tây Công Sở",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 19,
-      name: "Quần Tây Công Sở 2",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-    {
-      id: 20,
-      name: "Quần Tây Công Sở 3",
-      image: "/placeholder.svg",
-      price: 550000,
-      category: "Quần Nam",
-      stock: 0,
-      status: "Hết hàng",
-      description: "Quần tây nam công sở, thiết kế vừa vặn, chất liệu cao cấp, dễ phối đồ."
-    },
-
-
   ]);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, selectedCategory, priceRange.min, priceRange.max]);
-  
+  }, [searchTerm, selectedCategory, selectedBrandId, priceRange.min, priceRange.max]);
+
   const handleApplyFilter = (filterOptions) => {
     const { min, max } = filterOptions.priceRange;
-    
     if (min !== "" && max !== "" && Number(min) > Number(max)) {
       toast({
         title: "Lỗi",
@@ -268,10 +101,9 @@ const Products = () => {
       });
       return;
     }
-    
-    setSelectedCategory(filterOptions.category);
+    setSelectedCategory(filterOptions.categorY_ID);
+    setSelectedBrandId(filterOptions.branD_ID);
     setPriceRange(filterOptions.priceRange);
-    
     toast({
       title: "Đã áp dụng bộ lọc",
       description: "Các tiêu chí lọc đã được cập nhật.",
@@ -279,38 +111,89 @@ const Products = () => {
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesCategory = selectedCategory === "" || product.category === selectedCategory;
-    
+    const matchesSearch = product.producT_NAME.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      categories.find(c => c.id === product.categorY_ID)?.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "" || product.categorY_ID === selectedCategory;
+    const matchesBrand = selectedBrandId === "" || product.branD_ID === selectedBrandId;
     const matchesPrice = (
-      (priceRange.min === "" || product.price >= Number(priceRange.min)) &&
-      (priceRange.max === "" || product.price <= Number(priceRange.max))
+      (priceRange.min === "" || product.producT_PRICE >= Number(priceRange.min)) &&
+      (priceRange.max === "" || product.producT_PRICE <= Number(priceRange.max))
     );
-    
-    return matchesSearch && matchesCategory && matchesPrice;
+    return matchesSearch && matchesCategory && matchesBrand && matchesPrice;
   });
-
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN').format(price) + "đ";
   };
 
-  const handleAddProduct = (newProduct) => {
-    const highestId = products.reduce((max, product) => Math.max(max, product.id), 0);
-    const productToAdd = {
-      id: highestId + 1,
-      ...newProduct,
-      status: newProduct.stock > 0 ? "Còn hàng" : "Hết hàng"
-    };
-    
-    setProducts([...products, productToAdd]);
-    setIsAddDialogOpen(false);
-    toast({
-      title: "Thêm sản phẩm thành công",
-      description: `Đã thêm "${newProduct.name}" vào danh sách sản phẩm.`
-    });
+  const handleAddProduct = async (newProduct) => {
+    try {
+      const response = await addProduct({
+        producT_NAME: newProduct.producT_NAME,
+        producT_PRICE: newProduct.producT_PRICE,
+        producT_DETAIL: newProduct.producT_DETAIL,
+        producT_DESCRIPTION: newProduct.producT_DESCRIPTION,
+        branD_ID: newProduct.branD_ID,
+        categorY_ID: newProduct.categorY_ID,
+        producT_STATUS: newProduct.producT_STATUS,
+      });
+      if (response.code === 201) {
+        const highestId = products.reduce((max, product) => Math.max(max, product.id), 0);
+        const productToAdd = {
+          id: highestId + 1,
+          ...newProduct,
+          stock: 0,
+          image: "/placeholder.svg", // Default image
+        };
+        setProducts([...products, productToAdd]);
+        setIsAddDialogOpen(false);
+        setNewProductId(response.data.producT_ID);
+        setIsImageDialogOpen(true); // Open ImageForm after success
+        toast({
+          title: "Thêm sản phẩm thành công",
+          description: `Đã thêm "${newProduct.producT_NAME}" vào danh sách sản phẩm.`,
+        });
+      } else {
+        throw new Error("Thêm sản phẩm thất bại");
+      }
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: "Thêm sản phẩm thất bại. Vui lòng thử lại.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleAddImage = async (imageData) => {
+    try {
+      const response = await addImage({
+        imagE_NAME: imageData.imagE_NAME,
+        producT_ID: imageData.producT_ID,
+        imagE_STATUS: imageData.imagE_STATUS,
+      });
+      if (response.code === 201) {
+        // Update product with new image
+        setProducts(products.map(product =>
+          product.id === imageData.producT_ID
+            ? { ...product, image: imageData.imagE_NAME }
+            : product
+        ));
+        setIsImageDialogOpen(false);
+        toast({
+          title: "Thêm hình ảnh thành công",
+          description: "Hình ảnh đã được thêm cho sản phẩm.",
+        });
+      } else {
+        throw new Error("Thêm hình ảnh thất bại");
+      }
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: "Thêm hình ảnh thất bại. Vui lòng thử lại.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleUpdateProduct = (updatedProduct) => {
@@ -318,34 +201,39 @@ const Products = () => {
       if (product.id === updatedProduct.id) {
         return {
           ...updatedProduct,
-          status: updatedProduct.stock > 0 ? "Còn hàng" : "Hết hàng"
+          stock: updatedProduct.stock || 0,
+          image: updatedProduct.image || product.image,
         };
       }
       return product;
     });
-    
     setProducts(updatedProducts);
     setProductToEdit(null);
     toast({
       title: "Cập nhật thành công",
-      description: `Sản phẩm "${updatedProduct.name}" đã được cập nhật.`
+      description: `Sản phẩm "${updatedProduct.producT_NAME}" đã được cập nhật.`,
     });
   };
+
   const handleDeleteProduct = (id) => {
     setProducts(products.filter(product => product.id !== id));
     setIsDeleteDialogOpen(false);
     setProductToDelete(null);
     toast({
       title: "Xóa sản phẩm thành công",
-      description: "Sản phẩm đã được xóa khỏi danh sách."
+      description: "Sản phẩm đã được xóa khỏi danh sách.",
     });
   };
+
   const handleEditProduct = (product) => {
     setProductToEdit(product);
   };
+
   const handleDeleteClick = (product) => {
-    setProductToDelete(product);
-    setIsDeleteDialogOpen(true);
+    if (product) {
+      setProductToDelete(product);
+      setIsDeleteDialogOpen(true);
+    }
   };
 
   const filterProductsByStatus = (products, status) => {
@@ -353,10 +241,11 @@ const Products = () => {
       return products.filter(p => p.stock > 0);
     } else if (status === "out-of-stock") {
       return products.filter(p => p.stock === 0);
+    } else if (status === "draft") {
+      return products.filter(p => p.producT_STATUS === "DRAFT");
     }
     return products;
   };
-
 
   const getProductsForCurrentPage = (products) => {
     const indexOfLastProduct = currentPage * productsPerPage;
@@ -364,7 +253,6 @@ const Products = () => {
     return products.slice(indexOfFirstProduct, indexOfLastProduct);
   };
 
-  // Hiển thị thông báo không có sản phẩm nào
   const renderEmptyState = () => (
     <div className="p-8 text-center bg-white rounded-lg shadow-sm border border-gray-100">
       <div className="mx-auto w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
@@ -381,6 +269,7 @@ const Products = () => {
       <Button onClick={() => {
         setSearchTerm("");
         setSelectedCategory("");
+        setSelectedBrandId("");
         setPriceRange({ min: "", max: "" });
       }}>
         Xóa bộ lọc
@@ -390,142 +279,153 @@ const Products = () => {
 
   return (
     <React.Fragment>
-    <DashboardLayout>
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Sản Phẩm</h1>
-            <p className="text-gray-500">Quản lý sản phẩm thời trang của bạn</p>
+      <DashboardLayout>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">Sản Phẩm</h1>
+              <p className="text-gray-500">Quản lý sản phẩm thời trang của bạn</p>
+            </div>
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="flex items-center gap-2">
+                  <PlusCircle size={18} />
+                  <span>Thêm Sản Phẩm</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Thêm Sản Phẩm Mới</DialogTitle>
+                  <DialogDescription>
+                    Điền thông tin chi tiết về sản phẩm mới bên dưới.
+                  </DialogDescription>
+                </DialogHeader>
+                <ProductForm
+                  isOpen={isAddDialogOpen}
+                  onClose={() => setIsAddDialogOpen(false)}
+                  onSave={handleAddProduct}
+                  categories={categories}
+                  brands={brands}
+                />
+              </DialogContent>
+            </Dialog>
           </div>
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="flex items-center gap-2">
-                <PlusCircle size={18} />
-                <span>Thêm Sản Phẩm</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
-              <DialogHeader>
-                <DialogTitle>Thêm Sản Phẩm Mới</DialogTitle>
-                <DialogDescription>
-                  Điền thông tin chi tiết về sản phẩm mới bên dưới.
-                </DialogDescription>
-              </DialogHeader>
-              <ProductForm onSubmit={handleAddProduct} categories={categories.map(c => c.name)} />
-            </DialogContent>
-          </Dialog>
+
+          <Tabs defaultValue="all">
+            <TabsList className="bg-white border border-gray-200">
+              <TabsTrigger value="all"><span>Tất cả</span></TabsTrigger>
+              <TabsTrigger value="in-stock"><span>Còn hàng</span></TabsTrigger>
+              <TabsTrigger value="out-of-stock"><span>Hết hàng</span></TabsTrigger>
+              <TabsTrigger value="draft"><span>Bản nháp</span></TabsTrigger>
+            </TabsList>
+            {["all", "in-stock", "out-of-stock", "draft"].map((tab) => {
+              const statusFilteredProducts = filterProductsByStatus(filteredProducts, tab);
+              const displayProducts = getProductsForCurrentPage(statusFilteredProducts);
+              const totalPages = Math.ceil(statusFilteredProducts.length / productsPerPage);
+              return (
+                <TabsContent key={tab} value={tab}>
+                  <div className="space-y-4">
+                    <ProductsFilter
+                      searchTerm={searchTerm}
+                      setSearchTerm={setSearchTerm}
+                      viewMode={viewMode}
+                      setViewMode={setViewMode}
+                      categories={categories}
+                      selectedCategoryId={selectedCategory}
+                      setSelectedCategoryId={setSelectedCategory}
+                      selectedBrandId={selectedBrandId}
+                      setSelectedBrandId={setSelectedBrandId}
+                      onApplyFilter={handleApplyFilter}
+                      priceRange={priceRange}
+                      setPriceRange={setPriceRange}
+                      brands={brands}
+                    />
+                    {statusFilteredProducts.length > 0 ? (
+                      <>
+                        {viewMode === "grid" ? (
+                          <ProductsGrid
+                            products={displayProducts}
+                            formatPrice={formatPrice}
+                            onEdit={handleEditProduct}
+                            onDelete={handleDeleteClick}
+                            categories={categories}
+                          />
+                        ) : (
+                          <ProductTable
+                            items={displayProducts}
+                            itemType="Sản phẩm"
+                            onEdit={handleEditProduct}
+                            onDelete={handleDeleteClick}
+                            categories={categories}
+                            formatPrice={formatPrice}
+                          />
+                        )}
+                        <ProductsPagination
+                          currentPage={currentPage}
+                          setCurrentPage={setCurrentPage}
+                          totalPages={totalPages}
+                          productsPerPage={productsPerPage}
+                          totalProducts={statusFilteredProducts.length}
+                        />
+                      </>
+                    ) : (
+                      renderEmptyState()
+                    )}
+                  </div>
+                </TabsContent>
+              );
+            })}
+          </Tabs>
         </div>
 
-        {/* Tabs */}
-        <Tabs defaultValue="all">
-          <TabsList className="bg-white border border-gray-200">
-            <TabsTrigger value="all">
-              <span>Tất cả</span>
-            </TabsTrigger>
-            <TabsTrigger value="in-stock">
-              <span>Còn hàng</span>
-            </TabsTrigger>
-            <TabsTrigger value="out-of-stock">
-              <span>Hết hàng</span>
-            </TabsTrigger>
-            <TabsTrigger value="draft">
-              <span>Bản nháp</span>
-            </TabsTrigger>
-          </TabsList>
-          
-          {/* Nội dung các tab */}
-          {["all", "in-stock", "out-of-stock"].map((tab) => {
-            const statusFilteredProducts = filterProductsByStatus(filteredProducts, tab);
-            const displayProducts = getProductsForCurrentPage(statusFilteredProducts);
-            const totalPages = Math.ceil(statusFilteredProducts.length / productsPerPage);
-            
-            return (
-              <TabsContent key={tab} value={tab}>
-                <div className="space-y-4">
-                  <ProductsFilter 
-                    searchTerm={searchTerm} 
-                    setSearchTerm={setSearchTerm}
-                    viewMode={viewMode}
-                    setViewMode={setViewMode}
-                    categories={categories}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
-                    onApplyFilter={handleApplyFilter} 
-                    priceRange={priceRange}
-                    setPriceRange={setPriceRange}
-                  />
+        <Dialog open={!!productToEdit} onOpenChange={(open) => !open && setProductToEdit(null)}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Chỉnh Sửa Sản Phẩm</DialogTitle>
+              <DialogDescription>
+                Cập nhật thông tin cho sản phẩm này.
+              </DialogDescription>
+            </DialogHeader>
+            {productToEdit && (
+              <ProductForm
+                isOpen={!!productToEdit}
+                onClose={() => setProductToEdit(null)}
+                onSave={handleUpdateProduct}
+                product={productToEdit}
+                categories={categories}
+                brands={brands}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
 
-                  {statusFilteredProducts.length > 0 ? (
-                    <>
-                      {viewMode === "grid" ? (
-                        <ProductsGrid 
-                          products={displayProducts}
-                          formatPrice={formatPrice}
-                          onEdit={handleEditProduct}
-                          onDelete={handleDeleteClick}
-                        />
-                      ) : (
-                        <ProductsList
-                          products={displayProducts}
-                          formatPrice={formatPrice}
-                          onEdit={handleEditProduct}
-                          onDelete={handleDeleteClick}
-                        />
-                      )}
-                      
-                      <ProductsPagination 
-                        currentPage={currentPage}
-                        setCurrentPage={setCurrentPage}
-                        totalPages={totalPages}
-                        productsPerPage={productsPerPage}
-                        totalProducts={statusFilteredProducts.length}
-                      />
-                    </>
-                  ) : (
-                    renderEmptyState()
-                  )}
-                </div>
-              </TabsContent>
-            );
-          })}
-          
-          <TabsContent value="draft">
-            <div className="p-4 text-center text-gray-500">
-              <p>Không có sản phẩm nào ở trạng thái bản nháp.</p>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-
-      {/* Dialog sửa sản phẩm */}
-      <Dialog open={!!productToEdit} onOpenChange={(open) => !open && setProductToEdit(null)}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Chỉnh Sửa Sản Phẩm</DialogTitle>
-            <DialogDescription>
-              Cập nhật thông tin cho sản phẩm này.
-            </DialogDescription>
-          </DialogHeader>
-          {productToEdit && (
-            <ProductForm 
-              initialData={productToEdit} 
-              onSubmit={handleUpdateProduct} 
-              categories={categories.map(c => c.name)}
+        <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Thêm Hình Ảnh</DialogTitle>
+              <DialogDescription>
+                Thêm hình ảnh cho sản phẩm vừa tạo.
+              </DialogDescription>
+            </DialogHeader>
+            <ImageForm
+              isOpen={isImageDialogOpen}
+              onClose={() => setIsImageDialogOpen(false)}
+              onSave={handleAddImage}
+              productId={newProductId}
             />
-          )}
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
 
-      {/* Dialog xóa sản phẩm */}
-      <DeleteProductDialog 
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-        product={productToDelete}
-        onConfirm={() => productToDelete && handleDeleteProduct(productToDelete.id)}
-      />
-    </DashboardLayout>
-  </React.Fragment>
-);
+        <DeleteProductDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={() => setIsDeleteDialogOpen(false)}
+          item={productToDelete}
+          onConfirm={() => productToDelete && handleDeleteProduct(productToDelete.id)}
+          itemType="Sản phẩm"
+        />
+      </DashboardLayout>
+    </React.Fragment>
+  );
 };
 
 export default Products;
