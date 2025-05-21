@@ -19,12 +19,22 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
     image: "",
     description: "",
     featured: false,
+    image: "",
+    imagePreview: "",
   });
 
-  // Populate form when editing
+  // Đồng bộ formData khi chỉnh sửa
   useEffect(() => {
     if (category) {
-      setFormData(category);
+      setFormData({
+        name: category.name || "",
+        slug: category.slug || "",
+        description: category.description || "",
+        productsCount: category.productsCount || 0,
+        featured: category.featured || false,
+        image: category.image || "",
+        imagePreview: category.image || "",
+      });
     } else {
       setFormData({
         categorY_NAME: "",
@@ -62,7 +72,7 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
     }));
   };
 
-  // Handle checkbox change
+  // Xử lý checkbox thay đổi
   const handleCheckboxChange = (checked) => {
     setFormData((prev) => ({ ...prev, featured: checked }));
   };
@@ -87,16 +97,12 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>
-            {category ? "Chỉnh sửa danh mục" : "Thêm danh mục"}
-          </DialogTitle>
+          <DialogTitle>{category ? "Chỉnh sửa danh mục" : "Thêm danh mục"}</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Tên
-              </Label>
+              <Label htmlFor="name" className="text-right">Tên</Label>
               <Input
                 id="categorY_NAME"
                 name="categorY_NAME"
@@ -105,10 +111,9 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
                 className="col-span-3"
               />
             </div>
+
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="description" className="text-right">
-                Mô tả
-              </Label>
+              <Label htmlFor="description" className="text-right">Mô tả</Label>
               <Input
                 id="description"
                 name="description"
@@ -117,6 +122,7 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
                 className="col-span-3"
               />
             </div>
+
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="productsCount" className="text-right">
                 Ảnh danh mục
@@ -129,6 +135,7 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
                 className="col-span-3"
               />
             </div>
+
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">Nổi bật</Label>
               <Checkbox
@@ -137,11 +144,35 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
                 className="col-span-3"
               />
             </div>
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">Ảnh danh mục</Label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="col-span-3"
+              />
+            </div>
+            {formData.imagePreview && (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label className="text-right">Xem trước ảnh</Label>
+                <img src={formData.imagePreview} alt="Preview" className="col-span-3 max-h-32 object-contain" />
+              </div>
+            )}
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">Trạng thái</Label>
+              <Switch
+                checked={formData.featured}
+                onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, featured: checked }))}
+                className="col-span-3"
+              />
+            </div>
           </div>
+
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
-              Hủy
-            </Button>
+            <Button type="button" variant="outline" onClick={onClose}>Hủy</Button>
             <Button type="submit">Lưu</Button>
           </DialogFooter>
         </form>

@@ -29,10 +29,13 @@ const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("grid");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedBrandId, setSelectedBrandId] = useState("");
   const [productToEdit, setProductToEdit] = useState(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
+  const [newProductId, setNewProductId] = useState(null);
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
   const { toast } = useToast();
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,6 +52,13 @@ const Products = () => {
     { id: 6, name: "Giày Nam", products: 31, created: "22/04/2025", status: "Hiển thị", isActive: true },
     { id: 7, name: "Giày Nữ", products: 29, created: "24/04/2025", status: "Ẩn", isActive: false },
     { id: 8, name: "Túi Xách", products: 18, created: "01/05/2025", status: "Hiển thị", isActive: true },
+  ];
+
+  const brands = [
+    { id: 1, name: "Nike" },
+    { id: 2, name: "Adidas" },
+    { id: 3, name: "Gucci" },
+    { id: 4, name: "Zara" },
   ];
 
   const [products, setProducts] = useState([]);
@@ -71,7 +81,6 @@ const Products = () => {
   
   const handleApplyFilter = (filterOptions) => {
     const { min, max } = filterOptions.priceRange;
-    
     if (min !== "" && max !== "" && Number(min) > Number(max)) {
       toast({
         title: "Lỗi",
@@ -80,10 +89,9 @@ const Products = () => {
       });
       return;
     }
-    
-    setSelectedCategory(filterOptions.category);
+    setSelectedCategory(filterOptions.categorY_ID);
+    setSelectedBrandId(filterOptions.branD_ID);
     setPriceRange(filterOptions.priceRange);
-    
     toast({
       title: "Đã áp dụng bộ lọc",
       description: "Các tiêu chí lọc đã được cập nhật.",
@@ -100,30 +108,84 @@ const Products = () => {
     const matchesPrice = (
       (priceRange.min === "" || product.producT_PRICE >= Number(priceRange.min)) &&
       (priceRange.max === "" || product.producT_PRICE <= Number(priceRange.max))
+      (priceRange.min === "" || product.producT_PRICE >= Number(priceRange.min)) &&
+      (priceRange.max === "" || product.producT_PRICE <= Number(priceRange.max))
     );
-    
-    return matchesSearch && matchesCategory && matchesPrice;
+    return matchesSearch && matchesCategory && matchesBrand && matchesPrice;
   });
-
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN').format(price) + "đ";
   };
 
-  const handleAddProduct = (newProduct) => {
-    const highestId = products.reduce((max, product) => Math.max(max, product.id), 0);
-    const productToAdd = {
-      id: highestId + 1,
-      ...newProduct,
-      status: newProduct.stock > 0 ? "Còn hàng" : "Hết hàng"
-    };
-    
-    setProducts([...products, productToAdd]);
-    setIsAddDialogOpen(false);
-    toast({
-      title: "Thêm sản phẩm thành công",
-      description: `Đã thêm "${newProduct.name}" vào danh sách sản phẩm.`
-    });
+  const handleAddProduct = async (newProduct) => {
+    try {
+      const response = await addProduct({
+        producT_NAME: newProduct.producT_NAME,
+        producT_PRICE: newProduct.producT_PRICE,
+        producT_DETAIL: newProduct.producT_DETAIL,
+        producT_DESCRIPTION: newProduct.producT_DESCRIPTION,
+        branD_ID: newProduct.branD_ID,
+        categorY_ID: newProduct.categorY_ID,
+        producT_STATUS: newProduct.producT_STATUS,
+      });
+      if (response.code === 201) {
+        const highestId = products.reduce((max, product) => Math.max(max, product.id), 0);
+        const productToAdd = {
+          id: highestId + 1,
+          ...newProduct,
+          stock: 0,
+          image: "/placeholder.svg", // Default image
+        };
+        setProducts([...products, productToAdd]);
+        setIsAddDialogOpen(false);
+        setNewProductId(response.data.producT_ID);
+        setIsImageDialogOpen(true); // Open ImageForm after success
+        toast({
+          title: "Thêm sản phẩm thành công",
+          description: `Đã thêm "${newProduct.producT_NAME}" vào danh sách sản phẩm.`,
+        });
+      } else {
+        throw new Error("Thêm sản phẩm thất bại");
+      }
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: "Thêm sản phẩm thất bại. Vui lòng thử lại.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleAddImage = async (imageData) => {
+    try {
+      const response = await addImage({
+        imagE_NAME: imageData.imagE_NAME,
+        producT_ID: imageData.producT_ID,
+        imagE_STATUS: imageData.imagE_STATUS,
+      });
+      if (response.code === 201) {
+        // Update product with new image
+        setProducts(products.map(product =>
+          product.id === imageData.producT_ID
+            ? { ...product, image: imageData.imagE_NAME }
+            : product
+        ));
+        setIsImageDialogOpen(false);
+        toast({
+          title: "Thêm hình ảnh thành công",
+          description: "Hình ảnh đã được thêm cho sản phẩm.",
+        });
+      } else {
+        throw new Error("Thêm hình ảnh thất bại");
+      }
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: "Thêm hình ảnh thất bại. Vui lòng thử lại.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleUpdateProduct = (updatedProduct) => {
@@ -131,19 +193,20 @@ const Products = () => {
       if (product.id === updatedProduct.id) {
         return {
           ...updatedProduct,
-          status: updatedProduct.stock > 0 ? "Còn hàng" : "Hết hàng"
+          stock: updatedProduct.stock || 0,
+          image: updatedProduct.image || product.image,
         };
       }
       return product;
     });
-    
     setProducts(updatedProducts);
     setProductToEdit(null);
     toast({
       title: "Cập nhật thành công",
-      description: `Sản phẩm "${updatedProduct.name}" đã được cập nhật.`
+      description: `Sản phẩm "${updatedProduct.producT_NAME}" đã được cập nhật.`,
     });
   };
+
 
   const handleDeleteProduct = (id) => {
     setProducts(products.filter(product => product.id !== id));
@@ -151,16 +214,20 @@ const Products = () => {
     setProductToDelete(null);
     toast({
       title: "Xóa sản phẩm thành công",
-      description: "Sản phẩm đã được xóa khỏi danh sách."
+      description: "Sản phẩm đã được xóa khỏi danh sách.",
     });
   };
+
   const handleEditProduct = (product) => {
     setProductToEdit(product);
   };
 
+
   const handleDeleteClick = (product) => {
-    setProductToDelete(product);
-    setIsDeleteDialogOpen(true);
+    if (product) {
+      setProductToDelete(product);
+      setIsDeleteDialogOpen(true);
+    }
   };
 
   const filterProductsByStatus = (products, status) => {
@@ -168,10 +235,11 @@ const Products = () => {
       return products.filter(p => p.stock > 0);
     } else if (status === "out-of-stock") {
       return products.filter(p => p.stock === 0);
+    } else if (status === "draft") {
+      return products.filter(p => p.producT_STATUS === "DRAFT");
     }
     return products;
   };
-
 
   const getProductsForCurrentPage = (products) => {
     const indexOfLastProduct = currentPage * productsPerPage;
@@ -179,7 +247,6 @@ const Products = () => {
     return products.slice(indexOfFirstProduct, indexOfLastProduct);
   };
 
-  // Hiển thị thông báo không có sản phẩm nào
   const renderEmptyState = () => (
     <div className="p-8 text-center bg-white rounded-lg shadow-sm border border-gray-100">
       <div className="mx-auto w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
@@ -196,6 +263,7 @@ const Products = () => {
       <Button onClick={() => {
         setSearchTerm("");
         setSelectedCategory("");
+        setSelectedBrandId("");
         setPriceRange({ min: "", max: "" });
       }}>
         Xóa bộ lọc
@@ -205,31 +273,37 @@ const Products = () => {
 
   return (
     <React.Fragment>
-    <DashboardLayout>
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Sản Phẩm</h1>
-            <p className="text-gray-500">Quản lý sản phẩm thời trang của bạn</p>
+      <DashboardLayout>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">Sản Phẩm</h1>
+              <p className="text-gray-500">Quản lý sản phẩm thời trang của bạn</p>
+            </div>
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="flex items-center gap-2">
+                  <PlusCircle size={18} />
+                  <span>Thêm Sản Phẩm</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Thêm Sản Phẩm Mới</DialogTitle>
+                  <DialogDescription>
+                    Điền thông tin chi tiết về sản phẩm mới bên dưới.
+                  </DialogDescription>
+                </DialogHeader>
+                <ProductForm
+                  isOpen={isAddDialogOpen}
+                  onClose={() => setIsAddDialogOpen(false)}
+                  onSave={handleAddProduct}
+                  categories={categories}
+                  brands={brands}
+                />
+              </DialogContent>
+            </Dialog>
           </div>
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="flex items-center gap-2">
-                <PlusCircle size={18} />
-                <span>Thêm Sản Phẩm</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
-              <DialogHeader>
-                <DialogTitle>Thêm Sản Phẩm Mới</DialogTitle>
-                <DialogDescription>
-                  Điền thông tin chi tiết về sản phẩm mới bên dưới.
-                </DialogDescription>
-              </DialogHeader>
-              <ProductForm onSubmit={handleAddProduct} categories={categories.map(c => c.name)} />
-            </DialogContent>
-          </Dialog>
-        </div>
 
         {/* Tabs */}
         <Tabs defaultValue="all">
@@ -309,35 +383,54 @@ const Products = () => {
         </Tabs>
       </div>
 
-      {/* Dialog sửa sản phẩm */}
-      <Dialog open={!!productToEdit} onOpenChange={(open) => !open && setProductToEdit(null)}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Chỉnh Sửa Sản Phẩm</DialogTitle>
-            <DialogDescription>
-              Cập nhật thông tin cho sản phẩm này.
-            </DialogDescription>
-          </DialogHeader>
-          {productToEdit && (
-            <ProductForm 
-              initialData={productToEdit} 
-              onSubmit={handleUpdateProduct} 
-              categories={categories.map(c => c.name)}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
+        <Dialog open={!!productToEdit} onOpenChange={(open) => !open && setProductToEdit(null)}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Chỉnh Sửa Sản Phẩm</DialogTitle>
+              <DialogDescription>
+                Cập nhật thông tin cho sản phẩm này.
+              </DialogDescription>
+            </DialogHeader>
+            {productToEdit && (
+              <ProductForm
+                isOpen={!!productToEdit}
+                onClose={() => setProductToEdit(null)}
+                onSave={handleUpdateProduct}
+                product={productToEdit}
+                categories={categories}
+                brands={brands}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
 
-      {/* Dialog xóa sản phẩm */}
-      <DeleteProductDialog 
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-        product={productToDelete}
-        onConfirm={() => productToDelete && handleDeleteProduct(productToDelete.id)}
-      />
-    </DashboardLayout>
-  </React.Fragment>
-);
+        <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Thêm Hình Ảnh</DialogTitle>
+              <DialogDescription>
+                Thêm hình ảnh cho sản phẩm vừa tạo.
+              </DialogDescription>
+            </DialogHeader>
+            <ImageForm
+              isOpen={isImageDialogOpen}
+              onClose={() => setIsImageDialogOpen(false)}
+              onSave={handleAddImage}
+              productId={newProductId}
+            />
+          </DialogContent>
+        </Dialog>
+
+        <DeleteProductDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={() => setIsDeleteDialogOpen(false)}
+          item={productToDelete}
+          onConfirm={() => productToDelete && handleDeleteProduct(productToDelete.id)}
+          itemType="Sản phẩm"
+        />
+      </DashboardLayout>
+    </React.Fragment>
+  );
 };
 
 export default Products;

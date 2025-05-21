@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/Popover";
 import { Label } from "@/components/ui/Label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 
 export const ProductsFilter = ({
   searchTerm,
@@ -17,19 +17,23 @@ export const ProductsFilter = ({
   viewMode,
   setViewMode,
   categories,
-  selectedCategory,
-  setSelectedCategory,
+  selectedCategoryId,
+  setSelectedCategoryId,
+  selectedBrandId,
+  setSelectedBrandId,
   onApplyFilter,
   priceRange,
-  setPriceRange
+  setPriceRange,
+  brands,
 }) => {
   const [localPriceRange, setLocalPriceRange] = useState(priceRange);
 
   const handleApply = () => {
     if (onApplyFilter) {
       onApplyFilter({
-        category: selectedCategory,
-        priceRange: localPriceRange
+        categorY_ID: selectedCategoryId,
+        branD_ID: selectedBrandId,
+        priceRange: localPriceRange,
       });
     }
   };
@@ -50,14 +54,14 @@ export const ProductsFilter = ({
           </div>
           <div className="flex items-center gap-2">
             <Button
-              variant={viewMode === "grid" ? "default" : "outline"} 
+              variant={viewMode === "grid" ? "default" : "outline"}
               size="icon"
               onClick={() => setViewMode("grid")}
             >
               <LayoutGrid size={18} />
             </Button>
-            <Button 
-              variant={viewMode === "list" ? "default" : "outline"} 
+            <Button
+              variant={viewMode === "list" ? "default" : "outline"}
               size="icon"
               onClick={() => setViewMode("list")}
             >
@@ -77,63 +81,84 @@ export const ProductsFilter = ({
               <div className="grid gap-4">
                 <div className="space-y-2">
                   <h4 className="font-medium leading-none">Danh mục</h4>
-                  <RadioGroup 
-                    value={selectedCategory || ""}
-                    onValueChange={setSelectedCategory}
-                    className="flex flex-col space-y-1"
+                  <Select
+                    value={selectedCategoryId || "all"}
+                    onValueChange={setSelectedCategoryId}
                   >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="" id="category-all" />
-                      <Label htmlFor="category-all">Tất cả danh mục</Label>
-                    </div>
-                    {categories?.map((category) => (
-                      <div key={category.id} className="flex items-center space-x-2">
-                        <RadioGroupItem value={category.name} id={`category-${category.id}`} />
-                        <Label htmlFor={`category-${category.id}`}>{category.name}</Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Tất cả danh mục" />
+                    </SelectTrigger>
+                    <SelectContent>
+                  <SelectItem value="all">Tất cả danh mục</SelectItem>
+                  {categories?.map((category) => (
+                    <SelectItem key={category.id} value={String(category.id)}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-                
+
+                <div className="space-y-2">
+                  <h4 className="font-medium leading-none">Thương hiệu</h4>
+                  <Select
+                    value={selectedBrandId || "all"}
+                    onValueChange={setSelectedBrandId}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Tất cả thương hiệu" />
+                    </SelectTrigger>
+                    <SelectContent>
+                  <SelectItem value="all">Tất cả thương hiệu</SelectItem>
+                  {brands?.map((brand) => (
+                    <SelectItem key={brand.id} value={String(brand.id)}>
+                      {brand.name}
+                    </SelectItem>
+                  ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <div className="space-y-2">
                   <h4 className="font-medium leading-none">Khoảng giá</h4>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <Label htmlFor="minPrice">Giá tối thiểu</Label>
-                      <Input 
-                        type="number" 
-                        id="minPrice" 
-                        placeholder="0" 
+                      <Input
+                        type="number"
+                        id="minPrice"
+                        placeholder="0"
                         value={localPriceRange.min}
-                        onChange={(e) => setLocalPriceRange({...localPriceRange, min: e.target.value})}
+                        onChange={(e) => setLocalPriceRange({ ...localPriceRange, min: e.target.value })}
                       />
                     </div>
                     <div>
                       <Label htmlFor="maxPrice">Giá tối đa</Label>
-                      <Input 
-                        type="number" 
-                        id="maxPrice" 
-                        placeholder="10,000,000" 
+                      <Input
+                        type="number"
+                        id="maxPrice"
+                        placeholder="10,000,000"
                         value={localPriceRange.max}
-                        onChange={(e) => setLocalPriceRange({...localPriceRange, max: e.target.value})}
+                        onChange={(e) => setLocalPriceRange({ ...localPriceRange, max: e.target.value })}
                       />
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="flex-1"
                     onClick={() => {
-                      setSelectedCategory("");
+                      setSelectedCategoryId("");
+                      setSelectedBrandId("");
                       setLocalPriceRange({ min: "", max: "" });
                     }}
                   >
                     Đặt lại
                   </Button>
-                  <Button 
-                    className="flex-1" 
+                  <Button
+                    className="flex-1"
                     onClick={handleApply}
                   >
                     Áp dụng
