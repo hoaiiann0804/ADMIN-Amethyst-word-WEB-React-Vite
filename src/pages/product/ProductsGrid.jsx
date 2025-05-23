@@ -23,7 +23,6 @@ export const ProductsGrid = ({
               <span
                 className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                   product.producT_STATUS === "ACTIVE"
-                  product.producT_STATUS === "ACTIVE"
                     ? "bg-green-100 text-green-800"
                     : product.producT_STATUS === "DRAFT"
                     ? "bg-yellow-100 text-yellow-800"
@@ -56,7 +55,6 @@ export const ProductsGrid = ({
             <div className="text-sm text-gray-500 mb-1">{product.category}</div>
             <h3 className="font-medium text-base mb-2 truncate">{product.producT_NAME}</h3>
             <div className="flex items-center justify-between">
-              <span className="font-bold text-base">{formatPrice(product.producT_PRICE)}</span>
               <span className="font-bold text-base">{formatPrice(product.producT_PRICE)}</span>
               <span className="text-sm text-gray-500">
                 <span>Kho: </span>

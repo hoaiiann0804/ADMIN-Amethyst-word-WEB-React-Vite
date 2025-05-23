@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import Login from '../pages/authentication/Login';
 import DashboardLayout from '../components/layouts/DashboardLayout';
+import Login from '../pages/authentication/Login';
 import Home from '../pages/home/Home';
 import ProductAdmin from '../pages/product/Product';
 import Language from '../pages/setting/Language';

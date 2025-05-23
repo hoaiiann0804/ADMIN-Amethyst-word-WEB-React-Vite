@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/Dialog";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
+import { Switch } from "@/components/ui/switch";
 import { useEffect, useState } from "react";
-import { addCategory, updateCategory } from "../../services/CategoryService";
-import { uploadImage } from "../../services/UploadService";
+import { addCategory, updateCategory } from "../../services/Category.Service";
+import { uploadImage } from "../../services/Upload.Service";
 
 const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
   const [formData, setFormData] = useState({
@@ -124,9 +125,7 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="productsCount" className="text-right">
-                Ảnh danh mục
-              </Label>
+              <Label htmlFor="productsCount" className="text-right">Ảnh danh mục</Label>
               <Input
                 id="image"
                 name="image"

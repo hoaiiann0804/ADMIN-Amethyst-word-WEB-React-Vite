@@ -1,8 +1,8 @@
-import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-
+import { useEffect, useState } from "react";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { GetRevenue } from "../../services/Dashboard.Service";
 const dailyData = [
   { name: "T2", sales: 4000 },
   { name: "T3", sales: 3000 },
@@ -44,6 +44,21 @@ const formatCurrency = (value) => {
 };
 
 export const SalesChart = () => {
+  const [revenue, setRevenue] = useState([]);
+
+  const fetchRevenueData = async () => {
+    try {
+      const response = await GetRevenue();
+      setRevenue(response);
+    } catch (error) {
+      console.error("Error fetching revenue data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRevenueData();
+  }, []);
+
   return (
     <Card className="col-span-3">
       <CardHeader className="pb-2">
@@ -58,7 +73,7 @@ export const SalesChart = () => {
               <TabsTrigger value="monthly">Tháng</TabsTrigger>
             </TabsList>
             <div className="text-sm text-gray-500">
-              Cập nhật: <span className="text-black">10/05/2025</span>
+              Cập nhật: <span className="text-black">{new Date().toLocaleDateString('vi-VN')}</span>
             </div>
           </div>
 
@@ -117,11 +132,11 @@ export const SalesChart = () => {
           <TabsContent value="monthly">
             <div className="h-[300px] mt-4">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={monthlyData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <BarChart data={revenue} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" />
+                  <XAxis dataKey="month" />
                   <YAxis 
-                    tickFormatter={(value) => `${value / 1000}K`} 
+                    tickFormatter={(value) => `${value / 1000}`} 
                     axisLine={false}
                     tickLine={false}
                   />
@@ -134,7 +149,7 @@ export const SalesChart = () => {
                       borderRadius: '0.375rem',
                     }}
                   />
-                  <Bar dataKey="sales" fill="#8884d8" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="quantity" fill="#8884d8" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

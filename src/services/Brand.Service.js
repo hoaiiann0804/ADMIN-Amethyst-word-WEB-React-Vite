@@ -1,25 +1,25 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000'
+const API_URL = 'https://localhost:5000'
 
-export const getCategories = async () => {
+export const getBrands = async () => {
     try {
-        const response = await axios.get(`${API_URL}/api/Category/GetList`);
+        const response = await axios.get(`${API_URL}/api/Brand/GetList`);
         return response.data;
     } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error('Error fetching brands:', error);
         throw error;
     }
 }
 
-export const addCategory = async (category) => {
+export const addBrand = async (brand) => {
     try {
         const response = await axios.post(
-        `${API_URL}/api/Category/Create`,
+        `${API_URL}/api/Brand/Create`,
         {
-            categorY_NAME: category.categorY_NAME,
-            categorY_IMAGE: category.image,
-            categorY_STATUS: category.status ? "ACTIVE" : "INACTIVE",
-            description: category.description,
+            branD_NAME: brand.branD_NAME,
+            branD_IMAGE: brand.image,
+            branD_STATUS: brand.status ? "ACTIVE" : "INACTIVE",
+            description: brand.description,
         },
         {
             headers: {
@@ -30,21 +30,21 @@ export const addCategory = async (category) => {
         );
         return response.data;
     } catch (error) {
-        console.error('Error adding category:', error);
+        console.error('Error adding brand:', error);
         throw error;
     }
 };
 
-export const updateCategory = async (category) => {
+export const updateBrand = async (brand) => {
     try {
         const response = await axios.put(
-        `${API_URL}/api/Category/Update`,
+        `${API_URL}/api/Brand/Update`,
         {
-            categorY_ID: category.categorY_ID,
-            categorY_NAME: category.categorY_NAME,
-            categorY_IMAGE: category.image,
-            categorY_STATUS: category.status ? "ACTIVE" : "INACTIVE",
-            description: category.description,
+            branD_ID: brand.branD_ID,
+            branD_NAME: brand.branD_NAME,
+            branD_IMAGE: brand.branD_IMAGE,
+            branD_STATUS: brand.branD_STATUS ? "ACTIVE" : "INACTIVE",
+            description: brand.description,
         },
         {
             headers: {
@@ -60,9 +60,9 @@ export const updateCategory = async (category) => {
     }
 };
 
-export const deleteCategory = async (categoryId) => {
+export const deleteBrand = async (brandId) => {
     try {
-        const response = await axios.delete(`${API_URL}/api/Category/Delete?id=${categoryId}`, {
+        const response = await axios.delete(`${API_URL}/api/Brand/Delete?id=${brandId}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 'Content-Type': 'application/json',

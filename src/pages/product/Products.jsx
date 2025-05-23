@@ -14,16 +14,19 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/Tabs";
-import { DeleteProductDialog } from "@/pages/product/DeleteProductDialog";
-import { ProductForm } from "@/pages/product/ProductForm";
-import { ProductsFilter } from "@/pages/product/ProductsFilter";
-import { ProductsGrid } from "@/pages/product/ProductsGrid";
-import { ProductsList } from "@/pages/product/ProductsList";
-import { ProductsPagination } from "@/pages/product/ProductsPagination";
 import { PlusCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import useToast from "../../hooks/use-toast";
-import { ProductPaging } from '../../services/ProductService';
+import { getBrands } from "../../services/Brand.Service";
+import { getCategories } from "../../services/Category.Service";
+import { ProductDetail, ProductPaging } from '../../services/Product.Service';
+import DeleteProductDialog from "./DeleteProductDialog";
+import ImageForm from "./ImageForm";
+import ProductForm from "./ProductForm";
+import { ProductsFilter } from "./ProductsFilter";
+import { ProductsGrid } from "./ProductsGrid";
+import { ProductsList } from "./ProductsList";
+import ProductsPagination from "./ProductsPagination";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -42,25 +45,8 @@ const Products = () => {
   const [productsPerPage] = useState(10);
   const [totalProduct, setTotalProducts] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  
-  const categories = [
-    { id: 1, name: "Áo Nam", products: 42, created: "15/04/2025", status: "Hiển thị", isActive: true },
-    { id: 2, name: "Quần Nam", products: 38, created: "16/04/2025", status: "Hiển thị", isActive: true },
-    { id: 3, name: "Áo Nữ", products: 56, created: "10/04/2025", status: "Hiển thị", isActive: true },
-    { id: 4, name: "Quần Nữ", products: 44, created: "12/04/2025", status: "Hiển thị", isActive: true },
-    { id: 5, name: "Phụ Kiện", products: 27, created: "05/04/2025", status: "Hiển thị", isActive: true },
-    { id: 6, name: "Giày Nam", products: 31, created: "22/04/2025", status: "Hiển thị", isActive: true },
-    { id: 7, name: "Giày Nữ", products: 29, created: "24/04/2025", status: "Ẩn", isActive: false },
-    { id: 8, name: "Túi Xách", products: 18, created: "01/05/2025", status: "Hiển thị", isActive: true },
-  ];
-
-  const brands = [
-    { id: 1, name: "Nike" },
-    { id: 2, name: "Adidas" },
-    { id: 3, name: "Gucci" },
-    { id: 4, name: "Zara" },
-  ];
-
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
   const [products, setProducts] = useState([]);
 
   const fetchProducts = async () => {
@@ -74,9 +60,29 @@ const Products = () => {
     }
   }
 
+  const fetchCategories = async () => {
+    try {
+      const response = await getCategories();
+      setCategories(response);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  const fetchBrands = async () => {
+    try {
+      const response = await getBrands();
+      setBrands(response);
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+    }
+  };
+
   useEffect(() => {
     //setCurrentPage(1);
     fetchProducts();
+    fetchCategories();
+    fetchBrands();
   }, [searchTerm, selectedCategory, priceRange.min, priceRange.max, currentPage]);
   
   const handleApplyFilter = (filterOptions) => {
@@ -103,11 +109,10 @@ const Products = () => {
     //   product.category.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesSearch = product.producT_NAME.toLowerCase().includes(searchTerm.toLowerCase()) 
     
-    const matchesCategory = selectedCategory === "" || product.category === selectedCategory;
+    const matchesCategory = selectedCategory === "" || product.categorY_ID === selectedCategory;
+    const matchesBrand = selectedBrandId === "" || product.branD_ID === selectedBrandId;
     
     const matchesPrice = (
-      (priceRange.min === "" || product.producT_PRICE >= Number(priceRange.min)) &&
-      (priceRange.max === "" || product.producT_PRICE <= Number(priceRange.max))
       (priceRange.min === "" || product.producT_PRICE >= Number(priceRange.min)) &&
       (priceRange.max === "" || product.producT_PRICE <= Number(priceRange.max))
     );
@@ -141,19 +146,11 @@ const Products = () => {
         setIsAddDialogOpen(false);
         setNewProductId(response.data.producT_ID);
         setIsImageDialogOpen(true); // Open ImageForm after success
-        toast({
-          title: "Thêm sản phẩm thành công",
-          description: `Đã thêm "${newProduct.producT_NAME}" vào danh sách sản phẩm.`,
-        });
       } else {
         throw new Error("Thêm sản phẩm thất bại");
       }
     } catch (error) {
-      toast({
-        title: "Lỗi",
-        description: "Thêm sản phẩm thất bại. Vui lòng thử lại.",
-        variant: "destructive",
-      });
+      console.error("Error adding product:", error);
     }
   };
 
@@ -191,10 +188,14 @@ const Products = () => {
   const handleUpdateProduct = (updatedProduct) => {
     const updatedProducts = products.map(product => {
       if (product.id === updatedProduct.id) {
+        const response = ProductDetail(updatedProduct.id);
+
         return {
           ...updatedProduct,
           stock: updatedProduct.stock || 0,
           image: updatedProduct.image || product.image,
+          detail: response.producT_DETAIL,
+          description: response.producT_DESCRIPTION,
         };
       }
       return product;
@@ -206,7 +207,6 @@ const Products = () => {
       description: `Sản phẩm "${updatedProduct.producT_NAME}" đã được cập nhật.`,
     });
   };
-
 
   const handleDeleteProduct = (id) => {
     setProducts(products.filter(product => product.id !== id));
@@ -221,7 +221,6 @@ const Products = () => {
   const handleEditProduct = (product) => {
     setProductToEdit(product);
   };
-
 
   const handleDeleteClick = (product) => {
     if (product) {

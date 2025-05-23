@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/layouts/DashboardLayout";
 import {
   AlertDialog,
@@ -11,7 +10,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/AlertDialog";
 import { Button } from "@/components/ui/Button";
-import { Plus, Edit, Trash2 } from "lucide-react";
 import {
   Card
 } from "@/components/ui/Card";
@@ -24,12 +22,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
+import { Edit, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import CategoriesFilter from "@/pages/categories/CategoriesFilter";
 import CategoryForm from "@/pages/categories/CategoryForm";
-import DeleteCategoryDialog from "@/pages/categories/DeleteCategoryDialog";
 import useToast from "../../hooks/use-toast";
-import { getCategories } from "../../services/CategoryService";
+import { getCategories } from "../../services/Category.Service";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -176,7 +175,7 @@ const Categories = () => {
                   <TableCell>{category.categorY_ID}</TableCell>
                   <TableCell>{category.categorY_NAME}</TableCell>
                   <TableCell>
-                    <img src={category.image} alt={category.categorY_NAME} className="w-12 h-12 object-cover" />
+                    <img src={`https://localhost:5000/images/${category.categorY_IMAGE}`} alt={category.categorY_NAME} className="w-12 h-12 object-cover" />
                   </TableCell>
                   <TableCell>{category.isActive ? "Hiển thị" : "Ẩn"}</TableCell>
                   <TableCell className="text-right space-x-2">

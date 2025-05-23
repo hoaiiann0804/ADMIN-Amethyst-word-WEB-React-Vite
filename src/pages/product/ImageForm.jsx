@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Button } from "@/components/ui/Button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/DiaLog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/DiaLog";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import useToast from "../../hooks/use-toast";
-import { uploadImage } from "../../services/UploadService";
+import { uploadImage } from "../../services/Upload.Service";
 
 const imageSchema = z.object({
   imagE_NAME: z.string().min(1, { message: "Vui lòng chọn hình ảnh." }),
