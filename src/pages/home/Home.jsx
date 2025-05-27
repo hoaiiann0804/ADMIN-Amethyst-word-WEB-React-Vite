@@ -7,7 +7,7 @@ import { TopProducts } from "@/components/layouts/TopProduct";
 import { Card } from "@/components/ui/Card";
 import { BarChart, Calendar, ShoppingBag, User } from "lucide-react";
 import { useEffect, useState } from "react";
-import { GetOrder, GetRevenue, GetUser } from "../../services/Dashboard.Service";
+import { GetOrder, GetRevenueTotal, GetUser } from "../../services/Dashboard.Service";
 
 const Home = () => {
   // State variables to hold data
@@ -45,7 +45,7 @@ const Home = () => {
 
   const fetchRevenue = async () => {
     try {
-      const response = await GetRevenue();
+      const response = await GetRevenueTotal();
       setRevenue(response);
     } catch (error) {
       console.error("Error fetching revenue data:", error);

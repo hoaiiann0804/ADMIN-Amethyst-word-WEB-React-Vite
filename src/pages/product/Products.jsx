@@ -198,6 +198,7 @@ const Products = () => {
           description: response.producT_DESCRIPTION,
         };
       }
+      console.log(response);
       return product;
     });
     setProducts(updatedProducts);

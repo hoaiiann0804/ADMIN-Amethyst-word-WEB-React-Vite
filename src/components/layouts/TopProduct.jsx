@@ -1,37 +1,21 @@
-import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-
+import { useEffect, useState } from "react";
+import { ProductBestSeller } from "../../services/Product.Service";
 export const TopProducts = () => {
-  const products = [
-    {
-      name: "Áo sơ mi trắng",
-      category: "Áo",
-      sales: 120,
-      stock: 45,
-      image: "https://via.placeholder.com/40x40",
-    },
-    {
-      name: "Váy dạ hội đen",
-      category: "Váy",
-      sales: 98,
-      stock: 12,
-      image: "https://via.placeholder.com/40x40",
-    },
-    {
-      name: "Quần jean nam",
-      category: "Quần",
-      sales: 87,
-      stock: 34,
-      image: "https://via.placeholder.com/40x40",
-    },
-    {
-      name: "Giày thể thao",
-      category: "Giày",
-      sales: 76,
-      stock: 23,
-      image: "https://via.placeholder.com/40x40",
-    },
-  ];
+  const [products, setProducts] = useState([]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await ProductBestSeller();
+      setProducts(response);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   return (
     <Card>
@@ -47,18 +31,18 @@ export const TopProducts = () => {
             >
               <div className="h-10 w-10 rounded-md bg-gray-100 overflow-hidden">
                 <img
-                  src={product.image}
-                  alt={product.name}
+                  src={`https://localhost:5000/images/${product.imagE_NAME}`}
+                  alt={product.producT_NAME}
                   className="h-full w-full object-cover"
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-sm truncate">{product.name}</h3>
+                <h3 className="font-medium text-sm truncate">{product.producT_NAME}</h3>
                 <p className="text-xs text-gray-500">{product.category}</p>
               </div>
               <div className="text-right">
                 <div className="font-medium text-sm">{product.sales} đã bán</div>
-                <p className="text-xs text-gray-500">Còn {product.stock}</p>
+                <p className="text-xs text-gray-500">Còn {product.quantity}</p>
               </div>
             </div>
           ))}

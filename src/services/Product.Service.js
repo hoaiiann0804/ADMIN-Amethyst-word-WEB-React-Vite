@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'https://localhost:5000'
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const ProductNew = async (input) => {
     try {
@@ -19,7 +19,7 @@ export const ProductNew = async (input) => {
 
 export const ProductBestSeller = async (input) => {
     try {
-        const response = await axios.get(`${API_URL}/api/Product/ProductBestSeller`, {
+        const response = await axios.get(`${API_URL}/api/Product/ProductBestSeller?input=5`, {
             headers: {
                 'Content-Type': 'application/json',
             },
