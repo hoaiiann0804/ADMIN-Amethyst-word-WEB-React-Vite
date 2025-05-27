@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Button } from "@/components/ui/Button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/DiaLog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/DiaLog";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
-import useToast from "../../hooks/use-toast";
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { CreateProduct, CreateProductImage, UpdateProduct } from "../../services/Product.Service";
+import { uploadImage } from "../../services/Upload.Service";
 const productSchema = z.object({
   producT_NAME: z.string().min(2, { message: "Tên sản phẩm phải có ít nhất 2 ký tự." }),
   producT_PRICE: z
@@ -24,7 +24,6 @@ const productSchema = z.object({
 });
 
 const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) => {
-  const { toast } = useToast();
   const { register, handleSubmit, reset, formState: { errors }, setValue, watch } = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -37,6 +36,7 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
       producT_STATUS: "ACTIVE",
     },
   });
+  const [imageName, setImageName] = useState("");
 
   // Watch selected values for controlled Select components
   const selectedBrand = watch("branD_ID");
@@ -47,10 +47,6 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
   const selectedBrandStr = selectedBrand ? String(selectedBrand) : "";
   const selectedCategoryStr = selectedCategory ? String(selectedCategory) : "";
   const selectedStatusStr = selectedStatus ? String(selectedStatus) : "";
-
-  console.log("selectedBrand:", selectedBrand);
-  console.log("selectedCategory:", selectedCategory);
-  console.log("selectedStatus:", selectedStatus);
 
   useEffect(() => {
     if (product) {
@@ -76,15 +72,46 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
     }
   }, [product, reset]);
 
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+    
+      try {
+        const res = await uploadImage(file);
+        setImageName(res.imageUrl);
+      } catch (err) {
+        console.error('Upload thất bại:', err);
+      }
+    }
+  };
+
   const onSubmit = async (data) => {
     try {
       onSave(data);
+      if(product){
+        const response = await UpdateProduct(data)
+        if(response.code === 200){
+            const request = {
+              productId : parseInt(response.result),
+              imageName : imageName,
+            }
+            const res = await CreateProductImage(request)
+        }
+      }else{
+        const response = await CreateProduct(data);
+          const request = {
+            productId : parseInt(response.result),
+            imageName : imageName,
+          }
+          await CreateProductImage(request)
+
+        }
+      onClose();
     } catch (error) {
-      toast({
-        title: "Lỗi",
-        description: "Lưu sản phẩm thất bại. Vui lòng thử lại.",
-        variant: "destructive",
-      });
+      console.error("Lỗi khi lưu sản phẩm:", error);
     }
   };
 
@@ -108,6 +135,18 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
                   {errors.producT_NAME.message}
                 </p>
               )}
+            </div>
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="producT_DETAIL" className="text-right">Ảnh</Label>
+              <Input
+                id="producT_IMAGE"
+                type="file"
+                accept="image/*"
+                {...register("producT_IMAGE")}
+                onChange={handleFileChange}
+                className="col-span-3"
+              />
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4">
@@ -154,8 +193,8 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
                 </SelectTrigger>
                 <SelectContent>
                   {brands.map((brand) => (
-                    <SelectItem key={brand.id} value={String(brand.id)}>
-                      {brand.name}
+                    <SelectItem key={brand.branD_ID} value={String(brand.branD_ID)}>
+                      {brand.branD_NAME}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -178,8 +217,8 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
-                    <SelectItem key={category.id} value={String(category.id)}>
-                      {category.name}
+                    <SelectItem key={category.categorY_ID} value={String(category.categorY_ID)}>
+                      {category.categorY_NAME}
                     </SelectItem>
                   ))}
                 </SelectContent>

@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/Button";
-import useToast from "../../hooks/use-toast";
 import {
   Dialog,
   DialogContent,
@@ -17,14 +15,18 @@ import {
   TabsTrigger,
 } from "@/components/ui/Tabs";
 import { PlusCircle } from "lucide-react";
-import  ProductForm from "./ProductForm";
+import React, { useEffect, useState } from "react";
+import useToast from "../../hooks/use-toast";
+import { getBrands } from "../../services/Brand.Service";
+import { getCategories } from "../../services/Category.Service";
+import { ProductDetail, ProductPaging } from '../../services/Product.Service';
+import DeleteProductDialog from "./DeleteProductDialog";
 import ImageForm from "./ImageForm";
-import  DeleteProductDialog from "@/pages/product/DeleteProductDialog";
-import  ProductTable  from "./ProductTable";
-import  ProductsPagination  from "@/pages/product/ProductsPagination";
+import ProductForm from "./ProductForm";
 import { ProductsFilter } from "./ProductsFilter";
 import { ProductsGrid } from "./ProductsGrid";
-// import { addProduct, addImage } from "../../services/ProductService";
+import { ProductsList } from "./ProductsList";
+import ProductsPagination from "./ProductsPagination";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -41,188 +43,48 @@ const Products = () => {
   const { toast } = useToast();
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(10);
+  const [totalProduct, setTotalProducts] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [products, setProducts] = useState([]);
 
-  const categories = [
-    { id: 1, name: "Áo Nam", products: 42, created: "15/04/2025", status: "Hiển thị", isActive: true },
-    { id: 2, name: "Quần Nam", products: 38, created: "16/04/2025", status: "Hiển thị", isActive: true },
-    { id: 3, name: "Áo Nữ", products: 56, created: "10/04/2025", status: "Hiển thị", isActive: true },
-    { id: 4, name: "Quần Nữ", products: 44, created: "12/04/2025", status: "Hiển thị", isActive: true },
-    { id: 5, name: "Phụ Kiện", products: 27, created: "05/04/2025", status: "Hiển thị", isActive: true },
-    { id: 6, name: "Giày Nam", products: 31, created: "22/04/2025", status: "Hiển thị", isActive: true },
-    { id: 7, name: "Giày Nữ", products: 29, created: "24/04/2025", status: "Ẩn", isActive: false },
-    { id: 8, name: "Túi Xách", products: 18, created: "01/05/2025", status: "Hiển thị", isActive: true },
-  ];
+  const fetchProducts = async () => {
+    try {
+      const response = await ProductPaging(currentPage, productsPerPage);
+      setProducts(response.data);
+      setTotalProducts(response.totalRecords);
+      setTotalPages(response.totalPages);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  }
 
-  const brands = [
-    { id: 1, name: "Nike" },
-    { id: 2, name: "Adidas" },
-    { id: 3, name: "Gucci" },
-    { id: 4, name: "Zara" },
-  ];
+  const fetchCategories = async () => {
+    try {
+      const response = await getCategories();
+      setCategories(response);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
 
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      producT_NAME: "Áo Sơ Mi Nam Trắng",
-      image: "/images/ao-so-mi-nam.jpg",
-      producT_PRICE: 450000,
-      categorY_ID: 1, // Áo Nam
-      stock: 25,
-      producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Áo sơ mi nam chất liệu cotton thoáng mát, phù hợp với môi trường công sở.",
-      producT_DETAIL: "Cotton 100%, size M-XXL",
-      branD_ID: 1, // Nike
-    },
-    {
-      id: 2,
-      producT_NAME: "Quần Jeans Nam Đen",
-      image: "/images/quan-jeans-nam.jpg",
-      producT_PRICE: 600000,
-      categorY_ID: 2, // Quần Nam
-      stock: 15,
-      producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Quần jeans nam phong cách hiện đại, chất liệu denim cao cấp.",
-      producT_DETAIL: "Denim, size 28-34",
-      branD_ID: 2, // Adidas
-    },
-    {
-      id: 3,
-      producT_NAME: "Áo Thun Nữ In Họa Tiết",
-      image: "/images/ao-thun-nu.jpg",
-      producT_PRICE: 250000,
-      categorY_ID: 3, // Áo Nữ
-      stock: 30,
-      producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Áo thun nữ in họa tiết thời thượng, chất liệu cotton mềm mại.",
-      producT_DETAIL: "Cotton pha spandex, size S-L",
-      branD_ID: 4, // Zara
-    },
-    {
-      id: 4,
-      producT_NAME: "Quần Tây Nữ Đen",
-      image: "/images/quan-tay-nu.jpg",
-      producT_PRICE: 550000,
-      categorY_ID: 4, // Quần Nữ
-      stock: 20,
-      producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Quần tây nữ dáng ôm, phù hợp cho công sở và sự kiện trang trọng.",
-      producT_DETAIL: "Polyester pha, size S-XL",
-      branD_ID: 3, // Gucci
-    },
-    {
-      id: 5,
-      producT_NAME: "Mũ Lưỡi Trai Đen",
-      image: "/images/mu-luoi-trai.jpg",
-      producT_PRICE: 200000,
-      categorY_ID: 5, // Phụ Kiện
-      stock: 50,
-      producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Mũ lưỡi trai unisex phong cách thể thao, phù hợp mọi lứa tuổi.",
-      producT_DETAIL: "Cotton, one size",
-      branD_ID: 1, // Nike
-    },
-    {
-      id: 6,
-      producT_NAME: "Áo Khoác Nam Gió",
-      image: "/images/ao-khoac-nam.jpg",
-      producT_PRICE: 800000,
-      categorY_ID: 1, // Áo Nam
-      stock: 10,
-      producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Áo khoác nam chống gió, chống nước nhẹ, phù hợp cho mùa đông.",
-      producT_DETAIL: "Nylon, size M-XXL",
-      branD_ID: 2, // Adidas
-    },
-    {
-      id: 7,
-      producT_NAME: "Quần Short Nữ Trắng",
-      image: "/images/quan-short-nu.jpg",
-      producT_PRICE: 300000,
-      categorY_ID: 4, // Quần Nữ
-      stock: 35,
-      producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Quần short nữ dáng suông, thoải mái cho mùa hè.",
-      producT_DETAIL: "Cotton pha, size S-L",
-      branD_ID: 4, // Zara
-    },
-    {
-      id: 8,
-      producT_NAME: "Túi Xách Nữ Da",
-      image: "/images/tui-xach-nu.jpg",
-      producT_PRICE: 1200000,
-      categorY_ID: 5, // Phụ Kiện
-      stock: 8,
-      producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Túi xách nữ da thật, thiết kế sang trọng cho các buổi tiệc.",
-      producT_DETAIL: "Da bò, kích thước 30x20cm",
-      branD_ID: 3, // Gucci
-    },
-    {
-      id: 9,
-      producT_NAME: "Áo Polo Nam Xanh Navy",
-      image: "/images/ao-polo-nam.jpg",
-      producT_PRICE: 350000,
-      categorY_ID: 1, // Áo Nam
-      stock: 40,
-      producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Áo polo nam phong cách năng động, phù hợp cho cả công việc và giải trí.",
-      producT_DETAIL: "Cotton pique, size M-XL",
-      branD_ID: 1, // Nike
-    },
-    {
-      id: 10,
-      producT_NAME: "Quần Jogger Nam Xám",
-      image: "/images/quan-jogger-nam.jpg",
-      producT_PRICE: 400000,
-      categorY_ID: 2, // Quần Nam
-      stock: 22,
-      producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Quần jogger nam thoải mái, lý tưởng cho thể thao và dạo phố.",
-      producT_DETAIL: "Cotton pha polyester, size M-XXL",
-      branD_ID: 2, // Adidas
-    },
-    {
-      id: 11,
-      producT_NAME: "Áo Len Nữ Cổ Lọ",
-      image: "/images/ao-len-nu.jpg",
-      producT_PRICE: 500000,
-      categorY_ID: 3, // Áo Nữ
-      stock: 18,
-      producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Áo len nữ cổ lọ ấm áp, phong cách tối giản cho mùa đông.",
-      producT_DETAIL: "Len pha acrylic, size S-L",
-      branD_ID: 4, // Zara
-    },
-    {
-      id: 12,
-      producT_NAME: "Thắt Lưng Nam Da",
-      image: "/images/that-lung-nam.jpg",
-      producT_PRICE: 350000,
-      categorY_ID: 5, // Phụ Kiện
-      stock: 30,
-      producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Thắt lưng nam da thật, phù hợp với trang phục công sở và thường ngày.",
-      producT_DETAIL: "Da bò, chiều dài 110-130cm",
-      branD_ID: 3, // Gucci
-    },
-    {
-      id: 13,
-      producT_NAME: "Áo Thun Nam Đen",
-      image: "/images/ao-thun-nam.jpg",
-      producT_PRICE: 200000,
-      categorY_ID: 1, // Áo Nam
-      stock: 45,
-      producT_STATUS: "ACTIVE",
-      producT_DESCRIPTION: "Áo thun nam basic, dễ phối đồ cho mọi dịp.",
-      producT_DETAIL: "Cotton 100%, size M-XXL",
-      branD_ID: 1, // Nike
-    },
-  ]);
+  const fetchBrands = async () => {
+    try {
+      const response = await getBrands();
+      setBrands(response);
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+    }
+  };
 
   useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, selectedCategory, selectedBrandId, priceRange.min, priceRange.max]);
-
+    //setCurrentPage(1);
+    fetchProducts();
+    fetchCategories();
+    fetchBrands();
+  }, [searchTerm, selectedCategory, priceRange.min, priceRange.max, currentPage]);
+  
   const handleApplyFilter = (filterOptions) => {
     const { min, max } = filterOptions.priceRange;
     if (min !== "" && max !== "" && Number(min) > Number(max)) {
@@ -243,10 +105,13 @@ const Products = () => {
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.producT_NAME.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      categories.find(c => c.id === product.categorY_ID)?.name.toLowerCase().includes(searchTerm.toLowerCase());
+    // const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //   product.category.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = product.producT_NAME.toLowerCase().includes(searchTerm.toLowerCase()) 
+    
     const matchesCategory = selectedCategory === "" || product.categorY_ID === selectedCategory;
     const matchesBrand = selectedBrandId === "" || product.branD_ID === selectedBrandId;
+    
     const matchesPrice = (
       (priceRange.min === "" || product.producT_PRICE >= Number(priceRange.min)) &&
       (priceRange.max === "" || product.producT_PRICE <= Number(priceRange.max))
@@ -281,19 +146,11 @@ const Products = () => {
         setIsAddDialogOpen(false);
         setNewProductId(response.data.producT_ID);
         setIsImageDialogOpen(true); // Open ImageForm after success
-        toast({
-          title: "Thêm sản phẩm thành công",
-          description: `Đã thêm "${newProduct.producT_NAME}" vào danh sách sản phẩm.`,
-        });
       } else {
         throw new Error("Thêm sản phẩm thất bại");
       }
     } catch (error) {
-      toast({
-        title: "Lỗi",
-        description: "Thêm sản phẩm thất bại. Vui lòng thử lại.",
-        variant: "destructive",
-      });
+      console.error("Error adding product:", error);
     }
   };
 
@@ -331,12 +188,17 @@ const Products = () => {
   const handleUpdateProduct = (updatedProduct) => {
     const updatedProducts = products.map(product => {
       if (product.id === updatedProduct.id) {
+        const response = ProductDetail(updatedProduct.id);
+
         return {
           ...updatedProduct,
           stock: updatedProduct.stock || 0,
           image: updatedProduct.image || product.image,
+          detail: response.producT_DETAIL,
+          description: response.producT_DESCRIPTION,
         };
       }
+      console.log(response);
       return product;
     });
     setProducts(updatedProducts);
@@ -443,72 +305,83 @@ const Products = () => {
             </Dialog>
           </div>
 
-          <Tabs defaultValue="all">
-            <TabsList className="bg-white border border-gray-200">
-              <TabsTrigger value="all"><span>Tất cả</span></TabsTrigger>
-              <TabsTrigger value="in-stock"><span>Còn hàng</span></TabsTrigger>
-              <TabsTrigger value="out-of-stock"><span>Hết hàng</span></TabsTrigger>
-              <TabsTrigger value="draft"><span>Bản nháp</span></TabsTrigger>
-            </TabsList>
-            {["all", "in-stock", "out-of-stock", "draft"].map((tab) => {
-              const statusFilteredProducts = filterProductsByStatus(filteredProducts, tab);
-              const displayProducts = getProductsForCurrentPage(statusFilteredProducts);
-              const totalPages = Math.ceil(statusFilteredProducts.length / productsPerPage);
-              return (
-                <TabsContent key={tab} value={tab}>
-                  <div className="space-y-4">
-                    <ProductsFilter
-                      searchTerm={searchTerm}
-                      setSearchTerm={setSearchTerm}
-                      viewMode={viewMode}
-                      setViewMode={setViewMode}
-                      categories={categories}
-                      selectedCategoryId={selectedCategory}
-                      setSelectedCategoryId={setSelectedCategory}
-                      selectedBrandId={selectedBrandId}
-                      setSelectedBrandId={setSelectedBrandId}
-                      onApplyFilter={handleApplyFilter}
-                      priceRange={priceRange}
-                      setPriceRange={setPriceRange}
-                      brands={brands}
-                    />
-                    {statusFilteredProducts.length > 0 ? (
-                      <>
-                        {viewMode === "grid" ? (
-                          <ProductsGrid
-                            products={displayProducts}
-                            formatPrice={formatPrice}
-                            onEdit={handleEditProduct}
-                            onDelete={handleDeleteClick}
-                            categories={categories}
-                          />
-                        ) : (
-                          <ProductTable
-                            items={displayProducts}
-                            itemType="Sản phẩm"
-                            onEdit={handleEditProduct}
-                            onDelete={handleDeleteClick}
-                            categories={categories}
-                            formatPrice={formatPrice}
-                          />
-                        )}
-                        <ProductsPagination
-                          currentPage={currentPage}
-                          setCurrentPage={setCurrentPage}
-                          totalPages={totalPages}
-                          productsPerPage={productsPerPage}
-                          totalProducts={statusFilteredProducts.length}
+        {/* Tabs */}
+        <Tabs defaultValue="all">
+          <TabsList className="bg-white border border-gray-200">
+            <TabsTrigger value="all">
+              <span>Tất cả</span>
+            </TabsTrigger>
+            <TabsTrigger value="in-stock">
+              <span>Còn hàng</span>
+            </TabsTrigger>
+            <TabsTrigger value="out-of-stock">
+              <span>Hết hàng</span>
+            </TabsTrigger>
+            <TabsTrigger value="draft">
+              <span>Bản nháp</span>
+            </TabsTrigger>
+          </TabsList>
+          
+          {/* Nội dung các tab */}
+          {["all", "in-stock", "out-of-stock"].map((tab) => {
+            const statusFilteredProducts = filterProductsByStatus(filteredProducts, tab);
+            return (
+              <TabsContent key={tab} value={tab}>
+                <div className="space-y-4">
+                  <ProductsFilter 
+                    searchTerm={searchTerm} 
+                    setSearchTerm={setSearchTerm}
+                    viewMode={viewMode}
+                    setViewMode={setViewMode}
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                    onApplyFilter={handleApplyFilter} 
+                    priceRange={priceRange}
+                    setPriceRange={setPriceRange}
+                  />
+
+                  {statusFilteredProducts.length > 0 ? (
+                    <>
+                      {viewMode === "grid" ? (
+                        <ProductsGrid 
+                          products={products}
+                          formatPrice={formatPrice}
+                          onEdit={handleEditProduct}
+                          onDelete={handleDeleteClick}
                         />
-                      </>
-                    ) : (
-                      renderEmptyState()
-                    )}
-                  </div>
-                </TabsContent>
-              );
-            })}
-          </Tabs>
-        </div>
+                      ) : (
+                        <ProductsList
+                          products={products}
+                          formatPrice={formatPrice}
+                          onEdit={handleEditProduct}
+                          onDelete={handleDeleteClick}
+                        />
+                      )}
+                      
+                      <ProductsPagination 
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        totalPages={totalPages}
+                        productsPerPage={productsPerPage}
+                        totalProducts={totalProduct}
+                      />
+                    </>
+                  ) : (
+                    renderEmptyState()
+                  )}
+                </div>
+              </TabsContent>
+            );
+          })}
+          
+          <TabsContent value="draft">
+            <div className="p-4 text-center text-gray-500">
+              <p>Không có sản phẩm nào ở trạng thái bản nháp.</p>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
 
         <Dialog open={!!productToEdit} onOpenChange={(open) => !open && setProductToEdit(null)}>
           <DialogContent className="sm:max-w-[425px]">

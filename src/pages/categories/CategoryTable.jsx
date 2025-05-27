@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/Table";
 import { ArrowUpDown, Edit, MoreVertical, Tag, Trash } from "lucide-react";
 
+
 const CategoryTable = ({ categories, onEdit, onDelete }) => {
   return (
     <Card>
@@ -34,7 +35,7 @@ const CategoryTable = ({ categories, onEdit, onDelete }) => {
                   <ArrowUpDown size={16} />
                 </div>
               </TableHead>
-              <TableHead>Slug</TableHead>
+              <TableHead>Ảnh</TableHead>
               <TableHead>Mô tả</TableHead>
               <TableHead>Số sản phẩm</TableHead>
               <TableHead className="w-[80px]"></TableHead>
@@ -43,19 +44,21 @@ const CategoryTable = ({ categories, onEdit, onDelete }) => {
           <TableBody>
             {categories.length > 0 ? (
               categories.map((category) => (
-                <TableRow key={category.id}>
-                  <TableCell>{category.id}</TableCell>
+                <TableRow key={category.categorY_ID}>
+                  <TableCell>{category.categorY_ID}</TableCell>
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
                       <Tag size={16} className="text-gray-500" />
-                      {category.name}
+                      {category.categorY_NAME}
                     </div>
                   </TableCell>
-                  <TableCell>{category.slug}</TableCell>
+                  <TableCell>
+                    <img src={`https://localhost:5000/images/${category.categorY_IMAGE}`} alt={category.categorY_NAME} className="w-16 h-16 object-cover" />
+                  </TableCell>
                   <TableCell className="max-w-[300px] truncate">
                     {category.description}
                   </TableCell>
-                  <TableCell>{category.productsCount}</TableCell>
+                  <TableCell>{category.producT_QUANTITY}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

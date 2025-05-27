@@ -13,7 +13,7 @@ import { useMountEffect } from "primereact/hooks"
 import { Toast } from "primereact/toast"
 import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { login } from "../../services/AdminService"
+import { login } from "../../services/Admin.Service"
 
 
 const Login = () => {
