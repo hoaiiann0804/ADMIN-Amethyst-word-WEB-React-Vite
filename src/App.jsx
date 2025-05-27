@@ -3,7 +3,7 @@ import { ToastProvider, ToastViewport } from "@/components/ui/Toast";
 import { TooltipProvider } from "@/components/ui/Tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import PrivateRoute from "./components/PrivateRoute";
+import PrivateRoute from "./components/Private.Route";
 import Analytics from "./pages/Analytics/Analytics";
 import Login from "./pages/authentication/Login";
 import Brands from "./pages/brands/Brands";

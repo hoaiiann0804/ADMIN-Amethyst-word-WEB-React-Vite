@@ -1,7 +1,10 @@
-import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { GetRevenueByMonth, GetRevenueByWeek, GetRevenueByYear, GetRevenueTotal } from "../../services/Dashboard.Service";
+import DateRangePicker from "../ui/DateRangePicker";
 
 const dailyData = [
   { name: "T2", sales: 4000 },
@@ -20,21 +23,6 @@ const weeklyData = [
   { name: "Tuần 4", sales: 15000 },
 ];
 
-const monthlyData = [
-  { name: "T1", sales: 42000 },
-  { name: "T2", sales: 35000 },
-  { name: "T3", sales: 28000 },
-  { name: "T4", sales: 20000 },
-  { name: "T5", sales: 18900 },
-  { name: "T6", sales: 23900 },
-  { name: "T7", sales: 34900 },
-  { name: "T8", sales: 37800 },
-  { name: "T9", sales: 49000 },
-  { name: "T10", sales: 52000 },
-  { name: "T11", sales: 78000 },
-  { name: "T12", sales: 92000 },
-];
-
 const formatCurrency = (value) => {
   return new Intl.NumberFormat("vi-VN", {
     style: "currency",
@@ -44,7 +32,80 @@ const formatCurrency = (value) => {
 };
 
 export const SalesChart = () => {
+  const [revenue, setRevenue] = useState([]);
+  const [revenueByYear, setRevenueByYear] = useState([]);
+  const [revenueByMonth, setRevenueByMonth] = useState([]);
+  const [revenueByWeek, setRevenueByWeek] = useState([]);
+
+  const [dateRange, setDateRange] = useState({
+    from: new Date(),
+    to: undefined,
+  });
+  const vietnamDateTime = format(dateRange.from, "yyyy/MM/dd");
+
+
+  const fetchRevenueData = async () => {
+    try {
+      const response = await GetRevenueTotal();
+      setRevenue(response);
+    } catch (error) {
+      console.error("Error fetching revenue data:", error);
+    }
+  };
+
+  const fetchRevenueByYear = async () =>{
+    try {
+      const response = await GetRevenueByYear(vietnamDateTime)
+      setRevenueByYear(response)
+    } catch(error) {
+      console.log(error.response);
+    }
+  }
+  
+  const fetchRevenueByMonth = async () =>{
+    try {
+      const response = await GetRevenueByMonth(vietnamDateTime);
+      setRevenueByMonth(response)
+    } catch(error) {
+      console.log(error.response);
+    }
+  }
+
+  const formatRevenueData = (data) => {
+    const weekdays = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+
+    return data.map(item => {
+      const date = new Date(item.day);
+      const dayOfWeekText = weekdays[date.getDay()];
+
+      return {
+        ...item,
+        weekday: dayOfWeekText
+        
+      };
+    });
+  };
+
+
+  const fetchRevenueByWeek = async () =>{
+    try {
+      const response = await GetRevenueByWeek(vietnamDateTime);
+      const formattedData = formatRevenueData(response);
+      setRevenueByWeek(formattedData);
+    } catch(error) {
+      console.log(error.response)
+    }
+  }
+
+  useEffect(() => {
+    fetchRevenueData();
+    fetchRevenueByYear(vietnamDateTime)
+    fetchRevenueByMonth(vietnamDateTime)
+    fetchRevenueByWeek(vietnamDateTime)
+  }, [vietnamDateTime]);
+
   return (
+    
     <Card className="col-span-3">
       <CardHeader className="pb-2">
         <CardTitle className="text-lg font-medium">Phân tích doanh thu</CardTitle>
@@ -58,16 +119,16 @@ export const SalesChart = () => {
               <TabsTrigger value="monthly">Tháng</TabsTrigger>
             </TabsList>
             <div className="text-sm text-gray-500">
-              Cập nhật: <span className="text-black">10/05/2025</span>
+              <DateRangePicker value={dateRange} onChange={setDateRange}/>
             </div>
           </div>
 
           <TabsContent value="daily">
             <div className="h-[300px] mt-4">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={dailyData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <BarChart data={revenueByWeek} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" />
+                  <XAxis dataKey="weekday" />
                   <YAxis 
                     tickFormatter={(value) => `${value / 1000}K`} 
                     axisLine={false}
@@ -82,7 +143,7 @@ export const SalesChart = () => {
                       borderRadius: '0.375rem',
                     }}
                   />
-                  <Bar dataKey="sales" fill="#8884d8" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="quantity" fill="#8884d8" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -91,9 +152,9 @@ export const SalesChart = () => {
           <TabsContent value="weekly">
             <div className="h-[300px] mt-4">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={weeklyData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <BarChart data={revenueByMonth} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" />
+                  <XAxis dataKey="week" />
                   <YAxis 
                     tickFormatter={(value) => `${value / 1000}K`} 
                     axisLine={false}
@@ -108,7 +169,7 @@ export const SalesChart = () => {
                       borderRadius: '0.375rem',
                     }}
                   />
-                  <Bar dataKey="sales" fill="#8884d8" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="quantity" fill="#8884d8" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -117,11 +178,11 @@ export const SalesChart = () => {
           <TabsContent value="monthly">
             <div className="h-[300px] mt-4">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={monthlyData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <BarChart data={revenueByYear} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" />
+                  <XAxis dataKey="month" />
                   <YAxis 
-                    tickFormatter={(value) => `${value / 1000}K`} 
+                    tickFormatter={(value) => `${value / 1000}`} 
                     axisLine={false}
                     tickLine={false}
                   />
@@ -134,7 +195,7 @@ export const SalesChart = () => {
                       borderRadius: '0.375rem',
                     }}
                   />
-                  <Bar dataKey="sales" fill="#8884d8" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="quantity" fill="#8884d8" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

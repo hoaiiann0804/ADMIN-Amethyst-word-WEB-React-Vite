@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000'
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const getCategories = async () => {
     try {
@@ -16,7 +16,7 @@ export const addCategory = async (category) => {
         const response = await axios.post(
         `${API_URL}/api/Category/Create`,
         {
-            categorY_NAME: category.name,
+            categorY_NAME: category.categorY_NAME,
             categorY_IMAGE: category.image,
             categorY_STATUS: category.status ? "ACTIVE" : "INACTIVE",
             description: category.description,
@@ -38,8 +38,14 @@ export const addCategory = async (category) => {
 export const updateCategory = async (category) => {
     try {
         const response = await axios.put(
-        `${API_URL}/api/Brand/Update`,
-        category,
+        `${API_URL}/api/Category/Update`,
+        {
+            categorY_ID: category.categorY_ID,
+            categorY_NAME: category.categorY_NAME,
+            categorY_IMAGE: category.image,
+            categorY_STATUS: category.status ? "ACTIVE" : "INACTIVE",
+            description: category.description,
+        },
         {
             headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -54,9 +60,9 @@ export const updateCategory = async (category) => {
     }
 };
 
-export const deleteBrand = async (categoryId) => {
+export const deleteCategory = async (categoryId) => {
     try {
-        const response = await axios.delete(`${API_URL}/api/Brand/Delete?id=${categoryId}`, {
+        const response = await axios.delete(`${API_URL}/api/Category/Delete?id=${categoryId}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 'Content-Type': 'application/json',

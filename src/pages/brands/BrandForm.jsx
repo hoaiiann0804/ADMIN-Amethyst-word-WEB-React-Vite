@@ -10,8 +10,8 @@ import {
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { useEffect, useState } from "react";
-import { addBrand, updateBrand } from "../../services/BrandService";
-import { uploadImage } from "../../services/UploadService";
+import { addBrand, updateBrand } from "../../services/Brand.Service";
+import { uploadImage } from "../../services/Upload.Service";
 
 const BrandForm = ({ isOpen, onClose, onSave, brand }) => {
   const [formData, setFormData] = useState({

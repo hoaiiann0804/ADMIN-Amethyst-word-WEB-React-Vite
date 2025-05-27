@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000'
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const ProductNew = async (input) => {
     try {
@@ -19,7 +19,7 @@ export const ProductNew = async (input) => {
 
 export const ProductBestSeller = async (input) => {
     try {
-        const response = await axios.get(`${API_URL}/api/Product/ProductBestSeller`, {
+        const response = await axios.get(`${API_URL}/api/Product/ProductBestSeller?input=5`, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -65,7 +65,7 @@ export const GetProductDetail = async (input) => {
     }
 }
 
-export const ProductPaging = async (pageNumber = 1, pageSize = 8) => {
+export const ProductPaging = async (pageNumber = 1, pageSize = 10) => {
     try {
         const response = await axios.get(`${API_URL}/api/Product/ProductList`, {
             headers: {
@@ -121,4 +121,95 @@ export const FillterProduct = async (input, pageNumber, pageSize) => {
     }
 }
 
+export const CreateProduct = async (input) => {
+    try {
+        const response = await axios.post(`${API_URL}/api/Product/Create`,{
+            producT_NAME: input.producT_NAME,
+            producT_PRICE: input.producT_PRICE,
+            producT_DETAIL: input.producT_DETAIL,
+            producT_DESCRIPTION: input.producT_DESCRIPTION,
+            branD_ID: input.branD_ID,
+            categorY_ID: input.categorY_ID,
+            producT_STATUS: input.producT_STATUS
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+}
 
+export const UpdateProduct = async (input) => {
+    try {
+        const response = await axios.post(`${API_URL}/api/Product/Update`,{
+            producT_ID: input.producT_ID,
+            producT_NAME: input.producT_NAME,
+            producT_PRICE: input.producT_PRICE,
+            producT_DETAIL: input.producT_DETAIL,
+            producT_DESCRIPTION: input.producT_DESCRIPTION,
+            branD_ID: input.branD_ID,
+            categorY_ID: input.categorY_ID,
+            producT_STATUS: input.producT_STATUS
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+}
+
+export const DeleteProduct = async (input) => {
+    try {
+        const response = await axios.post(`${API_URL}/api/Product/Delete?id=${input}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+}
+
+export const CreateProductImage = async (input) => {
+    try {
+        const response = await axios.post(`${API_URL}/api/Product/CreateImage`,{
+            producT_ID: input.productId,
+            imagE_NAME: input.imageName,
+            imagE_STATUS: "ACTIVE",
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response || { message: 'Lỗi kết nối server' };
+    }
+}
+
+export const ProductDetail = async (input) => {
+    try {
+        const response = await axios.get(`${API_URL}/api/Product/ProductDetail`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            params: {
+                id: input,
+            }
+        });
+        return response.data;
+    } catch (error) {
+        return error.response || { message: 'Lỗi kết nối server' };
+    }
+}

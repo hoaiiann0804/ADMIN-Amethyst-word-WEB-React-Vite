@@ -1,4 +1,4 @@
-import React from "react";
+import { Badge } from "@/components/ui/Badge";
 import {
   Card,
   CardContent,
@@ -13,53 +13,19 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/Table";
-import { Badge } from "@/components/ui/Badge";
 import { clsx } from "clsx";
-
-const orders = [
-  {
-    id: "ORD-001",
-    customer: "Nguyễn Văn A",
-    product: "Áo sơ mi trắng",
-    totalPrice: "550.000đ",
-    status: "completed",
-    date: "15/05/2025",
-  },
-  {
-    id: "ORD-002",
-    customer: "Trần Thị B",
-    product: "Váy đầm dạ hội",
-    totalPrice: "1.200.000đ",
-    status: "processing",
-    date: "14/05/2025",
-  },
-  {
-    id: "ORD-003",
-    customer: "Lê Văn C",
-    product: "Quần jean nam",
-    totalPrice: "420.000đ",
-    status: "pending",
-    date: "13/05/2025",
-  },
-  {
-    id: "ORD-004",
-    customer: "Phạm Thị D",
-    product: "Áo khoác nữ",
-    totalPrice: "750.000đ",
-    status: "cancelled",
-    date: "12/05/2025",
-  },
-];
+import { useEffect, useState } from "react";
+import { OrderNew } from "../../services/Order.Service";
 
 function getStatusStyle(status) {
   switch (status) {
-    case "completed":
+    case 1:
       return "bg-green-100 text-green-800 hover:bg-green-200";
-    case "processing":
+    case 2:
       return "bg-blue-100 text-blue-800 hover:bg-blue-200";
-    case "pending":
+    case 3:
       return "bg-yellow-100 text-yellow-800 hover:bg-yellow-200";
-    case "cancelled":
+    case 5:
       return "bg-red-100 text-red-800 hover:bg-red-200";
     default:
       return "bg-gray-100 text-gray-800 hover:bg-gray-200";
@@ -68,20 +34,34 @@ function getStatusStyle(status) {
 
 function getStatusText(status) {
   switch (status) {
-    case "completed":
+    case 1:
       return "Hoàn thành";
-    case "processing":
+    case 2:
       return "Đang xử lý";
-    case "pending":
+    case 3:
       return "Chờ xác nhận";
-    case "cancelled":
+    case 5:
       return "Đã hủy";
     default:
       return status;
   }
 }
 
-function RecentOrders() {
+const RecentOrders = () => {
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await OrderNew();
+        setOrders(response);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+    fetchOrders();
+  }, []);
+
   return (
     <Card className="col-span-2">
       <CardHeader className="pb-2">
@@ -103,18 +83,18 @@ function RecentOrders() {
             {orders.map((order) => (
               <TableRow key={order.id}>
                 <TableCell className="font-medium">{order.id}</TableCell>
-                <TableCell>{order.customer}</TableCell>
+                <TableCell>{order.useR_LAST_NAME}</TableCell>
                 <TableCell>{order.product}</TableCell>
-                <TableCell className="text-right">{order.totalPrice}</TableCell>
+                <TableCell className="text-right">{order.totaL_PRICE}</TableCell>
                 <TableCell>
                   <Badge
                     variant="outline"
-                    className={clsx("font-normal", getStatusStyle(order.status))}
+                    className={clsx("font-normal", getStatusStyle(order.ordeR_STATUS))}
                   >
-                    {getStatusText(order.status)}
+                    {getStatusText(order.ordeR_STATUS)}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-right">{order.date}</TableCell>
+                <TableCell className="text-right">{order.createD_AT}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -122,6 +102,6 @@ function RecentOrders() {
       </CardContent>
     </Card>
   );
-}
+};
 
 export default RecentOrders;

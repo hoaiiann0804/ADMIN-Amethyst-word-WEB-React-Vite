@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/Button";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { deleteBrand, getBrands } from "../../services/BrandService";
+import { deleteBrand, getBrands } from "../../services/Brand.Service";
 import BrandForm from "./BrandForm";
 import BrandsFilter from "./BrandsFilter";
 import BrandTable from "./BrandTable";
@@ -60,7 +60,6 @@ const Brands = () => {
   };
 
   const confirmDelete = () => {
-    console.log("Deleting brand:", brandToDelete);
     deleteBrand(brandToDelete.branD_ID);
     if (brandToDelete) {
       setBrands(brands.filter((brand) => brand.id !== brandToDelete.id));
