@@ -55,8 +55,8 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
         producT_PRICE: product.producT_PRICE || "",
         producT_DETAIL: product.producT_DETAIL || "",
         producT_DESCRIPTION: product.producT_DESCRIPTION || "",
-        branD_ID: product.branD_ID || "",
-        categorY_ID: product.categorY_ID || "",
+        branD_ID: product.branD_ID?.toString() || "",
+        categorY_ID: product.categorY_ID?.toString()|| "",
         producT_STATUS: product.producT_STATUS || "ACTIVE",
       });
     } else {
@@ -187,6 +187,7 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
               <Select
                 onValueChange={(value) => setValue("branD_ID", value)}
                 value={selectedBrandStr}
+                  defaultValue={product?.branD_ID?.toString()}
               >
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Chọn thương hiệu" />

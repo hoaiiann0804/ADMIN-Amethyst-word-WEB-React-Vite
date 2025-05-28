@@ -26,7 +26,7 @@ import { Edit, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import CategoriesFilter from "@/pages/categories/CategoriesFilter";
-import CategoryForm from "@/pages/categories/CategoryForm";
+import CategoryForm from "./CategoryForm";
 import useToast from "../../hooks/use-toast";
 import { getCategories } from "../../services/Category.Service";
 
