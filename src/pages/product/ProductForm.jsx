@@ -51,12 +51,13 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
   useEffect(() => {
     if (product) {
       reset({
+        producT_ID: product.producT_ID,
         producT_NAME: product.producT_NAME || "",
-        producT_PRICE: product.producT_PRICE || "",
+        producT_PRICE: product.producT_PRICE?.toString() || "",
         producT_DETAIL: product.producT_DETAIL || "",
         producT_DESCRIPTION: product.producT_DESCRIPTION || "",
-        branD_ID: product.branD_ID?.toString() || "",
-        categorY_ID: product.categorY_ID?.toString()|| "",
+        branD_ID: product.branD_ID ? String(product.branD_ID) : "",
+        categorY_ID: product.categorY_ID ? String(product.categorY_ID) : "",
         producT_STATUS: product.producT_STATUS || "ACTIVE",
       });
     } else {
@@ -90,7 +91,7 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
 
   const onSubmit = async (data) => {
     try {
-      onSave(data);
+      
       if(product){
         const response = await UpdateProduct(data)
         if(response.code === 200){
@@ -98,7 +99,7 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
               productId : parseInt(response.result),
               imageName : imageName,
             }
-            const res = await CreateProductImage(request)
+            //const res = await CreateProductImage(request)
         }
       }else{
         const response = await CreateProduct(data);
@@ -107,8 +108,8 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
             imageName : imageName,
           }
           await CreateProductImage(request)
-
         }
+      onSave(data);
       onClose();
     } catch (error) {
       console.error("Lỗi khi lưu sản phẩm:", error);

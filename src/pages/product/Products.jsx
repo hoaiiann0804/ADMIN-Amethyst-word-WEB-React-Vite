@@ -19,7 +19,7 @@ import React, { useEffect, useState } from "react";
 import useToast from "../../hooks/use-toast";
 import { getBrands } from "../../services/Brand.Service";
 import { getCategories } from "../../services/Category.Service";
-import { ProductDetail, ProductPaging } from '../../services/Product.Service';
+import { ProductPaging } from '../../services/Product.Service';
 import DeleteProductDialog from "./DeleteProductDialog";
 import ImageForm from "./ImageForm";
 import ProductForm from "./ProductForm";
@@ -188,17 +188,13 @@ const Products = () => {
   const handleUpdateProduct = (updatedProduct) => {
     const updatedProducts = products.map(product => {
       if (product.id === updatedProduct.id) {
-        const response = ProductDetail(updatedProduct.id);
 
         return {
           ...updatedProduct,
           stock: updatedProduct.stock || 0,
           image: updatedProduct.image || product.image,
-          detail: response.producT_DETAIL,
-          description: response.producT_DESCRIPTION,
         };
       }
-      console.log(response);
       return product;
     });
     setProducts(updatedProducts);
