@@ -145,7 +145,7 @@ export const CreateProduct = async (input) => {
 
 export const UpdateProduct = async (input) => {
     try {
-        const response = await axios.post(`${API_URL}/api/Product/Update`,{
+        const response = await axios.put(`${API_URL}/api/Product/Update`,{
             producT_ID: input.producT_ID,
             producT_NAME: input.producT_NAME,
             producT_PRICE: input.producT_PRICE,
