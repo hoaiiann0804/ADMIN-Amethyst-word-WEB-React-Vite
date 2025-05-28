@@ -15,7 +15,7 @@ export const ProductsGrid = ({
         <Card key={product.producT_ID} className="overflow-hidden">
           <div className="aspect-square relative bg-gray-100">
             <img
-              src={`https://localhost:5000/images/${product.imagE_NAME}`}
+              src={`http://localhost:5000/images/${product.imagE_NAME}`}
               alt={product.producT_NAME}
               className="object-cover w-full h-full"
             />

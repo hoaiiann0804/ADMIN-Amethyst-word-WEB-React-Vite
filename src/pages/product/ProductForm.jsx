@@ -188,6 +188,7 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
               <Select
                 onValueChange={(value) => setValue("branD_ID", value)}
                 value={selectedBrandStr}
+                  defaultValue={product?.branD_ID?.toString()}
               >
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Chọn thương hiệu" />
