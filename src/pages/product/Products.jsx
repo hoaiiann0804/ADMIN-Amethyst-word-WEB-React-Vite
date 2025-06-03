@@ -20,7 +20,9 @@ import useToast from "../../hooks/use-toast";
 import { getBrands } from "../../services/Brand.Service";
 import { getCategories } from "../../services/Category.Service";
 import { ProductPaging } from '../../services/Product.Service';
+import { UpdateProduct } from "../../services/Product.Service";
 import DeleteProductDialog from "./DeleteProductDialog";
+import { DeleteProduct } from "../../services/Product.Service";
 import ImageForm from "./ImageForm";
 import ProductForm from "./ProductForm";
 import { ProductsFilter } from "./ProductsFilter";
@@ -187,7 +189,7 @@ const Products = () => {
 
   const handleUpdateProduct = (updatedProduct) => {
     const updatedProducts = products.map(product => {
-      if (product.id === updatedProduct.id) {
+      if (product.producT_ID === updatedProduct.producT_ID) {
 
         return {
           ...updatedProduct,
@@ -206,6 +208,7 @@ const Products = () => {
   };
 
   const handleDeleteProduct = (id) => {
+    DeleteProduct(id);
     setProducts(products.filter(product => product.id !== id));
     setIsDeleteDialogOpen(false);
     setProductToDelete(null);
@@ -225,6 +228,9 @@ const Products = () => {
       setIsDeleteDialogOpen(true);
     }
   };
+
+
+
 
   const filterProductsByStatus = (products, status) => {
     if (status === "in-stock") {
@@ -421,7 +427,7 @@ const Products = () => {
           isOpen={isDeleteDialogOpen}
           onClose={() => setIsDeleteDialogOpen(false)}
           item={productToDelete}
-          onConfirm={() => productToDelete && handleDeleteProduct(productToDelete.id)}
+          onConfirm={() => productToDelete && handleDeleteProduct(productToDelete.producT_ID)}
           itemType="Sản phẩm"
         />
       </DashboardLayout>
