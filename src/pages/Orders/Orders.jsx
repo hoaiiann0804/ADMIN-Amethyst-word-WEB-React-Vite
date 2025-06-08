@@ -1,16 +1,6 @@
-import React, { useState } from "react";
 import { DashboardLayout } from "@/components/layouts/DashboardLayout";
-import { Package, ArrowUpDown, MoreVertical, Eye, Edit, Trash } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import {
-  Table,
-  TableHeader,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-} from "@/components/ui/Table";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,17 +8,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
-import useToast from "../../hooks/use-toast";
-import OrdersFilter from "./OrdersFilter";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/Table";
 import OrderDetailsDialog from "@/pages/Orders/OrderDetailsDialog";
+import { ArrowUpDown, Edit, Eye, MoreVertical, Package } from "lucide-react";
+import { useEffect, useState } from "react";
+import useToast from "../../hooks/use-toast";
+import { OrderNew } from "../../services/Order.Service";
+import { exportReport, getStatusBadge } from "../../utils/OrderUtils";
 import CancelOrderDialog from "./CancelOrderDialog";
-import { mockOrders } from "../../services/MocOrder";
-import { getStatusBadge, exportReport } from "../../utils/OrderUtils";
+import OrdersFilter from "./OrdersFilter";
 
 const Orders = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("Tất cả");
-  const [orders, setOrders] = useState(mockOrders);
+  const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isCancelOpen, setIsCancelOpen] = useState(false);
@@ -48,6 +48,15 @@ const Orders = () => {
     setSelectedOrder(order);
     setIsDetailOpen(true);
   };
+
+  const fetchOrders = async () => {
+    try {
+      const response = await OrderNew();
+      setOrders(response);
+    } catch (error) {
+      console.error("Lỗi khi lấy đơn hàng mới:", error);
+    }
+  }
 
   // Handle update status
   const handleUpdateStatus = (newStatus) => {
@@ -82,6 +91,10 @@ const Orders = () => {
     setIsCancelOpen(false);
     setIsDetailOpen(false);
   };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
   return (
     <DashboardLayout>
@@ -137,11 +150,11 @@ const Orders = () => {
                   filteredOrders.map((order) => (
                     <TableRow key={order.id}>
                       <TableCell className="font-medium">{order.id}</TableCell>
-                      <TableCell>{order.customer}</TableCell>
-                      <TableCell>{order.date}</TableCell>
-                      <TableCell>{getStatusBadge(order.status)}</TableCell>
-                      <TableCell className="text-right">{order.total}</TableCell>
-                      <TableCell>{order.items}</TableCell>
+                      <TableCell>{order.useR_LAST_NAME}</TableCell>
+                      <TableCell>{order.createD_AT}</TableCell>
+                      <TableCell>{getStatusBadge(order.ordeR_STATUS)}</TableCell>
+                      <TableCell className="text-right">{order.totaL_PRICE}</TableCell>
+                      <TableCell>{order.totaL_QUANTITY}</TableCell>
                       <TableCell>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>

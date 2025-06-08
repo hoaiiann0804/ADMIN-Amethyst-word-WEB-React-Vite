@@ -1,19 +1,18 @@
-import React from "react";
+import { Button } from "@/components/ui/Button";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/Dialog";
-import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/Label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/Table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table";
 
 const OrderDetailsDialog = ({ order, isOpen, onClose, onUpdateStatus }) => {
   if (!order) return null;
-
+  console.log("Order Details:", order);
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
@@ -27,20 +26,20 @@ const OrderDetailsDialog = ({ order, isOpen, onClose, onUpdateStatus }) => {
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="text-right font-medium">Khách hàng:</Label>
-            <span className="col-span-3">{order.customer}</span>
+            <span className="col-span-3">{order.useR_LAST_NAME}</span>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="text-right font-medium">Ngày đặt:</Label>
-            <span className="col-span-3">{order.date}</span>
+            <span className="col-span-3">{order.createD_AT}</span>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="text-right font-medium">Trạng thái:</Label>
-            <Select value={order.status} onValueChange={onUpdateStatus}>
+            <Select value={order.ordeR_STATUS} onValueChange={onUpdateStatus}>
               <SelectTrigger className="col-span-3">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {["Đã hoàn thành", "Đang xử lý", "Đã giao", "Đang giao", "Đã hủy"].map(
+                {["Đã hoàn thành", "Đang đợi", "Đã giao", "Đang giao", "Đã hủy"].map(
                   (status) => (
                     <SelectItem key={status} value={status}>
                       {status}
@@ -52,11 +51,11 @@ const OrderDetailsDialog = ({ order, isOpen, onClose, onUpdateStatus }) => {
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="text-right font-medium">Tổng tiền:</Label>
-            <span className="col-span-3">{order.total}</span>
+            <span className="col-span-3">{order.totaL_PRICE}</span>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="text-right font-medium">Số mặt hàng:</Label>
-            <span className="col-span-3">{order.items}</span>
+            <span className="col-span-3">{order.totaL_QUANTITY}</span>
           </div>
           <div className="grid gap-2">
             <Label className="font-medium">Danh sách sản phẩm:</Label>
@@ -71,9 +70,9 @@ const OrderDetailsDialog = ({ order, isOpen, onClose, onUpdateStatus }) => {
               <TableBody>
                 {order.products.map((product, index) => (
                   <TableRow key={index}>
-                    <TableCell>{product.name}</TableCell>
+                    <TableCell>{product.producT_NAME}</TableCell>
                     <TableCell>{product.quantity}</TableCell>
-                    <TableCell>{product.price}</TableCell>
+                    <TableCell>{product.producT_PRICE}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
