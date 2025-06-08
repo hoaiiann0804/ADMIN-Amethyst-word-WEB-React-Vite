@@ -15,7 +15,7 @@ export const ProductsList = ({
           <div key={product.producT_ID} className="flex items-center p-4 gap-4">
             <div className="w-16 h-16 bg-gray-100 rounded overflow-hidden">
               <img
-                src={`https://localhost:5000/images/${product.imagE_NAME}`}
+                src={`http://localhost:5000/images/${product.imagE_NAME}`}
                 alt={product.producT_NAME}
                 className="object-cover w-full h-full"
               />

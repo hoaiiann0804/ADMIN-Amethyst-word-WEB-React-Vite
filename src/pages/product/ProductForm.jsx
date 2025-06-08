@@ -6,10 +6,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/Textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { CreateProduct, CreateProductImage, UpdateProduct } from "../../services/Product.Service";
 import { uploadImage } from "../../services/Upload.Service";
+
+// Dữ liệu cứng cho size theo danh mục
+const sizeOptions = {
+  clothing: ["S", "M", "L", "XL", "XXL"],
+  shoes: ["38", "39", "40", "41", "42"],
+  ring: ["6", "7", "8", "9"],
+  perfume: [],
+};
+
+// Dữ liệu cứng cho màu sắc
+const colorOptions = ["Đỏ", "Trắng", "Xanh", "Đen"];
+
 const productSchema = z.object({
   producT_NAME: z.string().min(2, { message: "Tên sản phẩm phải có ít nhất 2 ký tự." }),
   producT_PRICE: z
@@ -21,10 +33,16 @@ const productSchema = z.object({
   branD_ID: z.string().min(1, { message: "Vui lòng chọn thương hiệu." }),
   categorY_ID: z.string().min(1, { message: "Vui lòng chọn danh mục." }),
   producT_STATUS: z.enum(["ACTIVE", "INACTIVE", "DRAFT"], { message: "Vui lòng chọn trạng thái hợp lệ." }),
+  variants: z.array(
+    z.object({
+      size: z.string().optional(),
+      color: z.string().optional(),
+    })
+  ).optional(),
 });
 
 const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) => {
-  const { register, handleSubmit, reset, formState: { errors }, setValue, watch } = useForm({
+  const { register, handleSubmit, reset, formState: { errors }, setValue, watch, control } = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: {
       producT_NAME: "",
@@ -34,16 +52,21 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
       branD_ID: "",
       categorY_ID: "",
       producT_STATUS: "ACTIVE",
+      variants: [],
     },
   });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "variants",
+  });
+
   const [imageName, setImageName] = useState("");
 
-  // Watch selected values for controlled Select components
   const selectedBrand = watch("branD_ID");
   const selectedCategory = watch("categorY_ID");
   const selectedStatus = watch("producT_STATUS");
 
-  // Ép kiểu sang string để đảm bảo khớp với value của SelectItem
   const selectedBrandStr = selectedBrand ? String(selectedBrand) : "";
   const selectedCategoryStr = selectedCategory ? String(selectedCategory) : "";
   const selectedStatusStr = selectedStatus ? String(selectedStatus) : "";
@@ -59,6 +82,7 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
         branD_ID: product.branD_ID ? String(product.branD_ID) : "",
         categorY_ID: product.categorY_ID ? String(product.categorY_ID) : "",
         producT_STATUS: product.producT_STATUS || "ACTIVE",
+        variants: product.variants || [],
       });
     } else {
       reset({
@@ -69,51 +93,60 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
         branD_ID: "",
         categorY_ID: "",
         producT_STATUS: "ACTIVE",
+        variants: [],
       });
     }
   }, [product, reset]);
-
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-    
       try {
         const res = await uploadImage(file);
         setImageName(res.imageUrl);
       } catch (err) {
-        console.error('Upload thất bại:', err);
+        console.error("Upload thất bại:", err);
       }
     }
   };
 
   const onSubmit = async (data) => {
     try {
-      
-      if(product){
-        const response = await UpdateProduct(data)
-        if(response.code === 200){
-            const request = {
-              productId : parseInt(response.result),
-              imageName : imageName,
-            }
-            //const res = await CreateProductImage(request)
-        }
-      }else{
-        const response = await CreateProduct(data);
+      if (product) {
+        const updateData = {
+          ...data,
+          producT_ID: product.producT_ID,
+        };
+        const response = await UpdateProduct(updateData);
+        if (response.code === 200) {
           const request = {
-            productId : parseInt(response.result),
-            imageName : imageName,
-          }
-          await CreateProductImage(request)
+            productId: parseInt(response.result),
+            imageName: imageName,
+          };
+          await CreateProductImage(request); // Gọi API để tạo ảnh
         }
+      } else {
+        const response = await CreateProduct(data);
+        const request = {
+          productId: parseInt(response.result),
+          imageName: imageName,
+        };
+        await CreateProductImage(request);
+      }
       onSave(data);
       onClose();
     } catch (error) {
       console.error("Lỗi khi lưu sản phẩm:", error);
     }
+  };
+
+  const isPerfume = categories.find(c => c.categorY_ID === selectedCategory)?.categorY_NAME.toLowerCase() === "nước hoa";
+
+  const getSizeOptions = () => {
+    const categoryName = categories.find(c => c.categorY_ID === selectedCategory)?.categorY_NAME.toLowerCase();
+    return sizeOptions[categoryName] || [];
   };
 
   return (
@@ -139,12 +172,11 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="producT_DETAIL" className="text-right">Ảnh</Label>
+              <Label htmlFor="producT_IMAGE" className="text-right">Ảnh</Label>
               <Input
                 id="producT_IMAGE"
                 type="file"
                 accept="image/*"
-                {...register("producT_IMAGE")}
                 onChange={handleFileChange}
                 className="col-span-3"
               />
@@ -183,11 +215,12 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
               />
             </div>
 
-            <div className="grid grid-cols-4 items-center gap-4 text-black" >
+            <div className="grid grid-cols-4 items-center gap-4 text-black">
               <Label htmlFor="branD_ID" className="text-right">Thương hiệu</Label>
               <Select
                 onValueChange={(value) => setValue("branD_ID", value)}
                 value={selectedBrandStr}
+                defaultValue={product?.branD_ID?.toString()}
               >
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Chọn thương hiệu" />
@@ -210,7 +243,10 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="categorY_ID" className="text-right">Danh mục</Label>
               <Select
-                onValueChange={(value) => setValue("categorY_ID", value)}
+                onValueChange={(value) => {
+                  setValue("categorY_ID", value);
+                  setValue("variants", []);
+                }}
                 value={selectedCategoryStr}
               >
                 <SelectTrigger className="col-span-3">
@@ -252,6 +288,61 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
                 </p>
               )}
             </div>
+
+            {/* Variants size/color */}
+            {!isPerfume && (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label className="text-right">Biến thể</Label>
+                <div className="col-span-3 space-y-2">
+                  {fields.map((field, index) => (
+                    <div key={field.id} className="flex gap-2 items-center">
+                      <Select
+                        onValueChange={(value) => setValue(`variants.${index}.size`, value)}
+                        defaultValue={field.size}
+                      >
+                        <SelectTrigger className="w-1/3">
+                          <SelectValue placeholder="Chọn size" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {getSizeOptions().map(size => (
+                            <SelectItem key={size} value={size}>{size}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Select
+                        onValueChange={(value) => setValue(`variants.${index}.color`, value)}
+                        defaultValue={field.color}
+                      >
+                        <SelectTrigger className="w-1/3">
+                          <SelectValue placeholder="Chọn màu" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {colorOptions.map(color => (
+                            <SelectItem key={color} value={color}>{color}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => remove(index)}
+                      >
+                        Xóa
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => append({ size: "", color: "" })}
+                  >
+                    Thêm biến thể
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
 
           <DialogFooter>

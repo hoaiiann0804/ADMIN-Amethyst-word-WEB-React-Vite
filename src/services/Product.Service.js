@@ -168,7 +168,7 @@ export const UpdateProduct = async (input) => {
 
 export const DeleteProduct = async (input) => {
     try {
-        const response = await axios.post(`${API_URL}/api/Product/Delete?id=${input}`, {
+        const response = await axios.delete(`${API_URL}/api/Product/Delete?id=${input}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,

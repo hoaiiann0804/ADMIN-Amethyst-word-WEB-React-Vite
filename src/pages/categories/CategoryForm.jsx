@@ -102,7 +102,7 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
+<div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">Tên</Label>
               <Input
                 id="categorY_NAME"
