@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/Textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { CreateProduct, CreateProductImage, UpdateProduct } from "../../services/Product.Service";
 import { uploadImage } from "../../services/Upload.Service";
@@ -51,7 +51,7 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
       producT_DESCRIPTION: "",
       branD_ID: "",
       categorY_ID: "",
-      producT_STATUS: "ACTIVE",
+      producT_STATUS: "INACTIVE",
       variants: [],
     },
   });
@@ -81,7 +81,7 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
         producT_DESCRIPTION: product.producT_DESCRIPTION || "",
         branD_ID: product.branD_ID ? String(product.branD_ID) : "",
         categorY_ID: product.categorY_ID ? String(product.categorY_ID) : "",
-        producT_STATUS: product.producT_STATUS || "ACTIVE",
+        producT_STATUS: product.producT_STATUS || "INACTIVE",
         variants: product.variants || [],
       });
     } else {
@@ -92,7 +92,7 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
         producT_DESCRIPTION: "",
         branD_ID: "",
         categorY_ID: "",
-        producT_STATUS: "ACTIVE",
+        producT_STATUS: "INACTIVE",
         variants: [],
       });
     }
@@ -279,7 +279,6 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
                 <SelectContent>
                   <SelectItem value="ACTIVE">Hiển thị</SelectItem>
                   <SelectItem value="INACTIVE">Ẩn</SelectItem>
-                  <SelectItem value="DRAFT">Bản nháp</SelectItem>
                 </SelectContent>
               </Select>
               {errors.producT_STATUS && (

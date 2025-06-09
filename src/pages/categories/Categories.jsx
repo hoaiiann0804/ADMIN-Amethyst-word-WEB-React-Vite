@@ -26,9 +26,9 @@ import { Edit, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import CategoriesFilter from "@/pages/categories/CategoriesFilter";
-import CategoryForm from "./CategoryForm";
 import useToast from "../../hooks/use-toast";
 import { getCategories } from "../../services/Category.Service";
+import CategoryForm from "./CategoryForm";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -177,7 +177,7 @@ const Categories = () => {
                   <TableCell>
                     <img src={`https://localhost:5000/images/${category.categorY_IMAGE}`} alt={category.categorY_NAME} className="w-12 h-12 object-cover" />
                   </TableCell>
-                  <TableCell>{category.isActive ? "Hiển thị" : "Ẩn"}</TableCell>
+                  <TableCell>{category.categorY_STATUS === 'ACTIVE' ? "Hiển thị" : "Ẩn"}</TableCell>
                   <TableCell className="text-right space-x-2">
                     <Button variant="outline" size="sm" onClick={() => openEditModal(category)}>
                       <Edit size={16} />

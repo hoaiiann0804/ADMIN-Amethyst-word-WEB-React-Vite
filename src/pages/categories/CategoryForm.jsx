@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/Button";
-import { Checkbox } from "@/components/ui/Checkbox";
 import {
   Dialog,
   DialogContent,
@@ -15,11 +14,12 @@ import { addCategory, updateCategory } from "../../services/Category.Service";
 import { uploadImage } from "../../services/Upload.Service";
 
 const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
+  console.log("CategoryForm rendered with category:", category);
   const [formData, setFormData] = useState({
     categorY_NAME: "",
     image: "",
     description: "",
-    featured: false,
+    categorY_STATUS: false,
     image: "",
     imagePreview: "",
   });
@@ -28,11 +28,11 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
   useEffect(() => {
     if (category) {
       setFormData({
-        name: category.name || "",
+        name: category.categorY_NAME || "",
         slug: category.slug || "",
         description: category.description || "",
         productsCount: category.productsCount || 0,
-        featured: category.featured || false,
+        categorY_STATUS: category.categorY_STATUS || false,
         image: category.image || "",
         imagePreview: category.image || "",
       });
@@ -41,7 +41,7 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
         categorY_NAME: "",
         image: "",
         description: "",
-        featured: false,
+        categorY_STATUS: false,
       });
     }
   }, [category]);
@@ -75,7 +75,7 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
 
   // Xử lý checkbox thay đổi
   const handleCheckboxChange = (checked) => {
-    setFormData((prev) => ({ ...prev, featured: checked }));
+    setFormData((prev) => ({ ...prev, categorY_STATUS: checked }));
   };
 
   // Handle form submission
@@ -102,7 +102,7 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-4 py-4">
-<div className="grid grid-cols-4 items-center gap-4">
+            <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">Tên</Label>
               <Input
                 id="categorY_NAME"
@@ -134,25 +134,6 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
                 className="col-span-3"
               />
             </div>
-
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Nổi bật</Label>
-              <Checkbox
-                checked={formData.featured}
-                onCheckedChange={handleCheckboxChange}
-                className="col-span-3"
-              />
-            </div>
-
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Ảnh danh mục</Label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="col-span-3"
-              />
-            </div>
             {formData.imagePreview && (
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label className="text-right">Xem trước ảnh</Label>
@@ -163,8 +144,8 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">Trạng thái</Label>
               <Switch
-                checked={formData.featured}
-                onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, featured: checked }))}
+                checked={formData.categorY_STATUS}
+                onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, categorY_STATUS: checked }))}
                 className="col-span-3"
               />
             </div>
