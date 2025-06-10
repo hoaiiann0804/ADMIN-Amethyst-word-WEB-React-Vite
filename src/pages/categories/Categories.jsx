@@ -30,7 +30,8 @@ import useToast from "../../hooks/use-toast";
 import { getCategories } from "../../services/Category.Service";
 import CategoryForm from "./CategoryForm";
 import { deleteCategory } from "../../services/Category.Service";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");

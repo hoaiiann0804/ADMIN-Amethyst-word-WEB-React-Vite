@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { useEffect, useState } from "react";
 import { ProductBestSeller } from "../../services/Product.Service";
+const API_URL =  import.meta.env.VITE_API_URL;
 export const TopProducts = () => {
   const [products, setProducts] = useState([]);
 
@@ -31,7 +32,7 @@ export const TopProducts = () => {
             >
               <div className="h-10 w-10 rounded-md bg-gray-100 overflow-hidden">
                 <img
-                  src={`https://localhost:5000/images/${product.imagE_NAME}`}
+                  src={`${API_URL}/images/${product.imagE_NAME}`}
                   alt={product.producT_NAME}
                   className="h-full w-full object-cover"
                 />

@@ -125,7 +125,9 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
             productId: parseInt(response.result),
             imageName: imageName,
           };
-          await CreateProductImage(request); // Gọi API để tạo ảnh
+          if(imageName) {
+            await CreateProductImage(request);
+          }
         }
       } else {
         const response = await CreateProduct(data);

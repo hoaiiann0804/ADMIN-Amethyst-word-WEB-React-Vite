@@ -69,9 +69,9 @@ const Login = () => {
       <div className="flex flex-col gap-6 w-full max-w-md">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Login</CardTitle>
+            <CardTitle className="text-2xl text-center">Đăng Nhập</CardTitle>
             <CardDescription>
-              Enter your email below to login to your account
+             Hãy nhập email và mật khẩu của bạn 
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -104,18 +104,9 @@ const Login = () => {
                 />
               </div>
               <button type="submit" className="w-full bg-violet-400 h-10">
-                Login
+                Đăng Nhập
               </button>
-              <Button type="button" variant="outline" className="w-full">
-                Login with Google
-              </Button>
             </form>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
-                Sign up
-              </a>
-            </div>
           </CardContent>
         </Card>
       </div>
