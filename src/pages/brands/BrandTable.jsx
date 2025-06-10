@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import { ArrowUpDown, Edit, MoreVertical, Tag, Trash } from "lucide-react";
-
+const API_URL = import.meta.env.VITE_API_URL;
 const BrandTable = ({ brands, onEdit, onDelete }) => {
   return (
     <Card>
@@ -54,7 +54,7 @@ const BrandTable = ({ brands, onEdit, onDelete }) => {
                   </TableCell>
                   <TableCell>{brand.branD_NAME.replace(/\s+/g, '').toLowerCase()}</TableCell>
                   <TableCell>
-                    <img src={`https://localhost:5000/images/${brand.branD_IMAGE}`} alt={brand.branD_NAME} className="w-16 h-16 object-cover" />
+                    <img src={`${API_URL}/images/${brand.branD_IMAGE}`} alt={brand.branD_NAME} className="w-16 h-16 object-cover" />
                   </TableCell>
                   <TableCell className="max-w-[300px] truncate">
                     {brand.description}

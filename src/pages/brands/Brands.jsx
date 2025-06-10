@@ -12,10 +12,12 @@ import {
 import { Button } from "@/components/ui/Button";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { deleteBrand, getBrands } from "../../services/Brand.Service";
+import { deleteBrand, getBrands, addBrand, updateBrand } from "../../services/Brand.Service";
 import BrandForm from "./BrandForm";
 import BrandsFilter from "./BrandsFilter";
 import BrandTable from "./BrandTable";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Brands = () => {
   const [brands, setBrands] = useState([]);
@@ -33,24 +35,47 @@ const Brands = () => {
   );
 
   // Add or update brand
-  const handleSaveBrand = (brandData) => {
-    if (editingBrand) {
-      // Update existing brand
-      setBrands(
-        brands.map((brand) =>
-          brand.id === editingBrand.id ? { ...brandData, id: brand.id } : brand
-        )
-      );
-    } else {
-      // Add new brand
-      const newBrand = {
-        ...brandData,
-        id: brands.length ? Math.max(...brands.map((b) => b.id)) + 1 : 1,
-      };
-      setBrands([...brands, newBrand]);
+  const handleSaveBrand = async (brandData) => {
+    try {
+      console.log('brandData:', brandData);
+      if (!brandData.branD_NAME ) {
+        toast.error("Tên thương hiệu không được để trống");
+        return;
+      }
+      let res;
+      if (editingBrand) {
+        res = await updateBrand(brandData);
+        if (res.code === 200) {
+          toast.success("Cập nhật thương hiệu thành công");
+          await fetchBrands();
+          setIsModalOpen(false);
+          setEditingBrand(null);
+        } else {
+          toast.error(res.message || "Lỗi khi cập nhật thương hiệu");
+        }
+      } else {
+        res = await addBrand(brandData);
+        if (res.code === 201) {
+          toast.success("Thêm thương hiệu thành công");
+          await fetchBrands();
+          setIsModalOpen(false);
+          setEditingBrand(null);
+        } else {
+          toast.error(res.message || "Lỗi khi thêm thương hiệu");
+        }
+      }
+    } catch (error) {
+      console.error("Lỗi khi lưu thương hiệu trong handleSaveBrand:", error);
+      // Xử lý lỗi cụ thể khi thương hiệu đã tồn tại
+      if (error.response && error.response.data && error.response.data.message) {
+        const message = error.response.data.message.toLowerCase();
+        if (message.includes("đã tồn tại") || message.includes("exists")) {
+          toast.error("Thương hiệu đã tồn tại. Vui lòng chọn tên khác.");
+          return;
+        }
+      }
+      toast.error("Lỗi khi lưu thương hiệu. Vui lòng thử lại.");
     }
-    setIsModalOpen(false);
-    setEditingBrand(null);
   };
 
   // Delete brand
@@ -59,14 +84,22 @@ const Brands = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  const confirmDelete = () => {
-    deleteBrand(brandToDelete.branD_ID);
-    if (brandToDelete) {
-      setBrands(brands.filter((brand) => brand.id !== brandToDelete.id));
-      setIsDeleteDialogOpen(false);
-      setBrandToDelete(null);
-      setSearchTerm("");
+  const confirmDelete = async () => {
+    try {
+      const res = await deleteBrand(brandToDelete.branD_ID);
+      if (res.code === 200) {
+        toast.success("Xóa thương hiệu thành công");
+        await fetchBrands();
+      } else {
+        toast.error(res.message || "Lỗi khi xóa thương hiệu");
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa thương hiệu:", error);
+      toast.error("Lỗi khi xóa thương hiệu. Vui lòng thử lại.");
     }
+    setIsDeleteDialogOpen(false);
+    setBrandToDelete(null);
+    setSearchTerm("");
   };
 
   // Open modal for adding
@@ -87,8 +120,9 @@ const Brands = () => {
       setBrands(response);
     } catch (error) {
       console.error("Error fetching brands:", error);
+      toast.error("Lỗi khi tải danh sách thương hiệu");
     }
-  }
+  };
 
   useEffect(() => {
     fetchBrands();
@@ -118,13 +152,12 @@ const Brands = () => {
           onClose={() => {
             setIsModalOpen(false);
             setEditingBrand(null);
-            onSaveBrand(brands)
           }}
           onSave={handleSaveBrand}
           brand={editingBrand}
         />
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-            <AlertDialogContent>
+          <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
               <AlertDialogDescription>
@@ -143,6 +176,7 @@ const Brands = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+        <ToastContainer />
       </div>
     </DashboardLayout>
   );
