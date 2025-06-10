@@ -100,7 +100,7 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
+    if (file || file === null) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       try {
@@ -125,7 +125,9 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
             productId: parseInt(response.result),
             imageName: imageName,
           };
-          await CreateProductImage(request); // Gọi API để tạo ảnh
+          if(imageName) {
+            await CreateProductImage(request);
+          }
         }
       } else {
         const response = await CreateProduct(data);
@@ -180,7 +182,19 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
                 onChange={handleFileChange}
                 className="col-span-3"
               />
-            </div>
+              {imageName && (
+              <p className="text-sm text-green-600 mt-1">Đã chọn: {imageName}</p>
+                )}
+                {!imageName  && (
+                  <p className="text-sm text-gray-500 mt-1">Ảnh hiện tại: 
+                    <img
+                      src={product ? `${import.meta.env.VITE_API_URL}/images/${product.imagE_NAME}` : ""}
+                      alt={product?.producT_NAME || "Ảnh sản phẩm"}
+                      className="w-16 h-16 object-cover mt-1"
+                    />
+                  </p>
+                )}
+              </div>
 
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="producT_PRICE" className="text-right">Giá (VNĐ)</Label>
