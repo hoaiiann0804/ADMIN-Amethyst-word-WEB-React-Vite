@@ -20,6 +20,8 @@ export const addCategory = async (category) => {
             categorY_IMAGE: category.image,
             categorY_STATUS: category.status ? "ACTIVE" : "INACTIVE",
             description: category.description,
+            icoN_NAME: category.icoN_NAME,
+            icoN_COLOR: category.icoN_COLOR,
         },
         {
             headers: {
@@ -45,6 +47,8 @@ export const updateCategory = async (category) => {
             categorY_IMAGE: category.image,
             categorY_STATUS: category.status ? "ACTIVE" : "INACTIVE",
             description: category.description,
+            icoN_NAME: category.icoN_NAME,
+            icoN_COLOR: category.icoN_COLOR,
         },
         {
             headers: {
