@@ -29,6 +29,7 @@ import CategoriesFilter from "@/pages/categories/CategoriesFilter";
 import useToast from "../../hooks/use-toast";
 import { getCategories } from "../../services/Category.Service";
 import CategoryForm from "./CategoryForm";
+import { deleteCategory } from "../../services/Category.Service";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -40,7 +41,7 @@ const Categories = () => {
   const [sortBy, setSortBy] = useState("id");
   const [sortOrder, setSortOrder] = useState("asc");
 
-  const { toast } = useToast();
+  const { showSuccess, showError, showInfo } = useToast();
 
   const handleSort = (column) => {
     if (sortBy === column) {
@@ -79,20 +80,14 @@ const Categories = () => {
           : category
       );
       setCategories(updatedCategories);
-      toast({
-        title: "Cập nhật danh mục thành công",
-        description: `Danh mục "${data.categorY_NAME}" đã được cập nhật.`,
-      });
+      showSuccess(`Cập nhật danh mục thành công: Danh mục "${data.categorY_NAME}" đã được cập nhật.`);
     } else {
       const newCategory = {
         ...data,
         categorY_ID: categories.length ? Math.max(...categories.map((c) => c.categorY_ID)) + 1 : 1,
       };
       setCategories([...categories, newCategory]);
-      toast({
-        title: "Thêm danh mục thành công",
-        description: `Danh mục "${data.categorY_NAME}" đã được thêm.`,
-      });
+      showSuccess(`Thêm danh mục thành công: Danh mục "${data.categorY_NAME}" đã được thêm.`);
     }
     setIsModalOpen(false);
     setEditingCategory(null);
@@ -117,11 +112,7 @@ const Categories = () => {
     deleteCategory(categoryToDelete.categorY_ID)
     if (categoryToDelete) {
       setCategories(categories.filter(c => c.categorY_ID !== categoryToDelete.categorY_ID));
-      toast({
-        title: "Xóa danh mục thành công",
-        description: `Danh mục "${categoryToDelete.categorY_NAME}" đã bị xóa.`,
-        variant: "destructive",
-      });
+      showSuccess(`Xóa danh mục thành công: Danh mục "${categoryToDelete.categorY_NAME}" đã bị xóa.`);
       setCategoryToDelete(null);
       setIsDeleteDialogOpen(false);
     }
