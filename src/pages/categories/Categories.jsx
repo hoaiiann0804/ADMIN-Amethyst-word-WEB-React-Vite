@@ -40,7 +40,7 @@ const Categories = () => {
   const [sortBy, setSortBy] = useState("id");
   const [sortOrder, setSortOrder] = useState("asc");
 
-  const toast = useToast();
+  const { toast } = useToast();
 
   const handleSort = (column) => {
     if (sortBy === column) {
@@ -164,7 +164,8 @@ const Categories = () => {
                 <TableHead onClick={() => handleSort("categorY_NAME")} className="cursor-pointer">
                   Tên danh mục{renderSortIndicator("categorY_NAME")}
                 </TableHead>
-                <TableHead>Ảnh danh mục</TableHead>
+                <TableHead>Tên icon</TableHead>
+                <TableHead>Màu icon</TableHead>
                 <TableHead>Trạng thái</TableHead>
                 <TableHead className="text-right">Thao tác</TableHead>
               </TableRow>
@@ -175,8 +176,9 @@ const Categories = () => {
                   <TableCell>{category.categorY_ID}</TableCell>
                   <TableCell>{category.categorY_NAME}</TableCell>
                   <TableCell>
-                    <img src={`https://localhost:5000/images/${category.categorY_IMAGE}`} alt={category.categorY_NAME} className="w-12 h-12 object-cover" />
+                    {category.icoN_NAME}
                   </TableCell>
+                  <TableCell>{category.icoN_COLOR}</TableCell>
                   <TableCell>{category.categorY_STATUS === 'ACTIVE' ? "Hiển thị" : "Ẩn"}</TableCell>
                   <TableCell className="text-right space-x-2">
                     <Button variant="outline" size="sm" onClick={() => openEditModal(category)}>
@@ -186,7 +188,7 @@ const Categories = () => {
                       <Trash2 size={16} />
                     </Button>
                   </TableCell>
-                </TableRow>
+                </TableRow> 
               ))}
             </TableBody>
           </Table>
