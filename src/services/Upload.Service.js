@@ -11,7 +11,8 @@ export const uploadImage = async (file) => {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        return response.data;
+        const fileName = response.data.imageUrl;
+        return fileName.split('/').pop();
     } catch (error) {
         console.error('Error uploading image:', error);
         throw error;
