@@ -10,7 +10,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { CreateProduct, CreateProductImage, UpdateProduct } from "../../services/Product.Service";
 import { uploadImage } from "../../services/Upload.Service";
-
+const API_IMAGE_URL = import.meta.env.VITE_API_IMAGE;
 // Dữ liệu cứng cho size theo danh mục
 const sizeOptions = {
   clothing: ["S", "M", "L", "XL", "XXL"],
@@ -105,7 +105,7 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
       reader.readAsDataURL(file);
       try {
         const res = await uploadImage(file);
-        setImageName(res.imageUrl);
+        setImageName(res);
       } catch (err) {
         console.error("Upload thất bại:", err);
       }
@@ -183,12 +183,12 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
                 className="col-span-3"
               />
               {imageName && (
-              <p className="text-sm text-green-600 mt-1">Đã chọn: {imageName}</p>
+              <p className="text-sm text-green-600 mt-1">Đã chọn: </p>
                 )}
                 {!imageName  && (
                   <p className="text-sm text-gray-500 mt-1">Ảnh hiện tại: 
                     <img
-                      src={product ? `${import.meta.env.VITE_API_URL}/images/${product.imagE_NAME}` : ""}
+                      src={product ? `${API_IMAGE_URL}/${product.imagE_NAME}` : ""}
                       alt={product?.producT_NAME || "Ảnh sản phẩm"}
                       className="w-16 h-16 object-cover mt-1"
                     />

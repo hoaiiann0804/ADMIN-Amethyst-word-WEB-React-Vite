@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Edit, Trash2 } from "lucide-react";
 const API_URL = import.meta.env.VITE_API_URL;
-
+const API_IMAGE_URL = import.meta.env.VITE_API_IMAGE;
 
 export const ProductsGrid = ({
   products,
@@ -17,7 +17,7 @@ export const ProductsGrid = ({
         <Card key={product.producT_ID} className="overflow-hidden">
           <div className="aspect-square relative bg-gray-100">
             <img
-              src={`${API_URL}/images/${product.imagE_NAME}`}
+              src={`${API_IMAGE_URL}/${product.imagE_NAME}`}
               alt={product.producT_NAME}
               className="object-cover w-full h-full"
             />
