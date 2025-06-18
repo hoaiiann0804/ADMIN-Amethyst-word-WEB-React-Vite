@@ -155,7 +155,7 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[65%]">
         <DialogHeader>
           <DialogTitle>{product ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm"}</DialogTitle>
         </DialogHeader>
@@ -231,78 +231,77 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
               />
             </div>
 
-            <div className="grid grid-cols-4 items-center gap-4 text-black">
-              <Label htmlFor="branD_ID" className="text-right">Thương hiệu</Label>
-              <Select
-                onValueChange={(value) => setValue("branD_ID", value)}
-                value={selectedBrandStr}
-                defaultValue={product?.branD_ID?.toString()}
-              >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Chọn thương hiệu" />
-                </SelectTrigger>
-                <SelectContent>
-                  {brands.map((brand) => (
-                    <SelectItem key={brand.branD_ID} value={String(brand.branD_ID)}>
-                      {brand.branD_NAME}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.branD_ID && (
-                <p className="text-red-500 text-sm col-span-3 col-start-2">
-                  {errors.branD_ID.message}
-                </p>
-              )}
-            </div>
+            <div className="grid grid-cols-3 gap-4">
+  {/* Danh mục */}
+  <div>
+    <Label htmlFor="categorY_ID" className="block mb-1">Danh mục</Label>
+    <Select
+      onValueChange={(value) => {
+        setValue("categorY_ID", value);
+        setValue("variants", []);
+      }}
+      value={selectedCategoryStr}
+    >
+      <SelectTrigger>
+        <SelectValue placeholder="Chọn danh mục" />
+      </SelectTrigger>
+      <SelectContent>
+        {categories.map((category) => (
+          <SelectItem key={category.categorY_ID} value={String(category.categorY_ID)}>
+            {category.categorY_NAME}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+    {errors.categorY_ID && (
+      <p className="text-red-500 text-sm mt-1">{errors.categorY_ID.message}</p>
+    )}
+  </div>
 
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="categorY_ID" className="text-right">Danh mục</Label>
-              <Select
-                onValueChange={(value) => {
-                  setValue("categorY_ID", value);
-                  setValue("variants", []);
-                }}
-                value={selectedCategoryStr}
-              >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Chọn danh mục" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.categorY_ID} value={String(category.categorY_ID)}>
-                      {category.categorY_NAME}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.categorY_ID && (
-                <p className="text-red-500 text-sm col-span-3 col-start-2">
-                  {errors.categorY_ID.message}
-                </p>
-              )}
-            </div>
+  {/* Thương hiệu */}
+  <div>
+    <Label htmlFor="branD_ID" className="block mb-1">Thương hiệu</Label>
+    <Select
+      onValueChange={(value) => setValue("branD_ID", value)}
+      value={selectedBrandStr}
+    >
+      <SelectTrigger>
+        <SelectValue placeholder="Chọn thương hiệu" />
+      </SelectTrigger>
+      <SelectContent>
+        {brands.map((brand) => (
+          <SelectItem key={brand.branD_ID} value={String(brand.branD_ID)}>
+            {brand.branD_NAME}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+    {errors.branD_ID && (
+      <p className="text-red-500 text-sm mt-1">{errors.branD_ID.message}</p>
+    )}
+  </div>
 
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="producT_STATUS" className="text-right">Trạng thái</Label>
-              <Select
-                onValueChange={(value) => setValue("producT_STATUS", value)}
-                value={selectedStatusStr}
-              >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Chọn trạng thái" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="ACTIVE">Hiển thị</SelectItem>
-                  <SelectItem value="INACTIVE">Ẩn</SelectItem>
-                </SelectContent>
-              </Select>
-              {errors.producT_STATUS && (
-                <p className="text-red-500 text-sm col-span-3 col-start-2">
-                  {errors.producT_STATUS.message}
-                </p>
-              )}
-            </div>
+  {/* Trạng thái */}
+  <div>
+    <Label htmlFor="producT_STATUS" className="block mb-1">Trạng thái</Label>
+    <Select
+      onValueChange={(value) => setValue("producT_STATUS", value)}
+      value={selectedStatusStr}
+    >
+      <SelectTrigger>
+        <SelectValue placeholder="Chọn trạng thái" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="ACTIVE">Hiển thị</SelectItem>
+        <SelectItem value="INACTIVE">Ẩn</SelectItem>
+      </SelectContent>
+    </Select>
+    {errors.producT_STATUS && (
+      <p className="text-red-500 text-sm mt-1">{errors.producT_STATUS.message}</p>
+    )}
+  </div>
+</div>
+
 
             {/* Variants size/color */}
             {!isPerfume && (

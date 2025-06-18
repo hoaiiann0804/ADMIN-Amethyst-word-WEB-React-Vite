@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/Button"
 import {
   Card,
   CardContent,
@@ -71,7 +70,7 @@ const Login = () => {
           <CardHeader>
             <CardTitle className="text-2xl text-center">Đăng Nhập</CardTitle>
             <CardDescription>
-             Hãy nhập email và mật khẩu của bạn 
+              Hãy nhập email và mật khẩu của bạn 
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -88,12 +87,12 @@ const Login = () => {
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">Mật khẩu</Label>
                   <a
                     href="#"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
-                    Forgot your password?
+                    Quên mật khẩu?
                   </a>
                 </div>
                 <Input
