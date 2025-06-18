@@ -1,15 +1,15 @@
-import React from 'react'
-import QuickActions from './QuickAction'
-import InventoryTable from './InventoryTable'
-import StatsCard from './StatsCard'
-import RecentMoveMents from './RecentMoveMents'
-import { useInventoryData } from '../../hooks/useInventoryData'
 import { Button } from "@/components/ui/Button"
-import { Download } from 'lucide-react'
-import { Plus } from 'lucide-react'
-import {Package, TrendingUp, TrendingDown, AlertTriangle} from 'lucide-react'
+import { AlertTriangle, Download, Package, Plus, TrendingDown } from 'lucide-react'
+import React, { useEffect } from 'react'
 import { DashboardLayout } from '../../components/layouts/DashboardLayout'
+import { useInventoryData } from '../../hooks/useInventoryData'
+import { BelowMinium, OutOfStock, TotalProduct, TotalValues } from '../../services/Stock.Service'
+import InventoryTable from './InventoryTable'
 import { StockModal } from './ModalComponents'
+import QuickActions from './QuickAction'
+import RecentMoveMents from './RecentMoveMents'
+import StatsCard from './StatsCard'
+
 const InventoryManagement= () => {
     const [searchTerm, setSearchTerm] = React.useState('');
     const [isStockModalOpen, setIsStockModalOpen] = React.useState(false);
@@ -17,18 +17,22 @@ const InventoryManagement= () => {
     const [selectedCategory, setSelectedCategory] = React.useState('all');
     const { inventoryStats, recentMovements, inventoryData, addStock, removeStock } = useInventoryData();
     const filteredData = inventoryData.filter(item => {
-      const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           item.sku.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) || item.sku.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
-  
+    const [ totalProducts, setTotalProducts ] = React.useState([]);
+    const [ totalValues, setTotalValues ] = React.useState([]);
+    const [ belowMinium, setBelowMinium ] = React.useState([]);
+    const [ outOfStock, setOutOfStock ] = React.useState([]);
+
     const formatCurrency = (amount) => {
       return new Intl.NumberFormat('vi-VN', {
         style: 'currency',
         currency: 'VND'
       }).format(amount);
     };
+
     const exportReport = () => {
       const headers = ['ID,Sản phẩm,SKU,Danh mục,Số lượng,Giá,Trạng thái'];
       const rows = inventoryData.map(item =>
@@ -43,6 +47,48 @@ const InventoryManagement= () => {
       link.click();
       URL.revokeObjectURL(url);
     };
+
+
+    const handleFetchTotalProduct = async () => {
+      try{
+        const response = await TotalProduct();
+        setTotalProducts(response[0].result)
+      } catch(error)
+      {
+      }
+    }
+
+    const handleFetchTotalValues = async () => {
+      try{
+        const response = await TotalValues();
+        setTotalValues(response[0].result)
+      } catch(error){
+      }
+    }
+
+    const handleFetchMinium = async () => {
+      try{
+        const response = await BelowMinium();
+        setBelowMinium(response[0].result)
+      } catch(error){
+      }
+    }
+
+    const handleFetchOutOfStock = async () => {
+      try{
+        const response = await OutOfStock();
+        setOutOfStock(response[0].result)
+      }catch(error){
+      }
+    }
+
+    useEffect(() => {
+      handleFetchTotalProduct()
+      handleFetchTotalValues()
+      handleFetchMinium()
+      handleFetchOutOfStock()
+    },[])
+
     return (
       <DashboardLayout>
       <div className="space-y-4">
@@ -70,26 +116,31 @@ const InventoryManagement= () => {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <StatsCard
               title="Tổng sản phẩm"
-              value={inventoryStats.totalProducts.toLocaleString()}
+              value={totalProducts}
               description="Các mặt hàng trong kho"
               icon={Package}
             />
             <StatsCard
-              title="Giá trị tồn kho"
-              value={formatCurrency(inventoryStats.totalValue)}
-              description="Tổng giá trị hàng tồn"
-              icon={TrendingUp}
+              title="Tổng sản phẩm"
+              value={
+                Number(totalValues).toLocaleString('vi-VN', {
+                  style: 'currency',
+                  currency: 'VND',
+                })
+              }
+              description="Các mặt hàng trong kho"
+              icon={Package}
             />
             <StatsCard
               title="Sắp hết hàng"
-              value={inventoryStats.lowStock}
+              value={belowMinium}
               description="Sản phẩm dưới mức tối thiểu"
               icon={AlertTriangle}
               color="yellow"
             />
             <StatsCard
               title="Hết hàng"
-              value={inventoryStats.outOfStock}
+              value={outOfStock}
               description="Sản phẩm hết hàng"
               icon={TrendingDown}
               color="red"
