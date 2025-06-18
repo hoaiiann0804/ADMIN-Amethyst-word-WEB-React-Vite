@@ -22,7 +22,6 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
     categorY_STATUS: false,
   });
 
-  // Đồng bộ formData khi chỉnh sửa
   useEffect(() => {
     if (category) {
       setFormData({
@@ -118,14 +117,20 @@ const CategoryForm = ({ isOpen, onClose, onSave, category }) => {
 
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="icoN_COLOR" className="text-right">Màu icon</Label>
-              <Input
-                id="icoN_COLOR"
-                name="icoN_COLOR"
-                value={formData.icoN_COLOR}
-                onChange={handleChange}
-                className="col-span-3"
-              />
+
+              <div className="col-span-3 flex items-center gap-2">
+                <input
+                  type="color"
+                  id="icoN_COLOR"
+                  name="icoN_COLOR"
+                  value={formData.icoN_COLOR}
+                  onChange={handleChange}
+                  className="h-10 w-12 rounded border"
+                />
+                <span className="text-sm">{formData.icoN_COLOR}</span>
+              </div>
             </div>
+
 
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">Trạng thái</Label>
