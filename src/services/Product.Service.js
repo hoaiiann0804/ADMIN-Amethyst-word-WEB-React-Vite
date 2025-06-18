@@ -6,6 +6,7 @@ export const ProductNew = async (input) => {
         const response = await axios.get(`${API_URL}/api/Product/ProductNew`, {
             headers: {
                 'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
             },
             params: {
                 input: input,
@@ -22,6 +23,7 @@ export const ProductBestSeller = async (input) => {
         const response = await axios.get(`${API_URL}/api/Product/ProductBestSeller?input=5`, {
             headers: {
                 'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
             },
             params: {
                 input: input,
@@ -38,6 +40,7 @@ export const ProductSaleNoPaging = async (input) => {
         const response = await axios.get(`${API_URL}/api/Product/DiscountHome`, {
             headers: {
                 'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
             },
             params: {
                 input: input,
@@ -54,6 +57,7 @@ export const GetProductDetail = async (input) => {
         const response = await axios.get(`${API_URL}/api/Product/Detail`, {
             headers: {
                 'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
             },
             params: {
                 input: input,
@@ -70,6 +74,7 @@ export const ProductPaging = async (pageNumber = 1, pageSize = 10) => {
         const response = await axios.get(`${API_URL}/api/Product/ProductList`, {
             headers: {
                 'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
             },
             params: {
                 pageNumber: pageNumber,
@@ -87,6 +92,7 @@ export const SerchProduct = async (input, pageNumber, pageSize) => {
         const response = await axios.get(`${API_URL}/api/Product/Search`, {
             headers: {
                 'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
             },
             params: {
                 name: input,
@@ -105,6 +111,7 @@ export const FillterProduct = async (input, pageNumber, pageSize) => {
         const response = await axios.get(`${API_URL}/api/Product/Fillter`, {
             headers: {
                 'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
             },
             params: {
                 brandId: input.brandId,
@@ -158,6 +165,7 @@ export const UpdateProduct = async (input) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'ngrok-skip-browser-warning': 'true'
             }
         });
         return response.data;
@@ -172,6 +180,7 @@ export const DeleteProduct = async (input) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'ngrok-skip-browser-warning': 'true'
             }
         });
         return response.data;
@@ -190,6 +199,7 @@ export const CreateProductImage = async (input) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'ngrok-skip-browser-warning': 'true'
             }
         });
         return response.data;
@@ -203,6 +213,8 @@ export const ProductDetail = async (input) => {
         const response = await axios.get(`${API_URL}/api/Product/ProductDetail`, {
             headers: {
                 'Content-Type': 'application/json',
+                 'ngrok-skip-browser-warning': 'true',
+                 
             },
             params: {
                 id: input,
@@ -211,5 +223,20 @@ export const ProductDetail = async (input) => {
         return response.data;
     } catch (error) {
         return error.response || { message: 'Lỗi kết nối server' };
+    }
+}
+
+export const getProductImage = async (productId) =>{
+    try{
+        const response = await axios.get(`${API_URL}/api/Product/GetImage?id=${productId}`, {
+            headers:{
+                'Content-Type':'application/json',
+                'ngrok-skip-browser-warning': 'true',
+            }
+        })
+        return response.data
+    }
+    catch(error){
+        throw error.response || { message: 'Lỗi kết nối server' }
     }
 }

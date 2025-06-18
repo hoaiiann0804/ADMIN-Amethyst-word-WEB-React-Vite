@@ -18,3 +18,5 @@ export const uploadImage = async (file) => {
         throw error;
     }
 }
+
+
