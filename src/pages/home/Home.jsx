@@ -4,7 +4,6 @@ import RecentOrders from "@/components/layouts/RecentOrders";
 import { SalesChart } from "@/components/layouts/SalesChart";
 import { StatsCard } from "@/components/layouts/StatsCard";
 import { TopProducts } from "@/components/layouts/TopProduct";
-import { Card } from "@/components/ui/Card";
 import { BarChart, Calendar, ShoppingBag, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { GetOrder, GetRevenueTotal, GetUser } from "../../services/Dashboard.Service";
@@ -96,8 +95,6 @@ const Home = () => {
 
   }, [user, order, revenue]);
 
-
-
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -143,12 +140,8 @@ const Home = () => {
           <SalesChart />
           <div className="lg:col-span-2 grid grid-cols-1 gap-6">
             <TopProducts />
-            <Card className="h-[300px] flex items-center justify-center">
-              <p className="text-lg font-medium text-gray-500">Thêm widget</p>
-            </Card>
           </div>
         </div>
-
         <RecentOrders />
       </div>
     </DashboardLayout>
