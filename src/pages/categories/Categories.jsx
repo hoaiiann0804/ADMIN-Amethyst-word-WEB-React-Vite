@@ -26,12 +26,10 @@ import { Edit, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import CategoriesFilter from "@/pages/categories/CategoriesFilter";
-import useToast from "../../hooks/use-toast";
-import { getCategories } from "../../services/Category.Service";
-import CategoryForm from "./CategoryForm";
-import { deleteCategory } from "../../services/Category.Service";
-import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useToast from "../../hooks/use-toast";
+import { deleteCategory, getCategories } from "../../services/Category.Service";
+import CategoryForm from "./CategoryForm";
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -170,7 +168,18 @@ const Categories = () => {
                   <TableCell>
                     {category.icoN_NAME}
                   </TableCell>
-                  <TableCell>{category.icoN_COLOR}</TableCell>
+                  <TableCell>
+                    <div
+                      style={{
+                        backgroundColor: category.icoN_COLOR,
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '4px',
+                        border: '1px solid #ccc',
+                        display: 'inline-block'
+                      }}
+                    ></div>
+                  </TableCell>
                   <TableCell>{category.categorY_STATUS === 'ACTIVE' ? "Hiển thị" : "Ẩn"}</TableCell>
                   <TableCell className="text-right space-x-2">
                     <Button variant="outline" size="sm" onClick={() => openEditModal(category)}>
