@@ -26,6 +26,7 @@ export const Sidebar = () => {
     { name: "Danh mục", href: "/categories", icon: ListIcon },
     { name: "Thương hiệu", href: "/brands", icon: SiAdidas  },
     { name: "Đơn hàng ", href: "/orders", icon: RiBillFill },
+    {name: "tồn kho", href: "/stock", icon: FaCartArrowDown},
     { name: "Khách hàng", href: "/users", icon: User },
     { name: "Phân quyền", href: "/permissions",icon: FaUserCheck},
     { name: "Đánh giá", href: "/reviews", icon: MdOutlineReviews  },
