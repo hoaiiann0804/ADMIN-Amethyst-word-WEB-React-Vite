@@ -47,12 +47,14 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
     defaultValues: {
       producT_NAME: "",
       producT_PRICE: "",
+      pricE_ROOT: "",
       producT_DETAIL: "",
       producT_DESCRIPTION: "",
       branD_ID: "",
       categorY_ID: "",
       producT_STATUS: "INACTIVE",
-      variants: [],
+      coloR_NAME: "",
+      sizE_NAME: ""
     },
   });
 
@@ -79,23 +81,27 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
         producT_ID: product.producT_ID,
         producT_NAME: product.producT_NAME || "",
         producT_PRICE: product.producT_PRICE?.toString() || "",
+        pricE_ROOT: product.pricE_ROOT?.toString() || "",
         producT_DETAIL: product.producT_DETAIL || "",
         producT_DESCRIPTION: product.producT_DESCRIPTION || "",
         branD_ID: product.branD_ID ? String(product.branD_ID) : "",
         categorY_ID: product.categorY_ID ? String(product.categorY_ID) : "",
         producT_STATUS: product.producT_STATUS || "INACTIVE",
-        variants: product.variants || [],
+        coloR_NAME: product.coloR_NAME || "",
+        sizE_NAME: product.sizE_NAME || ""
       });
     } else {
       reset({
         producT_NAME: "",
         producT_PRICE: "",
+        pricE_ROOT: "",
         producT_DETAIL: "",
         producT_DESCRIPTION: "",
         branD_ID: "",
         categorY_ID: "",
         producT_STATUS: "INACTIVE",
-        variants: [],
+        coloR_NAME: "",
+        sizE_NAME: ""
       });
     }
   }, [product, reset]);
@@ -159,8 +165,11 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
         <DialogHeader>
           <DialogTitle>{product ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm"}</DialogTitle>
         </DialogHeader>
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid gap-4 py-4">
+          <div className="space-y-4 py-4">
+
+            {/* Tên sản phẩm */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="producT_NAME" className="text-right">Tên sản phẩm</Label>
               <Input
@@ -169,51 +178,75 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
                 className="col-span-3"
               />
               {errors.producT_NAME && (
-                <p className="text-red-500 text-sm col-span-3 col-start-2">
+                <p className="text-red-500 text-sm col-span-4 text-right">
                   {errors.producT_NAME.message}
                 </p>
               )}
             </div>
 
+            {/* Ảnh */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="producT_IMAGE" className="text-right">Ảnh</Label>
-              <Input
-                id="producT_IMAGE"
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="col-span-3"
-              />
-              {imageName && (
-              <p className="text-sm text-green-600 mt-1">Đã chọn: </p>
+              <div className="col-span-3">
+                <Input
+                  id="producT_IMAGE"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+                {imageName && (
+                  <p className="text-sm text-green-600 mt-1">Đã chọn: {imageName}</p>
                 )}
-                {!imageName  && (
-                  <p className="text-sm text-gray-500 mt-1">Ảnh hiện tại: 
+                {!imageName && product?.imagE_NAME && (
+                  <div className="mt-2 flex items-center gap-2">
+                    <span className="text-sm text-gray-500">Ảnh hiện tại:</span>
                     <img
-                      src={product ? `${API_IMAGE_URL}/${product.imagE_NAME}` : ""}
-                      alt={product?.producT_NAME || "Ảnh sản phẩm"}
-                      className="w-16 h-16 object-cover mt-1"
+                      src={`${API_IMAGE_URL}/${product.imagE_NAME}`}
+                      alt={product.producT_NAME}
+                      className="w-16 h-16 object-cover"
                     />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Giá và Giá gốc */}
+            <div className="grid grid-cols-2 gap-4">
+              {/* Giá */}
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="producT_PRICE" className="text-right">Giá (VNĐ)</Label>
+                <Input
+                  id="producT_PRICE"
+                  type="number"
+                  {...register("producT_PRICE")}
+                  className="col-span-3"
+                />
+                {errors.producT_PRICE && (
+                  <p className="text-red-500 text-sm col-span-4 text-right">
+                    {errors.producT_PRICE.message}
                   </p>
                 )}
               </div>
 
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="producT_PRICE" className="text-right">Giá (VNĐ)</Label>
-              <Input
-                id="producT_PRICE"
-                type="number"
-                {...register("producT_PRICE")}
-                className="col-span-3"
-              />
-              {errors.producT_PRICE && (
-                <p className="text-red-500 text-sm col-span-3 col-start-2">
-                  {errors.producT_PRICE.message}
-                </p>
-              )}
+              {/* Giá gốc */}
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="pricE_ROOT" className="text-right">Giá gốc (VNĐ)</Label>
+                <Input
+                  id="pricE_ROOT"
+                  type="number"
+                  {...register("pricE_ROOT")}
+                  className="col-span-3"
+                />
+                {errors.pricE_ROOT && (
+                  <p className="text-red-500 text-sm col-span-4 text-right">
+                    {errors.pricE_ROOT.message}
+                  </p>
+                )}
+              </div>
             </div>
 
-            <div className="grid grid-cols-4 items-center gap-4">
+            {/* Chi tiết */}
+            <div className="grid grid-cols-4 items-start gap-4">
               <Label htmlFor="producT_DETAIL" className="text-right">Chi tiết</Label>
               <Textarea
                 id="producT_DETAIL"
@@ -222,7 +255,8 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
               />
             </div>
 
-            <div className="grid grid-cols-4 items-center gap-4">
+            {/* Mô tả */}
+            <div className="grid grid-cols-4 items-start gap-4">
               <Label htmlFor="producT_DESCRIPTION" className="text-right">Mô tả</Label>
               <Textarea
                 id="producT_DESCRIPTION"
@@ -231,102 +265,97 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
               />
             </div>
 
+            {/* Danh mục, Thương hiệu, Trạng thái */}
             <div className="grid grid-cols-3 gap-4">
-  {/* Danh mục */}
-  <div>
-    <Label htmlFor="categorY_ID" className="block mb-1">Danh mục</Label>
-    <Select
-      onValueChange={(value) => {
-        setValue("categorY_ID", value);
-        setValue("variants", []);
-      }}
-      value={selectedCategoryStr}
-    >
-      <SelectTrigger>
-        <SelectValue placeholder="Chọn danh mục" />
-      </SelectTrigger>
-      <SelectContent>
-        {categories.map((category) => (
-          <SelectItem key={category.categorY_ID} value={String(category.categorY_ID)}>
-            {category.categorY_NAME}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-    {errors.categorY_ID && (
-      <p className="text-red-500 text-sm mt-1">{errors.categorY_ID.message}</p>
-    )}
-  </div>
+              {/* Danh mục */}
+              <div>
+                <Label htmlFor="categorY_ID" className="block mb-1">Danh mục</Label>
+                <Select
+                  onValueChange={(value) => {
+                    setValue("categorY_ID", value);
+                    setValue("variants", []);
+                  }}
+                  value={selectedCategoryStr}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Chọn danh mục" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category.categorY_ID} value={String(category.categorY_ID)}>
+                        {category.categorY_NAME}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errors.categorY_ID && (
+                  <p className="text-red-500 text-sm mt-1">{errors.categorY_ID.message}</p>
+                )}
+              </div>
 
-  {/* Thương hiệu */}
-  <div>
-    <Label htmlFor="branD_ID" className="block mb-1">Thương hiệu</Label>
-    <Select
-      onValueChange={(value) => setValue("branD_ID", value)}
-      value={selectedBrandStr}
-    >
-      <SelectTrigger>
-        <SelectValue placeholder="Chọn thương hiệu" />
-      </SelectTrigger>
-      <SelectContent>
-        {brands.map((brand) => (
-          <SelectItem key={brand.branD_ID} value={String(brand.branD_ID)}>
-            {brand.branD_NAME}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-    {errors.branD_ID && (
-      <p className="text-red-500 text-sm mt-1">{errors.branD_ID.message}</p>
-    )}
-  </div>
+              {/* Thương hiệu */}
+              <div>
+                <Label htmlFor="branD_ID" className="block mb-1">Thương hiệu</Label>
+                <Select
+                  onValueChange={(value) => setValue("branD_ID", value)}
+                  value={selectedBrandStr}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Chọn thương hiệu" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {brands.map((brand) => (
+                      <SelectItem key={brand.branD_ID} value={String(brand.branD_ID)}>
+                        {brand.branD_NAME}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errors.branD_ID && (
+                  <p className="text-red-500 text-sm mt-1">{errors.branD_ID.message}</p>
+                )}
+              </div>
 
-  {/* Trạng thái */}
-  <div>
-    <Label htmlFor="producT_STATUS" className="block mb-1">Trạng thái</Label>
-    <Select
-      onValueChange={(value) => setValue("producT_STATUS", value)}
-      value={selectedStatusStr}
-    >
-      <SelectTrigger>
-        <SelectValue placeholder="Chọn trạng thái" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="ACTIVE">Hiển thị</SelectItem>
-        <SelectItem value="INACTIVE">Ẩn</SelectItem>
-      </SelectContent>
-    </Select>
-    {errors.producT_STATUS && (
-      <p className="text-red-500 text-sm mt-1">{errors.producT_STATUS.message}</p>
-    )}
-  </div>
-</div>
+              {/* Trạng thái */}
+              <div>
+                <Label htmlFor="producT_STATUS" className="block mb-1">Trạng thái</Label>
+                <Select
+                  onValueChange={(value) => setValue("producT_STATUS", value)}
+                  value={selectedStatusStr}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Chọn trạng thái" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ACTIVE">Hiển thị</SelectItem>
+                    <SelectItem value="INACTIVE">Ẩn</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.producT_STATUS && (
+                  <p className="text-red-500 text-sm mt-1">{errors.producT_STATUS.message}</p>
+                )}
+              </div>
+            </div>
 
-
-            {/* Variants size/color */}
+            {/* Biến thể */}
             {!isPerfume && (
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right">Biến thể</Label>
+              <div className="grid grid-cols-4 items-start gap-4">
+                <Label className="text-right mt-2">Biến thể</Label>
                 <div className="col-span-3 space-y-2">
                   {fields.map((field, index) => (
                     <div key={field.id} className="flex gap-2 items-center">
-                      {/* Ô nhập size */}
                       <Input
                         className="w-1/4"
                         placeholder="Nhập size"
                         value={field.size}
                         onChange={(e) => setValue(`variants.${index}.size`, e.target.value)}
                       />
-
-                      {/* Ô nhập màu */}
                       <Input
                         className="w-1/4"
                         placeholder="Nhập màu"
                         value={field.color}
                         onChange={(e) => setValue(`variants.${index}.color`, e.target.value)}
                       />
-
-                      {/* Ô nhập số lượng */}
                       <Input
                         type="number"
                         className="w-1/4"
@@ -338,8 +367,6 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
                           setValue(`variants.${index}.quantity`, value);
                         }}
                       />
-
-                      {/* Nút xóa */}
                       <Button
                         type="button"
                         variant="destructive"
@@ -351,7 +378,6 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
                     </div>
                   ))}
 
-                  {/* Nút thêm biến thể */}
                   <Button
                     type="button"
                     variant="outline"
@@ -362,10 +388,10 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
                   </Button>
                 </div>
               </div>
-
             )}
           </div>
 
+          {/* Footer */}
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>Hủy</Button>
             <Button type="submit">Lưu</Button>
@@ -373,6 +399,7 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
         </form>
       </DialogContent>
     </Dialog>
+
   );
 };
 
