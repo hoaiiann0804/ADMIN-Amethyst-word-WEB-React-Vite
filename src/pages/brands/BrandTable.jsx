@@ -16,8 +16,26 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import { ArrowUpDown, Edit, MoreVertical, Tag, Trash } from "lucide-react";
-const API_URL = import.meta.env.VITE_API_URL;
+const API_IMAGE = import.meta.env.VITE_API_IMAGE;
 const BrandTable = ({ brands, onEdit, onDelete }) => {
+  const renderStatus = (status) => {
+    const statusStyles = {
+      ACTIVE: "bg-green-100 text-green-800",
+      INACTIVE: "bg-red-100 text-red-800",
+      DRAFT: "bg-yellow-100 text-yellow-800",
+      Hiện: "bg-green-100 text-green-800",
+      Ẩn: "bg-red-100 text-red-800",
+    };
+    return (
+      <span
+        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+          statusStyles[status] || "bg-gray-100 text-gray-800"
+        }`}
+      >
+        {status === "ACTIVE" ? "Hiển thị" : status === "DRAFT" ? "Bản nháp" : status === "Hiển thị" ? "Hiển thị" : "Ẩn"}
+      </span>
+    );
+  };
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -38,6 +56,7 @@ const BrandTable = ({ brands, onEdit, onDelete }) => {
               <TableHead>Ảnh</TableHead>
               <TableHead>Mô tả</TableHead>
               <TableHead>Số sản phẩm</TableHead>
+              <TableHead>Trạng thái</TableHead>
               <TableHead className="w-[80px]"></TableHead>
             </TableRow>
           </TableHeader>
@@ -54,12 +73,13 @@ const BrandTable = ({ brands, onEdit, onDelete }) => {
                   </TableCell>
                   <TableCell>{brand.branD_NAME.replace(/\s+/g, '').toLowerCase()}</TableCell>
                   <TableCell>
-                    <img src={`${API_URL}/images/${brand.branD_IMAGE}`} alt={brand.branD_NAME} className="w-16 h-16 object-cover" />
+                    <img src={`${API_IMAGE}/${brand.branD_IMAGE}`} alt={brand.branD_NAME} className="w-16 h-16 object-cover" />
                   </TableCell>
                   <TableCell className="max-w-[300px] truncate">
                     {brand.description}
                   </TableCell>
                   <TableCell className="text-center">{brand.producT_QUANTITY}</TableCell>
+                  <TableCell>{renderStatus(brand.status)}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
