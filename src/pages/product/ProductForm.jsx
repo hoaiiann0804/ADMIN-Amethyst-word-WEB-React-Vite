@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/Textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CreateProduct, CreateProductImage, UpdateProduct } from "../../services/Product.Service";
 import { uploadImage } from "../../services/Upload.Service";
@@ -20,7 +20,6 @@ const sizeOptions = {
 };
 
 // Dữ liệu cứng cho màu sắc
-const colorOptions = ["Đỏ", "Trắng", "Xanh", "Đen"];
 
 const productSchema = z.object({
   producT_NAME: z.string().min(2, { message: "Tên sản phẩm phải có ít nhất 2 ký tự." }),
@@ -33,13 +32,11 @@ const productSchema = z.object({
   branD_ID: z.string().min(1, { message: "Vui lòng chọn thương hiệu." }),
   categorY_ID: z.string().min(1, { message: "Vui lòng chọn danh mục." }),
   producT_STATUS: z.enum(["ACTIVE", "INACTIVE", "DRAFT"], { message: "Vui lòng chọn trạng thái hợp lệ." }),
-  variants: z.array(
-    z.object({
-      size: z.string().optional(),
-      color: z.string().optional(),
-    })
-  ).optional(),
+  coloR_NAME: z.string().optional(),
+  sizE_NAME: z.string().optional(),
+  quantity: z.preprocess((val) => Number(val), z.number().min(1)),
 });
+
 
 const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) => {
   const { register, handleSubmit, reset, formState: { errors }, setValue, watch, control } = useForm({
@@ -54,21 +51,17 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
       categorY_ID: "",
       producT_STATUS: "INACTIVE",
       coloR_NAME: "",
-      sizE_NAME: ""
+      sizE_NAME: "",
+      quantity: 1,
+      content: ""
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "variants",
-  });
 
   const [imageName, setImageName] = useState("");
-
   const selectedBrand = watch("branD_ID");
   const selectedCategory = watch("categorY_ID");
   const selectedStatus = watch("producT_STATUS");
-  const watchedFields = watch("variants");
 
 
   const selectedBrandStr = selectedBrand ? String(selectedBrand) : "";
@@ -88,7 +81,9 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
         categorY_ID: product.categorY_ID ? String(product.categorY_ID) : "",
         producT_STATUS: product.producT_STATUS || "INACTIVE",
         coloR_NAME: product.coloR_NAME || "",
-        sizE_NAME: product.sizE_NAME || ""
+        sizE_NAME: product.sizE_NAME || "",
+        quantity: product.quantity || 1,
+        content: product.content || ""
       });
     } else {
       reset({
@@ -101,7 +96,9 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
         categorY_ID: "",
         producT_STATUS: "INACTIVE",
         coloR_NAME: "",
-        sizE_NAME: ""
+        sizE_NAME: "",
+        quantity: 1,
+        content: ""
       });
     }
   }, [product, reset]);
@@ -265,6 +262,16 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
               />
             </div>
 
+            {/* Nội dung */}
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label htmlFor="content" className="text-right">Nội dung</Label>
+              <Textarea
+                id="content"
+                {...register("content")}
+                className="col-span-3"
+              />
+            </div>
+
             {/* Danh mục, Thương hiệu, Trạng thái */}
             <div className="grid grid-cols-3 gap-4">
               {/* Danh mục */}
@@ -339,56 +346,48 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
 
             {/* Biến thể */}
             {!isPerfume && (
-              <div className="grid grid-cols-4 items-start gap-4">
-                <Label className="text-right mt-2">Biến thể</Label>
-                <div className="col-span-3 space-y-2">
-                  {fields.map((field, index) => (
-                    <div key={field.id} className="flex gap-2 items-center">
-                      <Input
-                        className="w-1/4"
-                        placeholder="Nhập size"
-                        value={field.size}
-                        onChange={(e) => setValue(`variants.${index}.size`, e.target.value)}
-                      />
-                      <Input
-                        className="w-1/4"
-                        placeholder="Nhập màu"
-                        value={field.color}
-                        onChange={(e) => setValue(`variants.${index}.color`, e.target.value)}
-                      />
-                      <Input
-                        type="number"
-                        className="w-1/4"
-                        placeholder="Số lượng"
-                        min={1}
-                        value={watchedFields?.[index]?.quantity || 1}
-                        onChange={(e) => {
-                          const value = Math.max(1, Number(e.target.value));
-                          setValue(`variants.${index}.quantity`, value);
-                        }}
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => remove(index)}
-                      >
-                        Xóa
-                      </Button>
-                    </div>
-                  ))}
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label className="text-right">Biến thể</Label>
+                <div className="col-span-3 flex items-center gap-4">
+                  {/* Màu sắc */}
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="coloR_NAME"
+                      type="color"
+                      {...register("coloR_NAME")}
+                      className="w-10 h-10 p-1"
+                    />
+                    <span className="text-sm text-gray-600">
+                      {watch("coloR_NAME") || "#000000"}
+                    </span>
+                  </div>
 
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => append({ size: "", color: "", quantity: 1 })}
-                  >
-                    Thêm biến thể
-                  </Button>
+                  {/* Kích thước */}
+                  <Input
+                    id="sizE_NAME"
+                    {...register("sizE_NAME")}
+                    placeholder="Size"
+                    className="w-24"
+                  />
+
+                  {/* Số lượng */}
+                  <Input
+                    id="quantity"
+                    type="number"
+                    min={1}
+                    {...register("quantity")}
+                    className="w-20"
+                  />
                 </div>
+                {errors.quantity && (
+                  <p className="text-red-500 text-sm col-span-4 text-right">
+                    {errors.quantity.message}
+                  </p>
+                )}
               </div>
             )}
+
+
           </div>
 
           {/* Footer */}
