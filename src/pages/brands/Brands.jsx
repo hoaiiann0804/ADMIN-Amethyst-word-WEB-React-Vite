@@ -27,14 +27,13 @@ const Brands = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [brandToDelete, setBrandToDelete] = useState(null);
 
-  // Filter brands based on search term
+
   const filteredBrands = brands.filter(
     (brand) =>
       brand.branD_NAME.toLowerCase().includes(searchTerm.toLowerCase()) ||
       brand.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Add or update brand
   const handleSaveBrand = async (brandData) => {
     try {
       console.log('brandData:', brandData);
@@ -46,6 +45,10 @@ const Brands = () => {
       if (editingBrand) {
         res = await updateBrand(brandData);
         if (res.code === 200) {
+          if (res.message && (res.message.toLowerCase().includes("đã tồn tại") || res.message.toLowerCase().includes("exists"))) {
+            toast.error("Thương hiệu đã tồn tại. Vui lòng chọn tên khác.");
+            return;
+          }
           toast.success("Cập nhật thương hiệu thành công");
           await fetchBrands();
           setIsModalOpen(false);
@@ -56,6 +59,10 @@ const Brands = () => {
       } else {
         res = await addBrand(brandData);
         if (res.code === 201) {
+          if (res.message && (res.message.toLowerCase().includes("đã tồn tại") || res.message.toLowerCase().includes("exists"))) {
+            toast.error("Thương hiệu đã tồn tại. Vui lòng chọn tên khác.");
+            return;
+          }
           toast.success("Thêm thương hiệu thành công");
           await fetchBrands();
           setIsModalOpen(false);
@@ -66,19 +73,11 @@ const Brands = () => {
       }
     } catch (error) {
       console.error("Lỗi khi lưu thương hiệu trong handleSaveBrand:", error);
-      // Xử lý lỗi cụ thể khi thương hiệu đã tồn tại
-      if (error.response && error.response.data && error.response.data.message) {
-        const message = error.response.data.message.toLowerCase();
-        if (message.includes("đã tồn tại") || message.includes("exists")) {
-          toast.error("Thương hiệu đã tồn tại. Vui lòng chọn tên khác.");
-          return;
-        }
-      }
       toast.error("Lỗi khi lưu thương hiệu. Vui lòng thử lại.");
     }
   };
 
-  // Delete brand
+
   const openDeleteDialog = (brand) => {
     setBrandToDelete(brand);
     setIsDeleteDialogOpen(true);
@@ -102,13 +101,13 @@ const Brands = () => {
     setSearchTerm("");
   };
 
-  // Open modal for adding
+
   const openAddModal = () => {
     setEditingBrand(null);
     setIsModalOpen(true);
   };
 
-  // Open modal for editing
+ 
   const openEditModal = (brand) => {
     setEditingBrand(brand);
     setIsModalOpen(true);

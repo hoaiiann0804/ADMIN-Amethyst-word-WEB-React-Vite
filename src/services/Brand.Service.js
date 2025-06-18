@@ -3,7 +3,12 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export const getBrands = async () => {
     try {
-        const response = await axios.get(`${API_URL}/api/Brand/GetList`);
+        const response = await axios.get(`${API_URL}/api/Brand/GetList`,{
+            headers:{
+                      'ngrok-skip-browser-warning': 'true'
+            }
+        }
+        );
         return response.data;
     } catch (error) {
         console.error('Error fetching brands:', error);
@@ -25,6 +30,8 @@ export const addBrand = async (brand) => {
             headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true'
+        
             },
         }
         );
@@ -50,6 +57,7 @@ export const updateBrand = async (brand) => {
             headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true'
             },
         }
         );
@@ -66,12 +74,14 @@ export const deleteBrand = async (brandId) => {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
             }
         });
-        return response;
+        return response.data;
     }
     catch (error) {
-        return error || { message: 'Lỗi không xác định' };
+        console.error('Error deleting brand:', error);
+        throw error;
     }
 };
 

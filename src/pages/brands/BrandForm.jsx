@@ -12,6 +12,13 @@ import { Label } from "@/components/ui/Label";
 import { useEffect, useState } from "react";
 import { uploadImage } from "../../services/Upload.Service";
 import { toast } from "react-toastify";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/Select";
 
 const BrandForm = ({ isOpen, onClose, onSave, brand }) => {
 
@@ -20,7 +27,7 @@ const BrandForm = ({ isOpen, onClose, onSave, brand }) => {
     image: "",
     description: "",
     productsCount: 0,
-    status: false,
+    status: "INACTIVE",
     imagePreview: null,
   });
 
@@ -32,7 +39,7 @@ const BrandForm = ({ isOpen, onClose, onSave, brand }) => {
         branD_NAME: "",
         image: "",
         description: "",
-        status: false,
+        status: "INACTIVE",
         imagePreview: null,
       });
     }
@@ -62,10 +69,6 @@ const BrandForm = ({ isOpen, onClose, onSave, brand }) => {
         console.error('Upload thất bại:', err);
       }
     }
-  };
-
-  const handleCheckboxChange = (checked) => {
-    setFormData((prev) => ({ ...prev, status: checked }));
   };
 
   const handleSubmit = async (e) => {
@@ -159,12 +162,19 @@ const BrandForm = ({ isOpen, onClose, onSave, brand }) => {
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Nổi bật</Label>
-              <Checkbox
-                checked={formData.status}
-                onCheckedChange={handleCheckboxChange}
-                className="col-span-3"
-              />
+              <Label htmlFor="status" className="text-right">Trạng thái</Label>
+              <Select
+                value={formData.status}
+                onValueChange={(value) => setFormData((prev) => ({ ...prev, status: value }))}
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Chọn trạng thái" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ACTIVE">Hiển thị</SelectItem>
+                  <SelectItem value="INACTIVE">Ẩn</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <DialogFooter>
