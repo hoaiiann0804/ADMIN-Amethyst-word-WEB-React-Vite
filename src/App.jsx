@@ -14,6 +14,7 @@ import Permissions from "./pages/Permission/Permissions";
 import Products from "./pages/product/Products";
 import Reviews from "./pages/reviews/Reviews";
 import Settings from "./pages/setting/Settings";
+import InventoryManagement from "./pages/inventory/InventoryManageMent";
 import Users from "./pages/User/Users";
 const queryClient = new QueryClient();  
 
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/products" element={<PrivateRoute element={<Products />} />} />
           <Route path="/categories" element={<PrivateRoute element={<Categories />} />} />
           <Route path="/brands" element={<PrivateRoute element={<Brands />} />} />
+          <Route path="/stock" element={<PrivateRoute element={<InventoryManagement />} />} />
           <Route path="/orders" element={<PrivateRoute element={<Orders />} />} />
           <Route path="/users" element={<PrivateRoute element={<Users />} />} />
           <Route path="/permissions" element={<PrivateRoute element={<Permissions />} />} />
