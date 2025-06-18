@@ -66,6 +66,8 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
   const selectedBrand = watch("branD_ID");
   const selectedCategory = watch("categorY_ID");
   const selectedStatus = watch("producT_STATUS");
+  const watchedFields = watch("variants");
+
 
   const selectedBrandStr = selectedBrand ? String(selectedBrand) : "";
   const selectedCategoryStr = selectedCategory ? String(selectedCategory) : "";
@@ -309,32 +311,36 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
                 <div className="col-span-3 space-y-2">
                   {fields.map((field, index) => (
                     <div key={field.id} className="flex gap-2 items-center">
-                      <Select
-                        onValueChange={(value) => setValue(`variants.${index}.size`, value)}
-                        defaultValue={field.size}
-                      >
-                        <SelectTrigger className="w-1/3">
-                          <SelectValue placeholder="Chọn size" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {getSizeOptions().map(size => (
-                            <SelectItem key={size} value={size}>{size}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <Select
-                        onValueChange={(value) => setValue(`variants.${index}.color`, value)}
-                        defaultValue={field.color}
-                      >
-                        <SelectTrigger className="w-1/3">
-                          <SelectValue placeholder="Chọn màu" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {colorOptions.map(color => (
-                            <SelectItem key={color} value={color}>{color}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      {/* Ô nhập size */}
+                      <Input
+                        className="w-1/4"
+                        placeholder="Nhập size"
+                        value={field.size}
+                        onChange={(e) => setValue(`variants.${index}.size`, e.target.value)}
+                      />
+
+                      {/* Ô nhập màu */}
+                      <Input
+                        className="w-1/4"
+                        placeholder="Nhập màu"
+                        value={field.color}
+                        onChange={(e) => setValue(`variants.${index}.color`, e.target.value)}
+                      />
+
+                      {/* Ô nhập số lượng */}
+                      <Input
+                        type="number"
+                        className="w-1/4"
+                        placeholder="Số lượng"
+                        min={1}
+                        value={watchedFields?.[index]?.quantity || 1}
+                        onChange={(e) => {
+                          const value = Math.max(1, Number(e.target.value));
+                          setValue(`variants.${index}.quantity`, value);
+                        }}
+                      />
+
+                      {/* Nút xóa */}
                       <Button
                         type="button"
                         variant="destructive"
@@ -345,16 +351,19 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
                       </Button>
                     </div>
                   ))}
+
+                  {/* Nút thêm biến thể */}
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => append({ size: "", color: "" })}
+                    onClick={() => append({ size: "", color: "", quantity: 1 })}
                   >
                     Thêm biến thể
                   </Button>
                 </div>
               </div>
+
             )}
           </div>
 

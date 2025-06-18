@@ -1,18 +1,47 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/Card";
 import { useEffect, useState } from "react";
-import { ProductBestSeller } from "../../services/Product.Service";
-const API_URL =  import.meta.env.VITE_API_URL;
+import {
+  ProductBestSeller,
+  getProductImage,
+} from "../../services/Product.Service";
+
+const API_IMAGE = import.meta.env.VITE_API_IMAGE;
+
 export const TopProducts = () => {
   const [products, setProducts] = useState([]);
 
   const fetchProducts = async () => {
     try {
       const response = await ProductBestSeller();
-      setProducts(response);
+
+      const productsWithImages = await Promise.all(
+        response.map(async (product) => {
+          try {
+            const images = await getProductImage(product.producT_ID);
+            return {
+              ...product,
+              imageName: images?.[0]?.imagE_NAME || null,
+            };
+          } catch (error) {
+            console.error("Error loading image for product:", product.producT_ID);
+            return {
+              ...product,
+              imageName: null,
+            };
+          }
+        })
+      );
+
+      setProducts(productsWithImages);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
-  }
+  };
 
   useEffect(() => {
     fetchProducts();
@@ -32,7 +61,7 @@ export const TopProducts = () => {
             >
               <div className="h-10 w-10 rounded-md bg-gray-100 overflow-hidden">
                 <img
-                  src={`${API_URL}/images/${product.imagE_NAME}`}
+                  src={`${API_IMAGE}/${product.imageName}`}
                   alt={product.producT_NAME}
                   className="h-full w-full object-cover"
                 />
