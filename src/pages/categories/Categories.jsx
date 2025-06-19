@@ -8,7 +8,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/AlertDialog";
+} from "../../components/ui/AlertDiaLog";
 import { Button } from "@/components/ui/Button";
 import {
   Card
