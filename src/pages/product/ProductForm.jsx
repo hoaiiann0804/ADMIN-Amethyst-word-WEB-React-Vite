@@ -158,244 +158,148 @@ const ProductForm = ({ isOpen, onClose, onSave, product, categories, brands }) =
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[65%]">
+      <DialogContent className="sm:max-w-[50%]">
         <DialogHeader>
           <DialogTitle>{product ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm"}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-4 py-4">
-
-            {/* Tên sản phẩm */}
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="producT_NAME" className="text-right">Tên sản phẩm</Label>
-              <Input
-                id="producT_NAME"
-                {...register("producT_NAME")}
-                className="col-span-3"
-              />
-              {errors.producT_NAME && (
-                <p className="text-red-500 text-sm col-span-4 text-right">
-                  {errors.producT_NAME.message}
-                </p>
-              )}
-            </div>
-
-            {/* Ảnh */}
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="producT_IMAGE" className="text-right">Ảnh</Label>
-              <div className="col-span-3">
-                <Input
-                  id="producT_IMAGE"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
-                {imageName && (
-                  <p className="text-sm text-green-600 mt-1">Đã chọn: {imageName}</p>
-                )}
-                {!imageName && product?.imagE_NAME && (
-                  <div className="mt-2 flex items-center gap-2">
-                    <span className="text-sm text-gray-500">Ảnh hiện tại:</span>
-                    <img
-                      src={`${API_IMAGE_URL}/${product.imagE_NAME}`}
-                      alt={product.producT_NAME}
-                      className="w-16 h-16 object-cover"
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Giá và Giá gốc */}
-            <div className="grid grid-cols-2 gap-4">
-              {/* Giá */}
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="producT_PRICE" className="text-right">Giá (VNĐ)</Label>
-                <Input
-                  id="producT_PRICE"
-                  type="number"
-                  {...register("producT_PRICE")}
-                  className="col-span-3"
-                />
-                {errors.producT_PRICE && (
-                  <p className="text-red-500 text-sm col-span-4 text-right">
-                    {errors.producT_PRICE.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Giá gốc */}
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="pricE_ROOT" className="text-right">Giá gốc (VNĐ)</Label>
-                <Input
-                  id="pricE_ROOT"
-                  type="number"
-                  {...register("pricE_ROOT")}
-                  className="col-span-3"
-                />
-                {errors.pricE_ROOT && (
-                  <p className="text-red-500 text-sm col-span-4 text-right">
-                    {errors.pricE_ROOT.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Chi tiết */}
-            <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="producT_DETAIL" className="text-right">Chi tiết</Label>
-              <Textarea
-                id="producT_DETAIL"
-                {...register("producT_DETAIL")}
-                className="col-span-3"
-              />
-            </div>
-
-            {/* Mô tả */}
-            <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="producT_DESCRIPTION" className="text-right">Mô tả</Label>
-              <Textarea
-                id="producT_DESCRIPTION"
-                {...register("producT_DESCRIPTION")}
-                className="col-span-3"
-              />
-            </div>
-
-            {/* Nội dung */}
-            <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="content" className="text-right">Nội dung</Label>
-              <Textarea
-                id="content"
-                {...register("content")}
-                className="col-span-3"
-              />
-            </div>
-
-            {/* Danh mục, Thương hiệu, Trạng thái */}
-            <div className="grid grid-cols-3 gap-4">
-              {/* Danh mục */}
-              <div>
-                <Label htmlFor="categorY_ID" className="block mb-1">Danh mục</Label>
-                <Select
-                  onValueChange={(value) => {
-                    setValue("categorY_ID", value);
-                    setValue("variants", []);
-                  }}
-                  value={selectedCategoryStr}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Chọn danh mục" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category.categorY_ID} value={String(category.categorY_ID)}>
-                        {category.categorY_NAME}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.categorY_ID && (
-                  <p className="text-red-500 text-sm mt-1">{errors.categorY_ID.message}</p>
-                )}
-              </div>
-
-              {/* Thương hiệu */}
-              <div>
-                <Label htmlFor="branD_ID" className="block mb-1">Thương hiệu</Label>
-                <Select
-                  onValueChange={(value) => setValue("branD_ID", value)}
-                  value={selectedBrandStr}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Chọn thương hiệu" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {brands.map((brand) => (
-                      <SelectItem key={brand.branD_ID} value={String(brand.branD_ID)}>
-                        {brand.branD_NAME}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.branD_ID && (
-                  <p className="text-red-500 text-sm mt-1">{errors.branD_ID.message}</p>
-                )}
-              </div>
-
-              {/* Trạng thái */}
-              <div>
-                <Label htmlFor="producT_STATUS" className="block mb-1">Trạng thái</Label>
-                <Select
-                  onValueChange={(value) => setValue("producT_STATUS", value)}
-                  value={selectedStatusStr}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Chọn trạng thái" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ACTIVE">Hiển thị</SelectItem>
-                    <SelectItem value="INACTIVE">Ẩn</SelectItem>
-                  </SelectContent>
-                </Select>
-                {errors.producT_STATUS && (
-                  <p className="text-red-500 text-sm mt-1">{errors.producT_STATUS.message}</p>
-                )}
-              </div>
-            </div>
-
-            {/* Biến thể */}
-            {!isPerfume && (
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right">Biến thể</Label>
-                <div className="col-span-3 flex items-center gap-4">
-                  {/* Màu sắc */}
-                  <div className="flex items-center gap-2">
-                    <Input
-                      id="coloR_NAME"
-                      type="color"
-                      {...register("coloR_NAME")}
-                      className="w-10 h-10 p-1"
-                    />
-                    <span className="text-sm text-gray-600">
-                      {watch("coloR_NAME") || "#000000"}
-                    </span>
-                  </div>
-
-                  {/* Kích thước */}
-                  <Input
-                    id="sizE_NAME"
-                    {...register("sizE_NAME")}
-                    placeholder="Size"
-                    className="w-24"
-                  />
-
-                  {/* Số lượng */}
-                  <Input
-                    id="quantity"
-                    type="number"
-                    min={1}
-                    {...register("quantity")}
-                    className="w-20"
-                  />
-                </div>
-                {errors.quantity && (
-                  <p className="text-red-500 text-sm col-span-4 text-right">
-                    {errors.quantity.message}
-                  </p>
-                )}
-              </div>
-            )}
 
 
-          </div>
+<div className="grid grid-cols-5 items-center gap-4">
+  <Label htmlFor="producT_NAME" className="col-span-1 text-right">Tên sản phẩm</Label>
+  <Input id="producT_NAME" {...register("producT_NAME")} className="col-span-4" />
+</div>
 
-          {/* Footer */}
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>Hủy</Button>
-            <Button type="submit">Lưu</Button>
-          </DialogFooter>
-        </form>
+
+<div className="grid grid-cols-5 items-start gap-4">
+  <Label htmlFor="producT_IMAGE" className="col-span-1 text-right">Ảnh</Label>
+  <div className="col-span-4">
+    <Input id="producT_IMAGE" type="file" accept="image/*" onChange={handleFileChange} />
+    {imageName && <p className="text-sm text-green-600 mt-1">Đã chọn: {imageName}</p>}
+    {!imageName && product?.imagE_NAME && (
+      <div className="mt-2 flex items-center gap-2">
+        <span className="text-sm text-gray-500">Ảnh hiện tại:</span>
+        <img src={`${API_IMAGE_URL}/${product.imagE_NAME}`} alt={product.producT_NAME} className="w-16 h-16 object-cover" />
+      </div>
+    )}
+  </div>
+</div>
+
+
+<div className="grid grid-cols-5 items-center gap-4">
+  <Label htmlFor="producT_PRICE" className="col-span-1 text-right">Giá (VNĐ)</Label>
+  <Input id="producT_PRICE" type="number" {...register("producT_PRICE")} className="col-span-4" />
+</div>
+
+
+<div className="grid grid-cols-5 items-center gap-4">
+  <Label htmlFor="pricE_ROOT" className="col-span-1 text-right">Giá gốc (VNĐ)</Label>
+  <Input id="pricE_ROOT" type="number" {...register("pricE_ROOT")} className="col-span-4" />
+</div>
+
+
+<div className="grid grid-cols-5 items-start gap-4">
+  <Label htmlFor="producT_DETAIL" className="col-span-1 text-right">Chi tiết</Label>
+  <Textarea id="producT_DETAIL" {...register("producT_DETAIL")} className="col-span-4" />
+</div>
+
+
+<div className="grid grid-cols-5 items-start gap-4">
+  <Label htmlFor="producT_DESCRIPTION" className="col-span-1 text-right">Mô tả</Label>
+  <Textarea id="producT_DESCRIPTION" {...register("producT_DESCRIPTION")} className="col-span-4" />
+</div>
+
+
+<div className="grid grid-cols-5 items-start gap-4">
+  <Label htmlFor="content" className="col-span-1 text-right">Nội dung</Label>
+  <Textarea id="content" {...register("content")} className="col-span-4" />
+</div>
+
+
+<div className="grid grid-cols-5 items-center gap-4">
+  <Label className="col-span-1 text-right">Danh mục</Label>
+  <Select
+    onValueChange={(value) => {
+      setValue("categorY_ID", value);
+      setValue("variants", []);
+    }}
+    value={selectedCategoryStr}
+    className="col-span-4"
+  >
+    <SelectTrigger>
+      <SelectValue placeholder="Chọn danh mục" />
+    </SelectTrigger>
+    <SelectContent>
+      {categories.map((category) => (
+        <SelectItem key={category.categorY_ID} value={String(category.categorY_ID)}>
+          {category.categorY_NAME}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+</div>
+
+{/* Thương hiệu */}
+<div className="grid grid-cols-5 items-center gap-4">
+  <Label className="col-span-1 text-right">Thương hiệu</Label>
+  <Select
+    onValueChange={(value) => setValue("branD_ID", value)}
+    value={selectedBrandStr}
+    className="col-span-4"
+  >
+    <SelectTrigger>
+      <SelectValue placeholder="Chọn thương hiệu" />
+    </SelectTrigger>
+    <SelectContent>
+      {brands.map((brand) => (
+        <SelectItem key={brand.branD_ID} value={String(brand.branD_ID)}>
+          {brand.branD_NAME}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+</div>
+
+{/* Trạng thái */}
+<div className="grid grid-cols-5 items-center gap-4">
+  <Label className="col-span-1 text-right">Trạng thái</Label>
+  <Select
+    onValueChange={(value) => setValue("producT_STATUS", value)}
+    value={selectedStatusStr}
+    className="col-span-4"
+  >
+    <SelectTrigger>
+      <SelectValue placeholder="Chọn trạng thái" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="ACTIVE">Hiển thị</SelectItem>
+      <SelectItem value="INACTIVE">Ẩn</SelectItem>
+    </SelectContent>
+  </Select>
+</div>
+
+{/* Biến thể */}
+{!isPerfume && (
+  <div className="grid grid-cols-5 items-center gap-4">
+    <Label className="col-span-1 text-right">Biến thể</Label>
+    <div className="col-span-4 flex items-center gap-4">
+      <Input type="color" {...register("coloR_NAME")} className="w-10 h-10 p-1" />
+      <span className="text-sm text-gray-600">{watch("coloR_NAME") || "#000000"}</span>
+      <Input {...register("sizE_NAME")} placeholder="Size" className="w-24" />
+      <Input {...register("quantity")} type="number" min={1} className="w-20" />
+    </div>
+  </div>
+)}
+
+{/* Footer */}
+<DialogFooter className="pt-4">
+  <Button type="button" variant="outline" onClick={onClose}>Hủy</Button>
+  <Button type="submit">Lưu</Button>
+</DialogFooter>
+</form>
+
+
       </DialogContent>
     </Dialog>
 
