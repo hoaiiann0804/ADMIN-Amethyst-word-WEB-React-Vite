@@ -1,7 +1,7 @@
 import React from 'react';
 import { Check, X } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/Table';
+import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../../components/ui/Table';
 
 const PermissionMatrix = ({ roles }) => {
   const modules = [

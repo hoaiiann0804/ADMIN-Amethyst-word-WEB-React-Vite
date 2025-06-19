@@ -1,4 +1,4 @@
-import { DashboardLayout } from "@/components/layouts/DashboardLayout";
+import { DashboardLayout } from "../../components/layouts/DashboardLayout";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,9 +8,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/AlertDialog";
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
+} from "../../components/ui/AlertDiaLog";
+import { Button } from "../../components/ui/Button";
+import { Card } from "../../components/ui/Card";
 import {
   Table,
   TableBody,
@@ -19,11 +19,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/Table";
+} from "../../components/ui/Table";
 import { Edit, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import RanksFilter from "@/pages/Rank/RanksFilter";
+import RanksFilter from "../../pages/Rank/RanksFilter";
 import useToast from "../../hooks/use-toast";
 import { getRanks } from "../../services/Rank.Servcie";
 import RankForm from "./RankForm";

@@ -1,8 +1,8 @@
 import React from "react";
 import { Search, Filter, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Card, CardContent } from "@/components/ui/Card";
+import { Button } from "../../components/ui/Button";
+import { Input } from "../../components/ui/Input";
+import { Card, CardContent } from "../../components/ui/Card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuLabel,
   DropdownMenuCheckboxItem
-} from "@/components/ui/DropdownMenu";
+} from "../../components/ui/DropdownMenu";
 
 const ReviewsFilter = ({ searchTerm, setSearchTerm, selectedStatus, setSelectedStatus }) => {
   const statuses = ["Tất cả", "Đã duyệt", "Chờ duyệt", "Đã từ chối"];

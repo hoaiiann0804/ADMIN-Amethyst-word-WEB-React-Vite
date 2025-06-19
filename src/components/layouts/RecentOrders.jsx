@@ -1,10 +1,10 @@
-import { Badge } from "@/components/ui/Badge";
+import { Badge } from "../../components/ui/Badge";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle
-} from "@/components/ui/Card";
+} from "../ui/Card";
 import {
   Table,
   TableBody,
@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from "@/components/ui/Table";
+} from "../../components/ui/Table";
 import { clsx } from "clsx";
 import { useEffect, useState } from "react";
 import { OrderNew } from "../../services/Order.Service";

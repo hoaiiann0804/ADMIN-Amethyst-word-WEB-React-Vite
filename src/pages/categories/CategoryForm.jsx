@@ -1,14 +1,14 @@
-import { Button } from "@/components/ui/Button";
+import { Button } from "../../components/ui/Button";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/Dialog";
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
-import { Switch } from "@/components/ui/switch";
+} from "../../components/ui/DiaLog";
+import { Input } from "../../components/ui/Input";
+import { Label } from "../../components/ui/Label";
+import { Switch } from "../../components/ui/Switch";
 import { useEffect, useState } from "react";
 import { addCategory, updateCategory } from "../../services/Category.Service";
 

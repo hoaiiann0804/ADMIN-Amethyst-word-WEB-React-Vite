@@ -3,7 +3,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/Card";
+} from "../../components/ui/Card";
 import { useEffect, useState } from "react";
 import {
   ProductBestSeller,

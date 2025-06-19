@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Search, ChevronDown } from "lucide-react";
-import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent } from "@/components/ui/Card";
+import { Input } from "../../components/ui/Input";
+import { Button } from "../../components/ui/Button";
+import { Card, CardContent } from "../../components/ui/Card";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/Popover";
+} from "../../components/ui/Popover";
 import {
   Command,
   CommandInput,
@@ -15,7 +15,7 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandItem,
-} from "@/components/ui/Command";
+} from "../../components/ui/Command";
 
 const RanksFilter = ({ searchTerm, setSearchTerm }) => {
   const [isCommandOpen, setIsCommandOpen] = useState(false);

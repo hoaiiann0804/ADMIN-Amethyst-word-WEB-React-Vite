@@ -8,7 +8,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/AlertDialog";
+} from "../../components/ui/AlertDiaLog";
 
 const DeleteCategoryDialog = ({ open, onOpenChange, category, onConfirm }) => {
   if (!category) {

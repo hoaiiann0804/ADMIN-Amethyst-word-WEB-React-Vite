@@ -1,14 +1,13 @@
-import { Button } from "@/components/ui/Button";
-import { Checkbox } from "@/components/ui/Checkbox";
+import { Button } from "../../components/ui/Button";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../../components/ui/Dialog";
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
+} from "../../components/ui/DiaLog";
+import { Input } from "../../components/ui/Input";
+import { Label } from "../../components/ui/Label";
 import { useEffect, useState } from "react";
 import { uploadImage } from "../../services/Upload.Service";
 import { toast } from "react-toastify";
@@ -18,7 +17,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/Select";
+} from "../../components/ui/Select";
 
 const BrandForm = ({ isOpen, onClose, onSave, brand }) => {
 

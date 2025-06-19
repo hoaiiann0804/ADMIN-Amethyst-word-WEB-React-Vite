@@ -4,7 +4,7 @@ import InventoryTable from './InventoryTable'
 import StatsCard from './StatsCard'
 import RecentMoveMents from './RecentMoveMents'
 import { useInventoryData } from '../../hooks/useInventoryData'
-import { Button } from "@/components/ui/Button"
+import { Button } from "../../components/ui/Button"
 import { Download } from 'lucide-react'
 import { Plus } from 'lucide-react'
 import {Package, TrendingUp, TrendingDown, AlertTriangle} from 'lucide-react'

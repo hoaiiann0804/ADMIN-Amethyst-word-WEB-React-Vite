@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
-import { DashboardLayout } from '@/components/layouts/DashboardLayout';
-import { Button } from '@/components/ui/Button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+import { DashboardLayout } from '../../components/layouts/DashboardLayout';
+import { Button } from '../../components/ui/Button';
+import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import PermissionsFilter from './PermissionsFilter';
 import PermissionsTable from './PermissionsTable';
 import PermissionMatrix from './PermissionMatrix';
 import RoleForm from './RoleForm';
 import RoleDetail from './RoleDetail';
 import RoleDeleteConfirm from './RoleDeleteConfirm';
-import Modal from '@/components/ui/Modal';
+import Modal from '../../components/ui/Modal';
 import { mockRoles } from '../../services/mockRoles';
 
 const Permissions = () => {

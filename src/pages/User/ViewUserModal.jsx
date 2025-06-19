@@ -1,14 +1,14 @@
 // src/components/users/ViewUserModal.jsx
 import React from "react";
-import { Button } from "@/components/ui/Button";
-import { Label } from "@/components/ui/Label";
+import { Button } from "../../components/ui/Button";
+import { Label } from "../../components/ui/Label";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/Dialog";
+} from "../../components/ui/DiaLog";
 
 const ViewUserModal = ({ isOpen, onClose, user }) => {
   return (

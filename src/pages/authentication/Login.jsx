@@ -4,9 +4,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/Card"
-import { Input } from "@/components/ui/Input"
-import { Label } from "@/components/ui/Label"
+} from "../../components/ui/Card"
+import { Input } from "../../components/ui/Input"
+import { Label } from "../../components/ui/Label"
 import { clsx } from "clsx"
 import { useMountEffect } from "primereact/hooks"
 import { Toast } from "primereact/toast"

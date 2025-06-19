@@ -1,5 +1,5 @@
-import { DashboardLayout } from "@/components/layouts/DashboardLayout";
-import { Button } from "@/components/ui/Button";
+import { DashboardLayout } from "../../components/layouts/DashboardLayout";
+import { Button } from "../../components/ui/Button";
 import {
   Dialog,
   DialogContent,
@@ -7,13 +7,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/DiaLog";
+} from "../../components/ui/DiaLog";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui/Tabs";
+} from "../../components/ui/Tabs";
 import { PlusCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import useToast from "../../hooks/use-toast";

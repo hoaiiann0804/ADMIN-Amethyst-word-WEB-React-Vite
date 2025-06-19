@@ -1,14 +1,14 @@
-import { Button } from "@/components/ui/Button";
+import { Button } from "../../components/ui/Button";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/Dialog";
-import { Label } from "@/components/ui/Label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table";
+} from "../../components/ui/DiaLog";
+import { Label } from "../../components/ui/Label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/Select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/Table";
 
 const OrderDetailsDialog = ({ order, isOpen, onClose, onUpdateStatus }) => {
   if (!order) return null;

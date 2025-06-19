@@ -6,17 +6,17 @@ import {
   TableBody,
   TableRow,
   TableCell
-} from "@/components/ui/Table";
-import { Button } from "@/components/ui/Button";
+} from "../../components/ui/Table";
+import { Button } from "../../components/ui/Button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from "@/components/ui/DropdownMenu";
+} from "../../components/ui/DropdownMenu";
 import { MoreVertical, Eye, Edit, Trash, ArrowUpDown } from "lucide-react";
-import { renderStarRating, getStatusBadge } from "@/utils/ReviewUtils";
+import { renderStarRating, getStatusBadge } from "../../utils/ReviewUtils";
 
 const ReviewTable = ({ reviews, onView, onEdit, onDelete }) => {
   return (

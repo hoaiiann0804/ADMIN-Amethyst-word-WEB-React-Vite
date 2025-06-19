@@ -1,9 +1,9 @@
 
-import { DashboardLayout } from "@/components/layouts/DashboardLayout";
-import RecentOrders from "@/components/layouts/RecentOrders";
-import { SalesChart } from "@/components/layouts/SalesChart";
-import { StatsCard } from "@/components/layouts/StatsCard";
-import { TopProducts } from "@/components/layouts/TopProduct";
+import { DashboardLayout } from "../../components/layouts/DashboardLayout";
+import RecentOrders from "../../components/layouts/RecentOrders";
+import { SalesChart } from "../../components/layouts/SalesChart";
+import { StatsCard } from "../../components/layouts/StatsCard";
+import { TopProducts } from "../../components/layouts/TopProduct";
 import { BarChart, Calendar, ShoppingBag, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { GetOrder, GetRevenueTotal, GetUser } from "../../services/Dashboard.Service";
