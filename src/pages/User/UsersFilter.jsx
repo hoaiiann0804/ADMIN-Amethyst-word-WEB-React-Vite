@@ -1,9 +1,9 @@
 // src/components/users/UsersFilter.jsx
 import React from "react";
 import { Search, Filter, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Card, CardContent } from "@/components/ui/Card";
+import { Button } from "../../components/ui/Button";
+import { Input } from "../../components/ui/Input";
+import { Card, CardContent } from "../../components/ui/Card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
   DropdownMenuLabel,
-} from "@/components/ui/DropdownMenu";
+} from "../../components/ui/DropdownMenu";
 
 const UsersFilter = ({ searchTerm, setSearchTerm, selectedRole, setSelectedRole }) => {
   const roles = ["Tất cả", "Admin", "Nhân viên", "Khách hàng"];

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
+import { Button } from "../../components/ui/Button";
+import { Input } from "../../components/ui/Input";
+import { Label } from "../../components/ui/Label";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/Dialog";
+} from "../../components/ui/DiaLog";
 
 const EditUserModal = ({ isOpen, onClose, user, onEditUser }) => {
   const [editedUser, setEditedUser] = useState({

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
+import { Card, CardContent } from '../../components/ui/Card';
+import { Input } from '../../components/ui/Input';
 
 const PermissionsFilter = ({ searchTerm, setSearchTerm }) => {
   return (

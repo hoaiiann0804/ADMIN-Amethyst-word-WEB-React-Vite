@@ -8,7 +8,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/AlertDialog";
+} from "../../components/ui/AlertDiaLog";
 
 const DeleteRankDialog = ({ open, onOpenChange, rank, onConfirm }) => {
   if (!rank) {

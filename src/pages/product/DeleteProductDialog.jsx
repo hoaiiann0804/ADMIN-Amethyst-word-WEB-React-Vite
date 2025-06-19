@@ -1,6 +1,6 @@
 import React from "react";
-import { Button } from "@/components/ui/Button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/DiaLog";
+import { Button } from "../../components/ui/Button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../../components/ui/DiaLog";
 import { Trash2 } from "lucide-react";
 import useToast from "../../hooks/use-toast";
 

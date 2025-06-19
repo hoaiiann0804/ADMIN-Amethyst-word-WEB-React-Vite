@@ -1,8 +1,8 @@
 import React from 'react';
-import Modal from '@/components/ui/Modal';
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/Select";
+import Modal from '../../components/ui/Modal';
+import { Button } from "../../components/ui/Button";
+import { Input } from "../../components/ui/Input";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../components/ui/Select";
 import { toast } from 'react-toastify';
 
 export const StockModal = ({ isOpen, onClose, onSubmit, products, title, submitText, isExport = false }) => {

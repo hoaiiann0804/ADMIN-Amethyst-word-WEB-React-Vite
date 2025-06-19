@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import { format } from "date-fns"
 import { CalendarIcon } from "@radix-ui/react-icons"
-import { Calendar } from "@/components/ui/Calendar"
-import { Button } from "@/components/ui/Button"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/Popover"
+import { Calendar } from "../../components/ui/Calendar"
+import { Button } from "../../components/ui/Button"
+import { Popover, PopoverContent, PopoverTrigger } from "../../components/ui/Popover"
 import { clsx } from "clsx"
 
 function DateRangePicker({ className, value, onChange }) {

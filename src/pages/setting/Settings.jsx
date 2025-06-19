@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DashboardLayout } from "@/components/layouts/DashboardLayout";
+import { DashboardLayout } from "../../components/layouts/DashboardLayout";
 import { 
   Settings as SettingsIcon,
   Save,
@@ -15,19 +15,19 @@ import {
   Bell,
   Shield
 } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Textarea } from "@/components/ui/Textarea";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
+import { Button } from "../../components/ui/Button";
+import { Input } from "../../components/ui/Input";
+import { Textarea } from "../../components/ui/Textarea";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/Card";
 import { 
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger
-} from "@/components/ui/Tabs";
-import { Label } from "@/components/ui/Label";
-import { Switch } from "@/components/ui/Switch";
-import { Separator } from "@/components/ui/Separator";
+} from "../../components/ui/Tabs";
+import { Label } from "../../components/ui/Label";
+import { Switch } from "../../components/ui/Switch";
+import { Separator } from "../../components/ui/Separator";
 import { toast } from "sonner";
 
 const GeneralSettings = () => {

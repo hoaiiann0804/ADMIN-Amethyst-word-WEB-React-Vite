@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DashboardLayout } from "@/components/layouts/DashboardLayout";
+import { DashboardLayout } from "../../components/layouts/DashboardLayout";
 import {
   User,
   UserPlus,
@@ -15,8 +15,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Button } from "../../components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Card";
 import {
   Table,
   TableHeader,
@@ -24,8 +24,8 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from "@/components/ui/Table";
-import { Badge } from "@/components/ui/Badge";
+} from "../../components/ui/Table";
+import { Badge } from "../../components/ui/Badge";
 import UsersFilter from "./UsersFilter";
 import AddUserModal from "./AddUserModal";
 import EditUserModal from "./EditUserModal";
@@ -38,7 +38,7 @@ import {
   deleteUser,
   exportToCSV,
   getStatusBadge,
-} from "@/utils/userActions";
+} from "../../utils/userActions";
 import mockUsers from "../../services/mockUsers";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator} from "@/components/ui/DropdownMenu";
 const USERS_PER_PAGE = 5;

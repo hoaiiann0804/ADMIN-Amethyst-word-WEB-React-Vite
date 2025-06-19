@@ -1,4 +1,4 @@
-import { DashboardLayout } from "@/components/layouts/DashboardLayout";
+import { DashboardLayout } from "../../components/layouts/DashboardLayout";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,8 +8,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/AlertDialog";
-import { Button } from "@/components/ui/Button";
+} from "../../components/ui/AlertDiaLog";
+import { Button } from "../../components/ui/Button";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { deleteBrand, getBrands, addBrand, updateBrand } from "../../services/Brand.Service";

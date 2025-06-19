@@ -1,10 +1,10 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
-import { Input } from "@/components/ui/Input";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/Select";
-import {Table , TableBody, TableHead, TableHeader, TableRow, TableCell } from "@/components/ui/Table";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../components/ui/Card";
+import { Badge } from "../../components/ui/Badge";
+import { Input } from "../../components/ui/Input";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../components/ui/Select";
+import {Table , TableBody, TableHead, TableHeader, TableRow, TableCell } from "../../components/ui/Table";
 import { Eye, Edit, Search } from "lucide-react";
-import {Button} from "@/components/ui/Button"
+import {Button} from "../../components/ui/Button"
 const InventoryTable = ({ data, searchTerm, selectedCategory, onSearch, onCategoryChange }) => {
     const getStatusBadge = (status) => {
       switch (status) {

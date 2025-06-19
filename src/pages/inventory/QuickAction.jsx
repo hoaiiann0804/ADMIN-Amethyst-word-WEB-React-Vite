@@ -1,6 +1,6 @@
 import { AlertTriangle, Download, Package, Plus, TrendingDown } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Button } from "../../components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Card";
 import React from 'react';
 import { StockModal, LowStockModal } from './ModalComponents';
 import { useInventoryData } from "../../hooks/useInventoryData";

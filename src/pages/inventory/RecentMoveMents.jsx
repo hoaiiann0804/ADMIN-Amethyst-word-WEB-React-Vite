@@ -1,7 +1,7 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/Card";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import React from "react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "../../components/ui/Button";
 
 const RecentMovements = ({ movements }) => {
   return (

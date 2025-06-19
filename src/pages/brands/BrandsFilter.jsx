@@ -1,6 +1,6 @@
 import React from "react";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Input } from "@/components/ui/Input";
+import { Card, CardContent } from "../../components/ui/Card";
+import { Input } from "../../components/ui/Input";
 import { Search } from "lucide-react";
 
 const BrandsFilter = ({ searchTerm, setSearchTerm }) => {

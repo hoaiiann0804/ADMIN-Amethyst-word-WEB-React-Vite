@@ -1,4 +1,4 @@
-import { DashboardLayout } from "@/components/layouts/DashboardLayout";
+import { DashboardLayout } from "../../components/layouts/DashboardLayout";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,10 +9,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../../components/ui/AlertDiaLog";
-import { Button } from "@/components/ui/Button";
+import { Button } from "../../components/ui/Button";
 import {
   Card
-} from "@/components/ui/Card";
+} from "../../components/ui/Card";
 import {
   Table,
   TableBody,
@@ -21,11 +21,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/Table";
+} from "../../components/ui/Table";
 import { Edit, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import CategoriesFilter from "@/pages/categories/CategoriesFilter";
+import CategoriesFilter from "../../pages/categories/CategoriesFilter";
 import "react-toastify/dist/ReactToastify.css";
 import useToast from "../../hooks/use-toast";
 import { deleteCategory, getCategories } from "../../services/Category.Service";

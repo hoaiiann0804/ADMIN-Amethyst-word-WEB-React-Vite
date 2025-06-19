@@ -1,6 +1,6 @@
 import React from "react";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent } from "@/components/ui/Card";
+import { Button } from "../../components/ui/Button";
+import { Card, CardContent } from "../../components/ui/Card";
 import { Edit, Trash2 } from "lucide-react";
 
 const ProductTable = ({ items, itemType, onEdit, onDelete, categories, formatPrice }) => {

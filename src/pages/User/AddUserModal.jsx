@@ -1,15 +1,15 @@
 // src/components/users/AddUserModal.jsx
 import React, { useState } from "react";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
+import { Button } from "../../components/ui/Button";
+import { Input } from "../../components/ui/Input";
+import { Label } from "../../components/ui/Label";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/Dialog";
+} from "../../components/ui/DiaLog";
 
 const AddUserModal = ({ isOpen, onClose, onAddUser }) => {
   const [newUser, setNewUser] = useState({

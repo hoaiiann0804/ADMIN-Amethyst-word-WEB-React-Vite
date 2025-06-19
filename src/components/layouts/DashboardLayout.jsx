@@ -1,7 +1,7 @@
 
 import React from "react";
-import {Sidebar} from "@/components/layouts/Sidebar";
-import Header from "@/components/layouts/Header";
+import {Sidebar} from "../../components/layouts/Sidebar";
+import Header from "../../components/layouts/Header";
 
 export const DashboardLayout = ({ children }) => {
   return (

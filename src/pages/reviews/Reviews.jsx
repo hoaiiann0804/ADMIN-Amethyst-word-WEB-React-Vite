@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { DashboardLayout } from "@/components/layouts/DashboardLayout";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
+import { DashboardLayout } from "../../components/layouts/DashboardLayout";
+import { Card, CardHeader, CardTitle, CardContent } from "../../components/ui/Card";
 import ReviewsFilter from "./ReviewsFilter";
 import ReviewTable from "./ReviewTable";
 import ReviewDetailModal from "./ReviewDetailModal";

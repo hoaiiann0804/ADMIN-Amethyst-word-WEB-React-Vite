@@ -1,11 +1,11 @@
 import React from "react";
 import { Search, Filter, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/Popover";
-import { Label } from "@/components/ui/Label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup";
+import { Button } from "../../components/ui/Button";
+import { Input } from "../../components/ui/Input";
+import { Card, CardContent } from "../../components/ui/Card";
+import { Popover, PopoverContent, PopoverTrigger } from "../../components/ui/Popover";
+import { Label } from "../../components/ui/Label";
+import { RadioGroup, RadioGroupItem } from "../../components/ui/RadioGroup";
 
 const OrdersFilter = ({ searchTerm, setSearchTerm, selectedStatus, setSelectedStatus }) => {
   const allStatuses = [

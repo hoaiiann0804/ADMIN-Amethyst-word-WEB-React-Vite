@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '../../components/ui/Button';
 import { Check, X } from 'lucide-react';
 
 const RoleDetail = ({ role, onClose }) => {

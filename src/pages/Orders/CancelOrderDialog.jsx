@@ -8,7 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogFooter
-} from "@/components/ui/AlertDialog";
+} from "../../components/ui/AlertDiaLog";
 
 const CancelOrderDialog = ({ order, isOpen, onClose, onConfirm }) => {
   if (!order) return null;

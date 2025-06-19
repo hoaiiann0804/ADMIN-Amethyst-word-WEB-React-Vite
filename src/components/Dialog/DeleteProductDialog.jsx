@@ -9,7 +9,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/AlertDiaLog";
+} from "../../components/ui/AlertDiaLog";
 import { Trash2 } from "lucide-react";
 
 export const DeleteProductDialog = ({

@@ -1,13 +1,13 @@
-import { Button } from "@/components/ui/Button";
+import { Button } from "../../components/ui/Button";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/Dialog";
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
+} from "../../components/ui/DiaLog";
+import { Input } from "../../components/ui/Input";
+import { Label } from "../../components/ui/Label";
 import { useEffect, useState } from "react";
 import { addRank, updateRank } from "../../services/Rank.Servcie";
 

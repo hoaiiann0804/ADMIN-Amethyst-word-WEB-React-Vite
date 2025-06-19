@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import { Badge } from "@/components/ui/Badge";
+import { Badge } from "../components/ui/Badge";
 
 export const renderStarRating = (rating) => {
   return (

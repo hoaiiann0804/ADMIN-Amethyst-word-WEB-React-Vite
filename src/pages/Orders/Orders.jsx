@@ -1,13 +1,13 @@
-import { DashboardLayout } from "@/components/layouts/DashboardLayout";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { DashboardLayout } from "../../components/layouts/DashboardLayout";
+import { Button } from "../../components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/DropdownMenu";
+} from "../../components/ui/DropdownMenu";
 import {
   Table,
   TableBody,
@@ -15,8 +15,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/Table";
-import OrderDetailsDialog from "@/pages/Orders/OrderDetailsDialog";
+} from "../../components/ui/Table";
+import OrderDetailsDialog from "./OrderDetailsDialog";
 import { ArrowUpDown, Edit, Eye, MoreVertical, Package } from "lucide-react";
 import { useEffect, useState } from "react";
 import useToast from "../../hooks/use-toast";

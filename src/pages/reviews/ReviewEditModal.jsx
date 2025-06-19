@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Modal from "@/components/ui/Modal";
-import { Button } from "@/components/ui/Button";
-import { Select } from "@/components/ui/Select";
-import { Textarea } from "@/components/ui/Textarea";
+import Modal from "../../components/ui/Modal";
+import { Button } from "../../components/ui/Button";
+import { Select } from "../../components/ui/Select";
+import { Textarea } from "../../components/ui/Textarea";
 
 const ReviewEditModal = ({ isOpen, onClose, review, onSave }) => {
   const [formData, setFormData] = useState(review || { rating: 1, comment: "", status: "Chờ duyệt" });

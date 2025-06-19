@@ -1,7 +1,7 @@
 import React from "react";
-import Modal from "@/components/ui/Modal";
-import { renderStarRating, getStatusBadge } from "@/utils/ReviewUtils";
-import { Button } from "@/components/ui/Button";
+import Modal from "../../components/ui/Modal";
+import { renderStarRating, getStatusBadge } from "../../utils/ReviewUtils";
+import { Button } from "../../components/ui/Button";
 const ReviewDetailModal = ({ isOpen, onClose, review }) => {
   if (!review) return null;
 

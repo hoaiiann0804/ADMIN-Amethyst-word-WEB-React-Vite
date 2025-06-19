@@ -1,12 +1,12 @@
 import React from "react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "../../components/ui/Button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/Dialog";
+} from "../../components/ui/DiaLog";
 
 const DeleteUserModal = ({ isOpen, onClose, user, onDeleteUser }) => {
   const handleDelete = () => {

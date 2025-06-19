@@ -1,9 +1,9 @@
 import React from 'react';
 import { Shield, MoreVertical, Eye, Edit, Trash } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/Table';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/DropdownMenu';
-import { Badge } from '@/components/ui/Badge';
+import { Button } from '../../components/ui/Button';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../../components/ui/Table';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../../components/ui/DropdownMenu';
+import { Badge } from '../../components/ui/Badge';
 
 const PermissionsTable = ({ roles, onView, onEdit, onDelete }) => {
   return (

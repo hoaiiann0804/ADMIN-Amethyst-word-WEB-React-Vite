@@ -1,6 +1,6 @@
 import React from "react";
-import Modal from "@/components/ui/Modal";
-import { Button } from "@/components/ui/Button";
+import Modal from "../../components/ui/Modal";
+import { Button } from "../../components/ui/Button";
 
 const ReviewDeleteModal = ({ isOpen, onClose, onDelete }) => {
   return (
