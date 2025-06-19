@@ -20,13 +20,16 @@ const AppRoutes = () => {
     return (
         <Router>
             <Routes>
-                <Route                                                                                  
+                {/* Chỉ cho phép vào Login nếu chưa đăng nhập */}
+                <Route
                     path="/login"
                     element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />}
                 />
+
+                {/* Các route cần đăng nhập */}
                 <Route
                     path="/dashboard"
-                    element={                                       
+                    element={
                         <PrivateRoute>
                             <Home />
                         </PrivateRoute>
@@ -56,7 +59,15 @@ const AppRoutes = () => {
                         </PrivateRoute>
                     }
                 />
-                <Route path="/settings" element={<Language />} />
+                <Route
+                    path="/settings"
+                    element={
+                        <PrivateRoute>
+                            <Language />
+                        </PrivateRoute>
+                    }
+                />
+                <Route path="/" element={<Navigate to="/login" />} />
                 <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
         </Router>
