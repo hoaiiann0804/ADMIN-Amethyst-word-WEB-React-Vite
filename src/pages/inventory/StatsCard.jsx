@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Icon } from "@iconify/react";
 const StatsCard = ({ title, value, description, icon: Icon, color = "default" }) => {
     const colorClasses = {
       default: "text-muted-foreground",
